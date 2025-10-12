@@ -1,5 +1,7 @@
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
+  - esbuild
+  - sharp
 
 patchedDependencies:
   micromark: patches/micromark.patch
