@@ -1,0 +1,135 @@
+<div data-component="PreviewTinyClockCssVariable" class="component">
+  <section class="preview">
+    <div class="digit">
+      <div data-target="clock"></div>
+    </div>
+  </section>
+
+  <form class="input">
+    <div>
+      <input disabled type="range" id="hour" name="hour" min="0" max="12" value="10" />
+      <label for="hour">Hour</label>
+    </div>
+    <output data-target="output-hour" class="font-mono text-xs -mt-2"
+      >--angle-hour: 225deg</output
+    >
+
+    <div class="mt-8">
+      <input
+        disabled
+        type="range"
+        id="minute"
+        name="minute"
+        min="0"
+        max="60"
+        value="37.5"
+      />
+      <label for="minute">Minute</label>
+    </div>
+    <output data-target="output-minute" class="font-mono text-xs -mt-2"
+      >--angle-minute: 135deg</output
+    >
+  </form>
+</div>
+
+<style>
+  .component {
+    display: grid;
+    grid-template-columns: 13.5rem 1fr;
+
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+
+    gap: 2rem;
+  }
+
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+
+    padding: 1rem;
+
+    max-width: 13.5rem;
+    max-height: 13.5rem;
+
+    & > .digit {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+
+      gap: 12px;
+
+      & > * {
+        position: relative;
+
+        outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
+        aspect-ratio: 1 / 1;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          background: light-dark(var(--color-pink-600), var(--color-orange-400));
+          width: 50%;
+          height: 5%;
+
+          left: 50%;
+          top: 50%;
+          transform-origin: left center;
+          transform: translate(0, -50%) rotate(var(--angle, 135deg));
+        }
+
+        &::before {
+          --angle: var(--angle-hour, -135deg);
+        }
+
+        &::after {
+          --angle: var(--angle-minute);
+        }
+      }
+    }
+  }
+</style>
+
+<!-- client:visible -->
+<script>
+  const component = document.querySelector(
+    '[data-component="PreviewTinyClockCssVariable"]',
+  );
+  if (component) {
+    const clock = component.querySelector<HTMLElement>('[data-target="clock"]')!;
+    const inputHour = component.querySelector<HTMLInputElement>('input[name="hour"]')!;
+    const outputHour = component.querySelector<HTMLOutputElement>(
+      'output[data-target="output-hour"]',
+    )!;
+    const inputMinute =
+      component.querySelector<HTMLInputElement>('input[name="minute"]')!;
+    const outputMinute = component.querySelector<HTMLOutputElement>(
+      'output[data-target="output-minute"]',
+    )!;
+
+    function onChangeHour(this: HTMLInputElement, event: Event) {
+      const newValue = Number(this.value);
+      const ratio = newValue / 12;
+      const angle = (Math.round(ratio * 360 - 90) + 360) % 360;
+
+      outputHour.textContent = `--angle-hour: ${angle}deg`;
+      clock.style.setProperty("--angle-hour", ` ${angle}deg`);
+    }
+
+    function onChangeMinute(this: HTMLInputElement, event: Event) {
+      const newValue = Number(this.value);
+      const ratio = newValue / 60;
+      const angle = (Math.round(ratio * 360 - 90) + 360) % 360;
+
+      outputMinute.textContent = `--angle-minute: ${angle}deg`;
+      clock.style.setProperty("--angle-minute", ` ${angle}deg`);
+    }
+
+    inputHour.addEventListener("input", onChangeHour);
+    inputMinute.addEventListener("input", onChangeMinute);
+
+    inputHour.removeAttribute("disabled");
+    inputMinute.removeAttribute("disabled");
+  }
+</script>

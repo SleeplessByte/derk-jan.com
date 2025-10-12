@@ -7,5 +7,16 @@
     "frontmatter",
     "grayscale",
     "Monkeypatch"
-  ]
+  ],
+  "astro.content-intellisense": true,
+  "mdx.validate.validateDuplicateLinkDefinitions": "hint",
+  "mdx.validate.validateFileLinks": "warning",
+  "mdx.validate.validateFragmentLinks": "warning",
+  "mdx.validate.validateMarkdownFileLinkFragments": "warning",
+  "mdx.validate.validateReferences": "error",
+  "mdx.validate.validateUnusedLinkDefinitions": "warning",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[mdx]": {
+    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
+  }
 }

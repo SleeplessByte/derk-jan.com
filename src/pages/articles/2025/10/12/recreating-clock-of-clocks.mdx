@@ -1,0 +1,279 @@
+---
+layout: /src/layouts/Article.astro
+title: "Recreating the clock made of clocks"
+date: "2025-10-11T21:03:00Z"
+description: ""
+---
+
+import Component from "../../../../../components/Codepen/Embed.astro";
+import PreviewDigitLayout from "../../../../../components/articles/recreating-clock-of-clocks/PreviewDigitLayout.astro";
+import PreviewTinyClockLayout from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockLayout.astro";
+import PreviewTinyClockCssVariable from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockCssVariable.astro";
+import PreviewTinyClockVariations from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockVariations.astro";
+import PreviewTinyClockDigitZero from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockDigitZero.astro";
+import PreviewTinyClockDigits from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockDigits.astro";
+import PreviewTinyClockTransition from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockTransition.astro";
+
+import { Image } from "astro:assets"
+import clocksImage from "../../../../../assets/articles/recreating-clock-of-clocks/clocks.jpg";
+
+Recently [I saw][source-reddit] a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physicial].
+[The Codepen][source-codepen] shows a clock displaying the current (local) time, and each digit is composed of smaller clocks.
+
+<Component
+  pen:title="Clock made of clocks"
+  pen:author="EntropyReversed"
+  pen:hash="QwybYEJ"
+  pen:height={300}
+  pen:tab="result"
+/>
+
+In this article I recreate the result (with some choices of my own) without looking at the implementation.
+
+## Requirements
+
+Having a look at the result I establish what I want my ClocksClock to be able to do:
+
+- Use HTML, CSS, and JavaScript only;
+- Have the full current time (`HH:MM:SS`) represented;
+- Each digit is represented by tiny clocks in at 4x6 configuration;
+- It animates the digits by animating the tiny clocks;
+- All animations are clockwise;
+- The initial clock face is randomised;
+- When a tiny clock does not participate in the digit, both hands point to the bottom left.
+
+## Challenge
+
+If you like to try this yourself, you should stop here and start working on your own implementation.
+If you want to see my implementation and thought process, [keep reading](#digit-layout).
+
+<figure>
+  <Image
+    src={clocksImage}
+    alt="A pile of wooden clocks all set to different times"
+  />
+  <figcaption>Brown and white clocks by <a href="https://unsplash.com/@jontyson" target="_blank" rel="noreferrer">Jon Tyson</a></figcaption>
+</figure>
+
+## Digit layout
+
+I think it makes most sense by starting with the grid layout for a single digit.
+There are many ways to accomplish this, such as creating each element in JavaScript, or copying a single node many times, but I think I'll go with an actual grid of elements first.
+If that works, I'll extract it to a [`<template>` element][mdn-template] and go from there.
+
+```html
+<div class="digit">
+  <div></div> <div></div> <div></div> <div></div>
+  <div></div> <div></div> <div></div> <div></div>
+  <div></div> <div></div> <div></div> <div></div>
+  <div></div> <div></div> <div></div> <div></div>
+  <div></div> <div></div> <div></div> <div></div>
+  <div></div> <div></div> <div></div> <div></div>
+</div>
+```
+
+Let's start with ensuring this looks like a 4x6 grid.
+Because of the [`auto-flow`][mdn-grid-auto-flow] algorithm, there are again many ways to define this, but when the exact number of elements, rows, and columns are known, I'll often make it explicit.
+
+```css
+.digit {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+
+  gap: 0.5rem;
+
+  & > * {
+    outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
+    aspect-ratio: 1 / 1;
+  }
+}
+```
+
+The repeating pattern is set-up to have each grid cell use the same amount of space (same fractional ratio).
+The individual cells (tiny clocks) are set-up to be square.
+
+<PreviewDigitLayout />
+
+## Tiny clock layout
+
+The layout of the tiny clock is the clock face (and perhaps background and frame) with two hands.
+The hands are at most half the width of the face, and need to be placed with the "origin" (attachment point) in the center of the clock face.
+I can use the pseudo `::before` and `::after` elements to have CSS take care of this.
+For the rotation, a CSS variable can be used, which the `::before` and `::after` elements redirect to a different variable, so that it can be set on the tiny clock.
+
+```css
+.digit > * {
+  position: relative;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    background: light-dark(var(--color-pink-600), var(--color-orange-400));
+    width: 50%;
+    height: 0.5rem;
+
+    left: 50%;
+    top: 50%;
+    transform-origin: left center;
+    transform: translate(0, -50%) rotate(var(--angle, 135deg));
+  }
+
+  &::before {
+    --angle: var(--angle-hour, -135deg);
+  }
+
+  &::after {
+    --angle: var(--angle-minute);
+  }
+}
+```
+
+Here one of the clocks has `--angle-minute` and `--angle-hour` set in the HTML:
+
+```html
+<div style="--angle-hour: 145deg; --angle-minute: 22deg"></div>
+```
+
+<PreviewTinyClockLayout />
+
+The variables can now be used to change the hands of the clock.
+
+<PreviewTinyClockCssVariable />
+
+## Building a digit
+
+I now have the building blocks to create the various digits 0 through 9.
+It may seem, with 360 degrees of variation per hand, that there are a lot of different angle combinations, but because of the grid size, each digit only uses 2 variations of clock faces when active and 1 when inactive:
+
+<PreviewTinyClockVariations />
+
+These two active variations are rotated by 180 or 90 degrees respectively.
+The digit 0, for example, uses all tiny clocks and all variants:
+
+<PreviewTinyClockDigitZero />
+
+Instead of keeping track of angle pairs, [box drawing unicode][wiki-box-drawing-unicode] can be used to reference the different digits.
+It also helps me track each digit visually.
+I may change this down the line when animating, but for now, let's encode each digit using these unicode characters.
+
+```css
+.digit > * {
+  &.─ {
+    --angle-hour: 0deg;
+    --angle-minute: 180deg;
+  }
+
+  &.│ {
+    --angle-hour: 90deg;
+    --angle-minute: 270deg;
+  }
+
+  &.┌ {
+    --angle-hour: 0deg;
+    --angle-minute: 90deg;
+  }
+
+  &.┐ {
+    --angle-hour: 180deg;
+    --angle-minute: 90deg;
+  }
+
+  &.┘ {
+    --angle-hour: 180deg;
+    --angle-minute: 270deg;
+  }
+
+  &.└ {
+    --angle-hour: 0deg;
+    --angle-minute: 270deg;
+  }
+}
+```
+
+<div class="[&_code]:tracking-widest">
+```text
+┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
+│┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
+││││  .││.  ┌─┘│  .┌┘│  │└┘│  │└─┐  │└─┐  ..││  │└┘│  │└┘│
+││││  .││.  │┌─┘  .└┐│  └─┐│  └─┐│  │┌┐│  ..││  │┌┐│  └─┐│
+│└┘│  ┌┘└┐  │└─┐  ┌─┘│  ..││  ┌─┘│  │└┘│  ..││  │└┘│  ┌─┘│
+└──┘  └──┘  └──┘  └──┘  ..└┘  └──┘  └──┘  ..└┘  └──┘  └──┘
+```
+</div>
+
+## From unicode characters to digits
+
+There are multiple routes I could take now to decode that unicode text to something I can use:
+
+- Define each digit in CSS and use classes to transition between them. This could use `:nth-child`;
+- Define each digit as an array of unicode characters in JavaScript;
+- Define each digit as an array of angles in JavaScript;
+- Something else.
+
+I actually like the way the digits look in textual form, so I decided to parse the content back to individual digits,
+and then assign classes to individual DOM elements, or perhaps define the angle-mapping in JavaScript.
+We'll see.
+
+```typescript
+const ENCODED_DIGITS = `
+┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
+│┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
+││││  .││.  ┌─┘│  .┌┘│  │└┘│  │└─┐  │└─┐  ..││  │└┘│  │└┘│
+││││  .││.  │┌─┘  .└┐│  └─┐│  └─┐│  │┌┐│  ..││  │┌┐│  └─┐│
+│└┘│  ┌┘└┐  │└─┐  ┌─┘│  ..││  ┌─┘│  │└┘│  ..││  │└┘│  ┌─┘│
+└──┘  └──┘  └──┘  └──┘  ..└┘  └──┘  └──┘  ..└┘  └──┘  └──┘
+`.trim()
+.replace(/[\r\n]/g, '')
+
+const DECODED = Array.from(new Array(10), (_, digit) => {
+  const faces = []
+
+  const digitWidth = 4;
+  const digitHeight = 6;
+  const digitGap = 2;
+
+  const rowLength = digitWidth * 10 + digitGap * 9;
+  const x = digit * (digitWidth + digitGap);
+
+  for (let y = 0; y < digitHeight; y++) {
+    const start = rowLength * y + digit
+    const end = start + digitWidth;
+
+    faces.push(...ENCODED_DIGITS.substring(start, end))
+  }
+
+  return faces
+});
+```
+
+Now I can iterate through the digits by grabbing an array and overwriting the class list.
+
+<PreviewTinyClockDigits />
+
+## Animating a digit
+
+As the CSS properties are affecting the transform, putting a transition on it is probably enough to animate a clock face.
+
+```css
+.digit > * {
+  &::before, &::after {
+    transition: transform var(--duration, 0.5s) ease-in-out;
+  }
+}
+```
+
+This results in a smoother transition.
+
+<PreviewTinyClockTransition />
+
+The requirement however is that each face only moves clockwise, so this doesn't quite work, or at least: it's not enough.
+In order to make the transition work only clockwise, I could instead steadily increase the rotation.
+
+
+[source-reddit]: https://www.reddit.com/r/webdev/comments/1nrx5n9/clock_made_of_clocks/
+[source-physicial]: https://www.humanssince1982.com/en-eu
+[source-codepen]: https://codepen.io/EntropyReversed/pen/QwybYEJ
+[mdn-template]: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template
+[mdn-grid-auto-flow]: https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow
+[wiki-box-drawing-unicode]: https://en.wikipedia.org/wiki/Box-drawing_characters

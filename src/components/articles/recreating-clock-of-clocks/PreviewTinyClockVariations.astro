@@ -1,0 +1,72 @@
+<section class="preview">
+  <div class="digit">
+    <div
+      style="--angle-hour: 0deg; --angle-minute: 180deg; animation: rotate 4s infinite steps(4);"
+    >
+    </div>
+    <div
+      style="--angle-hour: 0deg; --angle-minute: 90deg; animation: rotate 4s infinite steps(4);"
+    >
+    </div>
+    <div style="--angle-hour: 135deg; --angle-minute: 135deg;"></div>
+  </div>
+</section>
+
+<style>
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 1rem;
+
+    & > .digit {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+
+      gap: 12px;
+
+      & > * {
+        position: relative;
+
+        outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
+        aspect-ratio: 1 / 1;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          background: light-dark(var(--color-pink-600), var(--color-orange-400));
+          width: 50%;
+          height: 5%;
+
+          left: 50%;
+          top: 50%;
+          transform-origin: left center;
+          transform: translate(0, -50%) rotate(var(--angle, 135deg));
+        }
+
+        &::before {
+          --angle: var(--angle-hour, -135deg);
+        }
+
+        &::after {
+          --angle: var(--angle-minute);
+        }
+      }
+    }
+  }
+</style>
