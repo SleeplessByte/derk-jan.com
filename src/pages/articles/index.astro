@@ -6,9 +6,11 @@ import "../../styles/transitions.css";
 
 import md5 from "../../functions/md5";
 
-const articles = (await getCollection("articles")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const articles = (await getCollection("articles"))
+  .filter(
+    (post) => post.data.published !== false || process.env.NODE_ENV === "development",
+  )
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout title="Articles">
@@ -38,14 +40,14 @@ const articles = (await getCollection("articles")).sort(
                     {/*transition:animate="slide"
                       transition:name={md5(article.id)}
                       */}
-                    <span>{article.data.title}</span>
+                    <span>
+                      {article.data.published === false ? "(Draft) " : ""}
+                      {article.data.title}
+                    </span>
                   </a>
                 </h2>
                 <span class="text-zinc-600 dark:text-zinc-400">
-                  <StaticDate
-                    date={article.data.date}
-                    aria-label="Published on "
-                  />
+                  <StaticDate date={article.data.date} aria-label="Published on " />
                 </span>
               </header>
               <p id={`${article.id}-description`} class="mt-2 text-xl">

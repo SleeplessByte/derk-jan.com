@@ -2,11 +2,13 @@
   "cSpell.words": [
     "bounceb",
     "bouncel",
+    "Codepen",
     "exercism",
     "figcaption",
     "frontmatter",
     "grayscale",
-    "Monkeypatch"
+    "Monkeypatch",
+    "noreferrer"
   ],
   "astro.content-intellisense": true,
   "mdx.validate.validateDuplicateLinkDefinitions": "hint",

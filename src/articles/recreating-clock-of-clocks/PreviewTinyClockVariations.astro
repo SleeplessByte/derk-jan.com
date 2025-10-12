@@ -1,33 +1,28 @@
-<section class="preview">
+<section data-component="PreviewTinyClockVariations" class="preview">
   <div class="digit">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div style="--angle-hour: 145deg; --angle-minute: 22deg"></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+    <div
+      style="--angle-hour: 0deg; --angle-minute: 180deg; animation: rotate 4s infinite steps(4);"
+    >
+    </div>
+    <div
+      style="--angle-hour: 0deg; --angle-minute: 90deg; animation: rotate 4s infinite steps(4);"
+    >
+    </div>
+    <div style="--angle-hour: 135deg; --angle-minute: 135deg;"></div>
   </div>
 </section>
 
 <style>
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   .preview {
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
 
@@ -39,8 +34,8 @@
 
     & > .digit {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(6, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(1, 1fr);
 
       gap: 12px;
 

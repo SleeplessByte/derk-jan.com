@@ -1,0 +1,148 @@
+<style>
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+
+    max-width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 1rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    & > button.digit {
+      min-width: 3rem;
+      min-height: 3rem;
+
+      cursor: pointer;
+
+      & > * {
+        color: light-dark(var(--color-zinc-900), var(--color-zinc-100));
+      }
+
+      &:hover > *,
+      &:focus > * {
+        color: light-dark(var(--color-green-600), var(--color-green-600));
+      }
+    }
+  }
+
+  .preview > .digit,
+  button.digit {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+
+    gap: 12px;
+
+    & > * {
+      position: relative;
+
+      color: light-dark(var(--color-pink-600), var(--color-orange-400));
+
+      outline: 1px solid currentColor;
+      aspect-ratio: 1 / 1;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        background: currentColor;
+        width: 50%;
+        height: 5%;
+
+        left: 50%;
+        top: 50%;
+        transform-origin: left center;
+        transform: translate(0, -50%) rotate(var(--angle, 135deg));
+
+        transition: transform 0.5s ease-in-out;
+      }
+
+      &::before {
+        --angle: var(--angle-hour, -135deg);
+      }
+
+      &::after {
+        --angle: var(--angle-minute);
+      }
+
+      &.─ {
+        --angle-hour: 0deg;
+        --angle-minute: 180deg;
+      }
+
+      &.│ {
+        --angle-hour: 90deg;
+        --angle-minute: 270deg;
+      }
+
+      &.┌ {
+        --angle-hour: 0deg;
+        --angle-minute: 90deg;
+      }
+
+      &.┐ {
+        --angle-hour: 180deg;
+        --angle-minute: 90deg;
+      }
+
+      &.┘ {
+        --angle-hour: 180deg;
+        --angle-minute: 270deg;
+      }
+
+      &.└ {
+        --angle-hour: 0deg;
+        --angle-minute: 270deg;
+      }
+
+      &.∅ {
+        --angle-hour: 125deg;
+        --angle-minute: 125deg;
+      }
+    }
+  }
+</style>
+
+<div class="controls">
+  <button type="button" data-shape="─" class="digit">
+    <div class="─">
+      <span class="sr-only">Horizontal</span>
+    </div>
+  </button>
+  <button type="button" data-shape="│" class="digit">
+    <div class="│">
+      <span class="sr-only">Vertical</span>
+    </div>
+  </button>
+  <button type="button" data-shape="┌" class="digit">
+    <div class="┌">
+      <span class="sr-only">Corner right and down</span>
+    </div>
+  </button>
+  <button type="button" data-shape="┐" class="digit">
+    <div class="┐">
+      <span class="sr-only">Corner left and down</span>
+    </div>
+  </button>
+  <button type="button" data-shape="┘" class="digit">
+    <div class="┘">
+      <span class="sr-only">Corner left and up</span>
+    </div>
+  </button>
+  <button type="button" data-shape="└" class="digit">
+    <div class="└">
+      <span class="sr-only">Corner right and up</span>
+    </div>
+  </button>
+  <button type="button" data-shape="∅" class="digit">
+    <div class="∅">
+      <span class="sr-only">Inactive</span>
+    </div>
+  </button>
+</div>

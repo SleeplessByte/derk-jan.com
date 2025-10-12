@@ -1,5 +1,5 @@
-<section class="preview">
-  <div class="digit">
+<section data-component="PreviewTinyClockDigits" class="preview">
+  <div data-target="digit" class="digit">
     <div class="┌"></div><div class="─"></div><div class="─"></div><div class="┐"></div>
     <div class="│"></div><div class="┌"></div><div class="┐"></div><div class="│"></div>
     <div class="│"></div><div class="│"></div><div class="│"></div><div class="│"></div>
@@ -83,7 +83,65 @@
           --angle-hour: 0deg;
           --angle-minute: 270deg;
         }
+
+        &.∅ {
+          --angle-hour: 125deg;
+          --angle-minute: 125deg;
+        }
       }
     }
   }
 </style>
+
+<script>
+  const ENCODED_DIGITS = `
+┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
+│┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
+││││  .││.  ┌─┘│  .┌┘│  │└┘│  │└─┐  │└─┐  ..││  │└┘│  │└┘│
+││││  .││.  │┌─┘  .└┐│  └─┐│  └─┐│  │┌┐│  ..││  │┌┐│  └─┐│
+│└┘│  ┌┘└┐  │└─┐  ┌─┘│  ..││  ┌─┘│  │└┘│  ..││  │└┘│  ┌─┘│
+└──┘  └──┘  └──┘  └──┘  ..└┘  └──┘  └──┘  ..└┘  └──┘  └──┘
+`
+    .trim()
+    .replace(/[\r\n]/g, "")
+    .replace(/\./g, "∅");
+
+  const DECODED = Array.from(new Array(10), (_, digit) => {
+    const faces = [];
+
+    const digitWidth = 4;
+    const digitHeight = 6;
+    const digitGap = 2;
+
+    const rowLength = digitWidth * 10 + digitGap * 9;
+    const x = digit * (digitWidth + digitGap);
+
+    for (let y = 0; y < digitHeight; y++) {
+      const start = rowLength * y + x;
+      const end = start + digitWidth;
+
+      faces.push(...ENCODED_DIGITS.substring(start, end));
+    }
+
+    return faces;
+  });
+
+  const target = document.querySelector(
+    '[data-component="PreviewTinyClockDigits"] [data-target="digit"]',
+  );
+  if (target) {
+    const tinyClocks = Array.from(target.children);
+    let currentDigit = 0;
+
+    function displayNextDigit() {
+      currentDigit = (currentDigit + 1) % DECODED.length;
+      const digit = DECODED[currentDigit];
+
+      digit.forEach((tinyClockClass, tinyClockIndex) => {
+        tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
+      });
+    }
+
+    setInterval(displayNextDigit, 2.5 * 1000);
+  }
+</script>

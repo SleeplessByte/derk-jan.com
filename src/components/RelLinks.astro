@@ -3,21 +3,17 @@ import { getCollection } from "astro:content";
 
 const url = Astro.url;
 
-const posts = (await getCollection("articles")).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const posts = (await getCollection("articles"))
+  .filter((post) => post.data.published !== false)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const currentPostIndex = posts.findIndex(
-  (post) =>
-    url.pathname.endsWith(post.id) || url.pathname.endsWith(post.id + "/")
+  (post) => url.pathname.endsWith(post.id) || url.pathname.endsWith(post.id + "/"),
 );
 
 const previousPost =
-  currentPostIndex + 1 === posts.length
-    ? undefined
-    : posts[currentPostIndex + 1];
-const nextPost =
-  currentPostIndex === 0 ? undefined : posts[currentPostIndex - 1];
+  currentPostIndex + 1 === posts.length ? undefined : posts[currentPostIndex + 1];
+const nextPost = currentPostIndex === 0 ? undefined : posts[currentPostIndex - 1];
 ---
 
 {
@@ -26,15 +22,12 @@ const nextPost =
       {previousPost && (
         <p class="text-left">
           Previous Post:{" "}
-          <a href={`/articles/${previousPost.id}/`}>
-            {previousPost.data.title}
-          </a>
+          <a href={`/articles/${previousPost.id}/`}>{previousPost.data.title}</a>
         </p>
       )}
       {nextPost && (
         <p class="text-right">
-          Next Post:{" "}
-          <a href={`/articles/${nextPost.id}/`}>{nextPost.data.title}</a>
+          Next Post: <a href={`/articles/${nextPost.id}/`}>{nextPost.data.title}</a>
         </p>
       )}
     </nav>

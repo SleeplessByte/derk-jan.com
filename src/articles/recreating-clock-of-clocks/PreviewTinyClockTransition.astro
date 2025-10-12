@@ -1,0 +1,149 @@
+<section data-component="PreviewTinyClockTransition" class="preview">
+  <div data-target="digit" class="digit">
+    <div class="┌"></div><div class="─"></div><div class="─"></div><div class="┐"></div>
+    <div class="│"></div><div class="┌"></div><div class="┐"></div><div class="│"></div>
+    <div class="│"></div><div class="│"></div><div class="│"></div><div class="│"></div>
+    <div class="│"></div><div class="│"></div><div class="│"></div><div class="│"></div>
+    <div class="│"></div><div class="└"></div><div class="┘"></div><div class="│"></div>
+    <div class="└"></div><div class="─"></div><div class="─"></div><div class="┘"></div>
+  </div>
+</section>
+
+<style>
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 1rem;
+
+    & > .digit {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+
+      gap: 12px;
+
+      & > * {
+        position: relative;
+
+        outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
+        aspect-ratio: 1 / 1;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          background: light-dark(var(--color-pink-600), var(--color-orange-400));
+          width: 50%;
+          height: 5%;
+
+          left: 50%;
+          top: 50%;
+          transform-origin: left center;
+          transform: translate(0, -50%) rotate(var(--angle, 135deg));
+
+          transition: transform 0.5s ease-in-out;
+        }
+
+        &::before {
+          --angle: var(--angle-hour, -135deg);
+        }
+
+        &::after {
+          --angle: var(--angle-minute);
+        }
+
+        &.─ {
+          --angle-hour: 0deg;
+          --angle-minute: 180deg;
+        }
+
+        &.│ {
+          --angle-hour: 90deg;
+          --angle-minute: 270deg;
+        }
+
+        &.┌ {
+          --angle-hour: 0deg;
+          --angle-minute: 90deg;
+        }
+
+        &.┐ {
+          --angle-hour: 180deg;
+          --angle-minute: 90deg;
+        }
+
+        &.┘ {
+          --angle-hour: 180deg;
+          --angle-minute: 270deg;
+        }
+
+        &.└ {
+          --angle-hour: 0deg;
+          --angle-minute: 270deg;
+        }
+
+        &.∅ {
+          --angle-hour: 125deg;
+          --angle-minute: 125deg;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  const ENCODED_DIGITS = `
+┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
+│┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
+││││  .││.  ┌─┘│  .┌┘│  │└┘│  │└─┐  │└─┐  ..││  │└┘│  │└┘│
+││││  .││.  │┌─┘  .└┐│  └─┐│  └─┐│  │┌┐│  ..││  │┌┐│  └─┐│
+│└┘│  ┌┘└┐  │└─┐  ┌─┘│  ..││  ┌─┘│  │└┘│  ..││  │└┘│  ┌─┘│
+└──┘  └──┘  └──┘  └──┘  ..└┘  └──┘  └──┘  ..└┘  └──┘  └──┘
+`
+    .trim()
+    .replace(/[\r\n]/g, "")
+    .replace(/\./g, "∅");
+
+  const DECODED = Array.from(new Array(10), (_, digit) => {
+    const faces = [];
+
+    const digitWidth = 4;
+    const digitHeight = 6;
+    const digitGap = 2;
+
+    const rowLength = digitWidth * 10 + digitGap * 9;
+    const x = digit * (digitWidth + digitGap);
+
+    for (let y = 0; y < digitHeight; y++) {
+      const start = rowLength * y + x;
+      const end = start + digitWidth;
+
+      faces.push(...ENCODED_DIGITS.substring(start, end));
+    }
+
+    return faces;
+  });
+
+  const target = document.querySelector(
+    '[data-component="PreviewTinyClockTransition"] [data-target="digit"]',
+  );
+  if (target) {
+    const tinyClocks = Array.from(target.children);
+    let currentDigit = 0;
+
+    function displayNextDigit() {
+      currentDigit = (currentDigit + 1) % DECODED.length;
+      const digit = DECODED[currentDigit];
+
+      digit.forEach((tinyClockClass, tinyClockIndex) => {
+        tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
+      });
+    }
+
+    setInterval(displayNextDigit, 2.5 * 1000);
+  }
+</script>

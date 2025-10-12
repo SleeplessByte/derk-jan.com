@@ -1,4 +1,4 @@
-<section class="preview">
+<section data-component="PreviewTinyClockWiseTransition" class="preview">
   <div data-target="digit" class="digit">
     <div class="┌"></div><div class="─"></div><div class="─"></div><div class="┐"></div>
     <div class="│"></div><div class="┌"></div><div class="┐"></div><div class="│"></div>
@@ -43,7 +43,10 @@
           left: 50%;
           top: 50%;
           transform-origin: left center;
-          transform: translate(0, -50%) rotate(var(--angle, 135deg));
+          transform: translate(0, -50%)
+            rotate(calc(360deg * var(--iterations, 0) + var(--angle, 135deg)));
+
+          transition: transform 0.5s ease-in-out;
         }
 
         &::before {
@@ -65,23 +68,23 @@
         }
 
         &.┌ {
-          --angle-hour: 0deg;
-          --angle-minute: 90deg;
+          --angle-hour: 90deg;
+          --angle-minute: 0deg;
         }
 
         &.┐ {
-          --angle-hour: 180deg;
-          --angle-minute: 90deg;
+          --angle-hour: 90deg;
+          --angle-minute: 180deg;
         }
 
         &.┘ {
-          --angle-hour: 180deg;
-          --angle-minute: 270deg;
+          --angle-hour: 270deg;
+          --angle-minute: 180deg;
         }
 
         &.└ {
-          --angle-hour: 0deg;
-          --angle-minute: 270deg;
+          --angle-hour: 270deg;
+          --angle-minute: 0deg;
         }
 
         &.∅ {
@@ -126,9 +129,11 @@
     return faces;
   });
 
-  const target = document.querySelector('[data-target="digit"]');
+  const target = document.querySelector(
+    '[data-component="PreviewTinyClockWiseTransition"] [data-target="digit"]',
+  );
   if (target) {
-    const tinyClocks = Array.from(target.children);
+    const tinyClocks = Array.from(target.children) as HTMLElement[];
     let currentDigit = 0;
 
     function displayNextDigit() {
@@ -136,7 +141,16 @@
       const digit = DECODED[currentDigit];
 
       digit.forEach((tinyClockClass, tinyClockIndex) => {
-        tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
+        const tinyClock = tinyClocks[tinyClockIndex];
+        if (tinyClock.getAttribute("class") === tinyClockClass) {
+          return;
+        }
+
+        tinyClock.setAttribute("class", tinyClockClass);
+        tinyClock.style.setProperty(
+          "--iterations",
+          String(Number(tinyClock.style.getPropertyValue("--iterations") || "0") + 1),
+        );
       });
     }
 

@@ -1,4 +1,4 @@
-<section class="preview">
+<section data-component="PreviewTinyClockLayout" class="preview">
   <div class="digit">
     <div></div>
     <div></div>
@@ -13,7 +13,7 @@
     <div></div>
     <div></div>
     <div></div>
-    <div></div>
+    <div style="--angle-hour: 145deg; --angle-minute: 22deg"></div>
     <div></div>
     <div></div>
     <div></div>
@@ -42,11 +42,35 @@
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(6, 1fr);
 
-      gap: 0.5rem;
+      gap: 12px;
 
       & > * {
+        position: relative;
+
         outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
         aspect-ratio: 1 / 1;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          background: light-dark(var(--color-pink-600), var(--color-orange-400));
+          width: 50%;
+          height: 5%;
+
+          left: 50%;
+          top: 50%;
+          transform-origin: left center;
+          transform: translate(0, -50%) rotate(var(--angle, 135deg));
+        }
+
+        &::before {
+          --angle: var(--angle-hour, -135deg);
+        }
+
+        &::after {
+          --angle: var(--angle-minute);
+        }
       }
     }
   }

@@ -1,23 +1,26 @@
 ---
 layout: /src/layouts/Article.astro
 title: "Recreating the clock made of clocks"
-date: "2025-10-11T21:03:00Z"
+date: "2025-10-12T21:56:00Z"
 description: ""
+published: false
 ---
 
 import Component from "../../../../../components/Codepen/Embed.astro";
-import PreviewDigitLayout from "../../../../../components/articles/recreating-clock-of-clocks/PreviewDigitLayout.astro";
-import PreviewTinyClockLayout from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockLayout.astro";
-import PreviewTinyClockCssVariable from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockCssVariable.astro";
-import PreviewTinyClockVariations from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockVariations.astro";
-import PreviewTinyClockDigitZero from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockDigitZero.astro";
-import PreviewTinyClockDigits from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockDigits.astro";
-import PreviewTinyClockTransition from "../../../../../components/articles/recreating-clock-of-clocks/PreviewTinyClockTransition.astro";
+import PreviewDigitLayout from "../../../../../articles/recreating-clock-of-clocks/PreviewDigitLayout.astro";
+import PreviewTinyClockLayout from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockLayout.astro";
+import PreviewTinyClockCssVariable from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockCssVariable.astro";
+import PreviewTinyClockVariations from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockVariations.astro";
+import PreviewTinyClockDigitZero from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockDigitZero.astro";
+import PreviewTinyClockDigits from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockDigits.astro";
+import PreviewTinyClockTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockTransition.astro";
+import PreviewTinyClockWiseTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockWiseTransition.astro";
+import PreviewTinyClockVariationTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockVariationTransition.astro";
 
 import { Image } from "astro:assets"
 import clocksImage from "../../../../../assets/articles/recreating-clock-of-clocks/clocks.jpg";
 
-Recently [I saw][source-reddit] a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physicial].
+Recently [I saw][source-reddit] a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physical].
 [The Codepen][source-codepen] shows a clock displaying the current (local) time, and each digit is composed of smaller clocks.
 
 <Component
@@ -39,7 +42,7 @@ Having a look at the result I establish what I want my ClocksClock to be able to
 - Each digit is represented by tiny clocks in at 4x6 configuration;
 - It animates the digits by animating the tiny clocks;
 - All animations are clockwise;
-- The initial clock face is randomised;
+- The initial clock face is randomized;
 - When a tiny clock does not participate in the digit, both hands point to the bottom left.
 
 ## Challenge
@@ -267,13 +270,49 @@ This results in a smoother transition.
 
 <PreviewTinyClockTransition />
 
-The requirement however is that each face only moves clockwise, so this doesn't quite work, or at least: it's not enough.
-In order to make the transition work only clockwise, I could instead steadily increase the rotation.
+The requirement is that each face only moves clockwise, so this doesn't quite work, or at least: it's not enough.
+
+In order to make the transition work only clockwise, I could use [the FLIP technique][web-flip] to decrease the rotation by a full circle (`360deg`), and then re-apply the correct class.
+It's a really good technique for performant animations, but I think there is a way that's barely any work.
+I could instead steadily increase the rotation.
+The easiest way to accomplish this is to take the current rotation (currently set by CSS), increase it to `360deg` and then add the expected rotation.
+But using `calc()` and a second variable that is the number of times the shape has changed makes it possible to not do any calculation in JavaScript!
+
+```css {3}
+.digit > * {
+  &::before, &::after {
+    transform: translate(0, -50%) rotate(calc(360deg * var(--iterations, 0) + var(--angle, 135deg)));
+  }
+}
+```
+
+Each time the class changes, increase `--iterations` by 1 and we're done!
+
+<PreviewTinyClockWiseTransition />
+
+Ugh. Okay it satisfies the requirement, but because the hour and angle hand are animated separately based on the angles in the CSS, and those do not guarantee that the hour and minute hand make the smallest increase, this actually feels much busier than the previous implementation.
+
+I suppose the easiest way to solve this is to pull a bit of the logic into JavaScript:
+
+1. For each shape, pull the desired angles;
+2. Get the current angles;
+3. Find the minimum distance between both hands and the new angles;
+   a. If this is 0, then nothing has changed and no animation is needed;
+   b. If the new angle is smaller than the old angle, then animating to it by *adding* a circle will make it animate clockwise;
+   c. If the new angle is larger than the old angle, then animating to it can be accomplished without adding a full circle;
+4. Set the new angles;
+
+```javascript
+
+```
+
+<PreviewTinyClockVariationTransition />
 
 
 [source-reddit]: https://www.reddit.com/r/webdev/comments/1nrx5n9/clock_made_of_clocks/
-[source-physicial]: https://www.humanssince1982.com/en-eu
+[source-physical]: https://www.humanssince1982.com/en-eu
 [source-codepen]: https://codepen.io/EntropyReversed/pen/QwybYEJ
 [mdn-template]: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template
 [mdn-grid-auto-flow]: https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow
 [wiki-box-drawing-unicode]: https://en.wikipedia.org/wiki/Box-drawing_characters
+[web-flip]: https://aerotwist.com/blog/flip-your-animations/

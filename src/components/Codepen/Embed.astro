@@ -22,25 +22,18 @@ const penAuthorUrl = `https://codepen.io/${penAuthor}`;
 <script src="./script.ts"></script>
 
 <p
-  class="codepen"
+  class="codepen flex items-center justify-center p-8 border-2 border-solid border-zinc-700 dark:border-zinc-400 bg-white dark:bg-zinc-950"
   data-height={String(penHeight)}
   data-default-tab={defaultTab}
   data-slug-hash={penHash}
   data-pen-title={penTitle}
   data-user={penAuthor}
-  class="box-border flex items-center justify-center border-2 border-solid my-2 p-2"
   style={`min-height: ${penHeight}px;`}
 >
   <span>
     See the Pen <a href={penUrl} rel="noreferrer" target="_blank">{penTitle}</a>
-    by
+    (by
     <a href={penAuthorUrl} rel="noreferrer" target="_blank">@{penAuthor}</a>) on
     <a href="https://codepen.io" rel="noreferrer" target="_blank">CodePen</a>.
   </span>
 </p>
-
-<style>
-  .cp_embed_wrapper {
-    background: rgba(0, 0, 0, 0.2);
-  }
-</style>

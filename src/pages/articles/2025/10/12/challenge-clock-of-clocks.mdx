@@ -1,0 +1,55 @@
+---
+layout: /src/layouts/Article.astro
+title: "Challenge: the clock made of clocks"
+date: "2025-10-12T21:43:00Z"
+description: "HTML, CSS, and JavaScript challenge recreating the intriguing concept of a clock made of clocks."
+---
+
+import Component from "../../../../../components/Codepen/Embed.astro";
+
+import { Image } from "astro:assets"
+import clocksImage from "../../../../../assets/articles/recreating-clock-of-clocks/clocks.jpg";
+
+Recently [I saw][source-reddit] a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physical].
+[The Codepen][source-codepen] shows a clock displaying the current (local) time, and each digit is composed of smaller clocks.
+
+<Component
+  pen:title="Clock made of clocks"
+  pen:author="EntropyReversed"
+  pen:hash="QwybYEJ"
+  pen:height={300}
+  pen:tab="result"
+/>
+
+This inspired my to challenge myself (and you!) to recreate the result (with some choices of my own) **without looking at the implementation**.
+
+## Requirements
+
+Having a look at the result I establish what I want my ClocksClock to be able to do:
+
+- Use HTML, CSS, and JavaScript only;
+- Have the full current time (`HH:MM:SS`) represented;
+- Each digit is represented by tiny clocks in at 4x6 configuration;
+- It animates the digits by animating the tiny clocks;
+- All animations are clockwise;
+- The initial clock face is randomized;
+- When a tiny clock does not participate in the digit, both hands point to the bottom left.
+
+## Challenge
+
+If you like to try this yourself, you should stop here and start working on your own implementation.
+If you want to see my implementation and thought process, check back later (sign up to the newsletter?) for a detailed breakdown.
+
+Once you have finished your implementation, host it online and [share it (including the source) with all of us](https://gist.github.com/SleeplessByte/a2af7b694ae6707494513cced53a10d2).
+
+<figure>
+  <Image
+    src={clocksImage}
+    alt="A pile of wooden clocks all set to different times"
+  />
+  <figcaption>Brown and white clocks by <a href="https://unsplash.com/@jontyson" target="_blank" rel="noreferrer">Jon Tyson</a></figcaption>
+</figure>
+
+[source-reddit]: https://www.reddit.com/r/webdev/comments/1nrx5n9/clock_made_of_clocks/
+[source-physical]: https://www.humanssince1982.com/en-eu
+[source-codepen]: https://codepen.io/EntropyReversed/full/QwybYEJ

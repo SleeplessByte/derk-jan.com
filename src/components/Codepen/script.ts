@@ -509,3 +509,6 @@ window.__cp_domReady = domReady;
 // @ts-ignore
 window.__CPEmbed = CPEmbed;
 domReady(CPEmbed);
+
+// Astro integration
+document.addEventListener("astro:page-load", () => CPEmbed(undefined));
