@@ -1,4 +1,4 @@
-import { ExternalLink } from "../../ExternalLink";
+import { ExternalLink } from "../../components/ExternalLink";
 
 export default function Page() {
   return (

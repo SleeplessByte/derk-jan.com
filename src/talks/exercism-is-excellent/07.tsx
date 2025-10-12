@@ -1,6 +1,6 @@
 import { motion, type Variants } from "motion/react";
 import { useEffect, useState } from "react";
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 import track_8th from "/src/assets/talks/exercism-is-excellent/tracks/8th.svg";
 import track_abap from "/src/assets/talks/exercism-is-excellent/tracks/abap.svg";

@@ -6,7 +6,7 @@ import headlineExposure from "/src/assets/talks/exercism-is-excellent/news-expos
 import headlineInterference from "/src/assets/talks/exercism-is-excellent/news-interference.png";
 import headlineLifetime from "/src/assets/talks/exercism-is-excellent/news-lifetime.png";
 import headlinePractice from "/src/assets/talks/exercism-is-excellent/news-practice.png";
-import { SlideFooter } from "../../Slide/SlideFooter";
+import { SlideFooter } from "../../components/Slide/SlideFooter";
 
 const HEADLINES = [
   {

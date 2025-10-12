@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 import analyzerResultSrc from "/src/assets/talks/exercism-is-excellent/analyzer.jpg";
-import { Code } from "../../Slide/SlideCode";
+import { Code } from "../../components/Slide/SlideCode";
 
 const NEXT_SLIDE_COUNT = 10;
 const NEXT_SLIDE_LABEL = "Representations";

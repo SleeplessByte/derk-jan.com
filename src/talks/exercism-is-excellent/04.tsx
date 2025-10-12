@@ -70,7 +70,7 @@ import track_swift from "/src/assets/talks/exercism-is-excellent/tracks/syllabus
 import { useEffect, useState } from "react";
 import type { Variants } from "motion";
 import { motion } from "motion/react";
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 const TRACKS = [
   { src: track_8th, syllabus: false, web: true },

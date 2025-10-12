@@ -1,5 +1,5 @@
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
-import { Code } from "../../Slide/SlideCode";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
+import { Code } from "../../components/Slide/SlideCode";
 
 const NEXT_SLIDE_COUNT = 11;
 const NEXT_SLIDE_LABEL = "Representer result";

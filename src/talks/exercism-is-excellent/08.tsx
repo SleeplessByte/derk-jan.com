@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 import elixirSrc from "/src/assets/talks/exercism-is-excellent/concepts-elixir.png";
 

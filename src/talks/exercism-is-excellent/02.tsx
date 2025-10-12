@@ -1,6 +1,6 @@
 import type { Variants } from "motion";
 import { motion } from "motion/react";
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 const container: Variants = {
   hidden: { opacity: 0 },

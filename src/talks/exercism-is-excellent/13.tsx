@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { AutoSlideFooter } from "../../Slide/AutoSlideFooter";
+import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 import communitySrc from "/src/assets/talks/exercism-is-excellent/community.png";
 
