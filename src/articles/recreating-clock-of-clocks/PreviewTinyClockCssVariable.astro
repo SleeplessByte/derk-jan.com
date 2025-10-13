@@ -37,7 +37,7 @@
     display: grid;
     grid-template-columns: 13.5rem 1fr;
 
-    max-width: 480px;
+    max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
@@ -46,6 +46,7 @@
 
   .preview {
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+    background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
     padding: 1rem;
 
@@ -57,46 +58,21 @@
       grid-template-columns: repeat(1, 1fr);
       grid-template-rows: repeat(1, 1fr);
 
-      gap: 12px;
-
-      & > * {
-        position: relative;
-
-        outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
-        aspect-ratio: 1 / 1;
-
-        &::before,
-        &::after {
-          content: "";
-          position: absolute;
-          background: light-dark(var(--color-pink-600), var(--color-orange-400));
-          width: 50%;
-          height: 5%;
-
-          left: 50%;
-          top: 50%;
-          transform-origin: left center;
-          transform: translate(0, -50%) rotate(var(--angle, 135deg));
-        }
-
-        &::before {
-          --angle: var(--angle-hour, -135deg);
-        }
-
-        &::after {
-          --angle: var(--angle-minute);
-        }
-      }
+      gap: 0.5rem;
     }
   }
 </style>
 
 <!-- client:visible -->
 <script>
-  const component = document.querySelector(
-    '[data-component="PreviewTinyClockCssVariable"]',
-  );
-  if (component) {
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewTinyClockCssVariable"]',
+    );
+    if (!component) {
+      return;
+    }
+
     const clock = component.querySelector<HTMLElement>('[data-target="clock"]')!;
     const inputHour = component.querySelector<HTMLInputElement>('input[name="hour"]')!;
     const outputHour = component.querySelector<HTMLOutputElement>(
@@ -131,5 +107,5 @@
 
     inputHour.removeAttribute("disabled");
     inputMinute.removeAttribute("disabled");
-  }
+  });
 </script>

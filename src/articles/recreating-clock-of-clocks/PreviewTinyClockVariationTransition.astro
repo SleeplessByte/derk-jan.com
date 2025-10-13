@@ -1,12 +1,43 @@
 <style>
-  .preview {
-    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+  .component {
+    display: grid;
+    grid-template-rows: 13.5rem 1fr;
 
     max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
+    gap: 2rem;
+  }
+
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+    background-color: light-dark(var(--color-white), var(--color-zinc-950));
+
+    width: 100%;
+
     padding: 1rem;
+
+    max-width: 13.5rem;
+    max-height: 13.5rem;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    & > .digit {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(1, 1fr);
+
+      gap: 0.5rem;
+
+      & > * {
+        &::before,
+        &::after {
+          transition: transform 0.5s ease-in-out;
+        }
+      }
+    }
   }
 
   .controls {
@@ -20,13 +51,19 @@
 
       cursor: pointer;
 
+      &:disabled {
+        cursor: not-allowed;
+      }
+
       & > * {
         color: light-dark(var(--color-zinc-900), var(--color-zinc-100));
       }
 
-      &:hover > *,
-      &:focus > * {
-        color: light-dark(var(--color-green-600), var(--color-green-600));
+      &:enabled {
+        &:hover > *,
+        &:focus > * {
+          color: light-dark(oklch(62.7% 0.194 149.214), oklch(79.2% 0.209 151.711));
+        }
       }
     }
   }
@@ -37,112 +74,158 @@
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(1, 1fr);
 
-    gap: 12px;
-
-    & > * {
-      position: relative;
-
-      color: light-dark(var(--color-pink-600), var(--color-orange-400));
-
-      outline: 1px solid currentColor;
-      aspect-ratio: 1 / 1;
-
-      &::before,
-      &::after {
-        content: "";
-        position: absolute;
-        background: currentColor;
-        width: 50%;
-        height: 5%;
-
-        left: 50%;
-        top: 50%;
-        transform-origin: left center;
-        transform: translate(0, -50%) rotate(var(--angle, 135deg));
-
-        transition: transform 0.5s ease-in-out;
-      }
-
-      &::before {
-        --angle: var(--angle-hour, -135deg);
-      }
-
-      &::after {
-        --angle: var(--angle-minute);
-      }
-
-      &.─ {
-        --angle-hour: 0deg;
-        --angle-minute: 180deg;
-      }
-
-      &.│ {
-        --angle-hour: 90deg;
-        --angle-minute: 270deg;
-      }
-
-      &.┌ {
-        --angle-hour: 0deg;
-        --angle-minute: 90deg;
-      }
-
-      &.┐ {
-        --angle-hour: 180deg;
-        --angle-minute: 90deg;
-      }
-
-      &.┘ {
-        --angle-hour: 180deg;
-        --angle-minute: 270deg;
-      }
-
-      &.└ {
-        --angle-hour: 0deg;
-        --angle-minute: 270deg;
-      }
-
-      &.∅ {
-        --angle-hour: 125deg;
-        --angle-minute: 125deg;
-      }
-    }
+    gap: 0.5rem;
   }
 </style>
 
-<div class="controls">
-  <button type="button" data-shape="─" class="digit">
-    <div class="─">
-      <span class="sr-only">Horizontal</span>
+<div data-component="PreviewTinyClockVariationTransition" class="component">
+  <section class="preview">
+    <div class="digit">
+      <div data-target="clock" class="∅"></div>
     </div>
-  </button>
-  <button type="button" data-shape="│" class="digit">
-    <div class="│">
-      <span class="sr-only">Vertical</span>
-    </div>
-  </button>
-  <button type="button" data-shape="┌" class="digit">
-    <div class="┌">
-      <span class="sr-only">Corner right and down</span>
-    </div>
-  </button>
-  <button type="button" data-shape="┐" class="digit">
-    <div class="┐">
-      <span class="sr-only">Corner left and down</span>
-    </div>
-  </button>
-  <button type="button" data-shape="┘" class="digit">
-    <div class="┘">
-      <span class="sr-only">Corner left and up</span>
-    </div>
-  </button>
-  <button type="button" data-shape="└" class="digit">
-    <div class="└">
-      <span class="sr-only">Corner right and up</span>
-    </div>
-  </button>
-  <button type="button" data-shape="∅" class="digit">
-    <div class="∅">
-      <span class="sr-only">Inactive</span>
-    </div>
-  </button>
+  </section>
+
+  <div class="controls" data-target="controls">
+    <button type="button" data-shape="─" class="digit" disabled>
+      <div class="─">
+        <span class="sr-only">Horizontal</span>
+      </div>
+    </button>
+    <button type="button" data-shape="│" class="digit" disabled>
+      <div class="│">
+        <span class="sr-only">Vertical</span>
+      </div>
+    </button>
+    <button type="button" data-shape="┌" class="digit" disabled>
+      <div class="┌">
+        <span class="sr-only">Corner right and down</span>
+      </div>
+    </button>
+    <button type="button" data-shape="┐" class="digit" disabled>
+      <div class="┐">
+        <span class="sr-only">Corner left and down</span>
+      </div>
+    </button>
+    <button type="button" data-shape="┘" class="digit" disabled>
+      <div class="┘">
+        <span class="sr-only">Corner left and up</span>
+      </div>
+    </button>
+    <button type="button" data-shape="└" class="digit" disabled>
+      <div class="└">
+        <span class="sr-only">Corner right and up</span>
+      </div>
+    </button>
+    <button type="button" data-shape="∅" class="digit" disabled>
+      <div class="∅">
+        <span class="sr-only">Inactive</span>
+      </div>
+    </button>
+  </div>
 </div>
+
+<script>
+  // Reading an angle from a property from a style
+  function read(style: CSSStyleDeclaration, property: string): number {
+    return Number(style.getPropertyValue(property).replace("deg", ""));
+  }
+
+  // Writing an angle to a property on an element's style
+  function write(style: CSSStyleDeclaration, property: string, angle: number) {
+    style.setProperty(property, `${angle}deg`);
+  }
+
+  // Update currentHour and currentMinute based on the given angles
+  function setHands([angleA, angleB]: [number, number]) {
+    // Normalize the current angles to 0 - 360
+    const currentRelativeHour = currentHour % 360;
+    const currentRelativeMinute = currentMinute % 360;
+
+    // This sorts the angles ensuring that the least amount of degrees will be
+    // rotated. This is not a requirement for the solution, but it makes for the
+    // least busy transition!
+    const [nextRelativeHour, nextRelativeMinute] =
+      distance(currentRelativeHour, angleA) + distance(currentRelativeMinute, angleB) <
+      distance(currentRelativeHour, angleB) + distance(currentRelativeMinute, angleA)
+        ? [angleA, angleB]
+        : [angleB, angleA];
+
+    // The new angle must be larger (or equal) to the current, so the distance
+    // between the current angle and the next angle is what needs to be added to
+    // complete the transition
+    currentHour += distance(currentRelativeHour, nextRelativeHour);
+    currentMinute += distance(currentRelativeMinute, nextRelativeMinute);
+  }
+
+  // Calculating the distance between a current hand and a destination
+  function distance(subject: number, destination: number) {
+    if (subject <= destination) {
+      return destination - subject;
+    }
+
+    return distance(subject, destination + 360);
+  }
+
+  const degrees: Record<string, [number, number]> = {};
+  let currentHour = 135;
+  let currentMinute = 135;
+
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewTinyClockVariationTransition"]',
+    );
+    if (!component) {
+      return;
+    }
+
+    const target = component.querySelector<HTMLElement>('[data-target="clock"]');
+    const controls = component.querySelector<HTMLElement>('[data-target="controls"]');
+
+    if (!target || !controls) {
+      throw new Error(
+        'Expected [data-component] PreviewTinyClockVariationTransition with [data-target="clock"] and [data-target="controls"]',
+      );
+    }
+
+    // Getting the current angles. The target is the clock that will be animated
+    // after clicking one of the buttons.
+    const targetStyle = window.getComputedStyle(target);
+    currentHour = read(targetStyle, "--angle-hour");
+    currentMinute = read(targetStyle, "--angle-minute");
+
+    // Enable the buttons
+    controls.querySelectorAll("button[data-shape]").forEach((button) => {
+      button.removeAttribute("disabled");
+    });
+
+    controls.addEventListener("click", (event) => {
+      if (!event.target || !(event.target instanceof Element)) {
+        return;
+      }
+
+      const button = event.target.closest<HTMLButtonElement>("button[data-shape]");
+      const shape = button?.getAttribute("data-shape");
+      if (!shape) {
+        return;
+      }
+
+      if (!degrees[shape]) {
+        const shapeElement = button!.querySelector(`.${shape}`);
+        if (!shapeElement) {
+          return;
+        }
+
+        const shapeStyle = window.getComputedStyle(shapeElement);
+        const desiredAngleA = read(shapeStyle, "--angle-hour");
+        const desiredAngleB = read(shapeStyle, "--angle-minute");
+
+        degrees[shape] = [desiredAngleA, desiredAngleB];
+      }
+
+      setHands(degrees[shape]);
+
+      write(target.style, "--angle-hour", currentHour);
+      write(target.style, "--angle-minute", currentMinute);
+    });
+  });
+</script>

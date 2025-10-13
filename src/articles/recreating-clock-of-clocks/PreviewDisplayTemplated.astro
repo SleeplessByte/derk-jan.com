@@ -1,0 +1,169 @@
+<section data-component="PreviewDisplayTemplated" class="component">
+  <div class="preview rounded-sm">
+    <template data-template="digit">
+      <div class="digit">
+        <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
+        </div>
+        <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
+        </div>
+        <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
+        </div>
+        <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
+        </div>
+        <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
+        </div>
+        <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
+        </div>
+      </div>
+    </template>
+
+    <div class="display" data-target="display"></div>
+  </div>
+
+  <div class="controls mt-2 flex flex-wrap gap-2" data-target="controls">
+    <button
+      type="button"
+      disabled
+      data-action="reset"
+      class="flex items-center space-x-2 rounded-sm border-2
+        outline-none focus-visible:outline-none
+        disabled:cursor-not-allowed disabled:opacity-75
+        border-zinc-700 dark:border-zinc-300 py-1 px-3 text-sm transition-colors
+        bg-white enabled:hover:bg-zinc-50 enabled:active:bg-zinc-200 enabled:hover:inset-shadow-xs enabled:active:inset-shadow-2xs
+        dark:bg-zinc-800 dark:enabled:hover:bg-zinc-700 dark:enabled:active:bg-zinc-600
+        focus:border-orange-400 dark:focus:border-pink-400"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        class="size-4"
+        role="presentation"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
+          clip-rule="evenodd"></path>
+      </svg>
+      <span>Reset</span>
+    </button>
+  </div>
+</section>
+
+<style>
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+    background-color: light-dark(var(--color-white), var(--color-zinc-950));
+
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 1rem;
+    padding: clamp(2px, 1.5vw, 1rem);
+
+    & > .display {
+      display: flex;
+      flex-direction: row;
+
+      gap: 1rem;
+      gap: clamp(2px, 1.5vw, 1rem);
+
+      width: 100%;
+
+      & > .digit {
+        flex: 1 1 0;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+
+        gap: 0.5rem;
+        gap: clamp(1px, 1vw, 0.5rem);
+      }
+
+      & > :nth-child(3) {
+        margin-left: 2rem;
+        margin-left: clamp(4px, 2.5vw, 2rem);
+      }
+
+      & > :nth-child(4) {
+        margin-right: 2rem;
+        margin-right: clamp(4px, 2.5vw, 2rem);
+      }
+    }
+  }
+</style>
+
+<script>
+  function write(style: CSSStyleDeclaration, property: string, angle: number) {
+    style.setProperty(property, `${angle}deg`);
+  }
+
+  function randomAngle(): number {
+    return Math.floor(Math.random() * 360);
+  }
+
+  function randomize(tinyClocks: HTMLCollection) {
+    for (const tinyClock of tinyClocks) {
+      if (tinyClock instanceof HTMLElement) {
+        write(tinyClock.style, "--angle-hour", randomAngle());
+        write(tinyClock.style, "--angle-minute", randomAngle());
+      }
+    }
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewDisplayTemplated"]',
+    );
+    if (!component) {
+      return;
+    }
+
+    const template = component.querySelector<HTMLTemplateElement>(
+      'template[data-template="digit"]',
+    );
+    const target = component.querySelector<HTMLElement>('[data-target="display"]');
+    const controls = component.querySelector<HTMLElement>('[data-target="controls"]');
+
+    if (!template || !target || !controls) {
+      throw new Error(
+        'Expected [data-component] PreviewDisplayTemplated with [data-template="digit"], [data-target="display"], and [data-target="controls"]',
+      );
+    }
+
+    for (let i = 0; i < 6; i++) {
+      const clone = template.content.cloneNode(true) as HTMLElement;
+      randomize(clone.firstElementChild!.children);
+
+      target.appendChild(clone);
+    }
+
+    controls.addEventListener("click", (event) => {
+      const clicked = event.target;
+      if (!(clicked instanceof Element)) {
+        return;
+      }
+
+      const action = clicked.closest("button[data-action]");
+      if (!action) {
+        return;
+      }
+
+      const action_ = action.getAttribute("data-action");
+      switch (action_) {
+        case "reset": {
+          target
+            .querySelectorAll<HTMLElement>(".digit")
+            .forEach((digit) => randomize(digit.children));
+          break;
+        }
+      }
+    });
+
+    controls.querySelectorAll("button[data-action]:disabled").forEach((button) => {
+      button.removeAttribute("disabled");
+    });
+  });
+</script>

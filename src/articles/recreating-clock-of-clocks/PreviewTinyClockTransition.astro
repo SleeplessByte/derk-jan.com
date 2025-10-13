@@ -12,8 +12,9 @@
 <style>
   .preview {
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+    background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
-    max-width: 480px;
+    max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
@@ -24,71 +25,11 @@
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(6, 1fr);
 
-      gap: 12px;
-
+      gap: 0.5rem;
       & > * {
-        position: relative;
-
-        outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
-        aspect-ratio: 1 / 1;
-
         &::before,
         &::after {
-          content: "";
-          position: absolute;
-          background: light-dark(var(--color-pink-600), var(--color-orange-400));
-          width: 50%;
-          height: 5%;
-
-          left: 50%;
-          top: 50%;
-          transform-origin: left center;
-          transform: translate(0, -50%) rotate(var(--angle, 135deg));
-
           transition: transform 0.5s ease-in-out;
-        }
-
-        &::before {
-          --angle: var(--angle-hour, -135deg);
-        }
-
-        &::after {
-          --angle: var(--angle-minute);
-        }
-
-        &.─ {
-          --angle-hour: 0deg;
-          --angle-minute: 180deg;
-        }
-
-        &.│ {
-          --angle-hour: 90deg;
-          --angle-minute: 270deg;
-        }
-
-        &.┌ {
-          --angle-hour: 0deg;
-          --angle-minute: 90deg;
-        }
-
-        &.┐ {
-          --angle-hour: 180deg;
-          --angle-minute: 90deg;
-        }
-
-        &.┘ {
-          --angle-hour: 180deg;
-          --angle-minute: 270deg;
-        }
-
-        &.└ {
-          --angle-hour: 0deg;
-          --angle-minute: 270deg;
-        }
-
-        &.∅ {
-          --angle-hour: 125deg;
-          --angle-minute: 125deg;
         }
       }
     }
@@ -128,12 +69,25 @@
     return faces;
   });
 
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockTransition"] [data-target="digit"]',
-  );
-  if (target) {
+  let interval: NodeJS.Timeout | undefined;
+  let currentDigit = 0;
+
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewTinyClockTransition"]',
+    );
+    if (!component) {
+      return;
+    }
+
+    const target = component.querySelector('[data-target="digit"]');
+    if (!target) {
+      throw new Error(
+        'Expected [data-component] PreviewTinyClockTransition with [data-target="digit"]',
+      );
+    }
+
     const tinyClocks = Array.from(target.children);
-    let currentDigit = 0;
 
     function displayNextDigit() {
       currentDigit = (currentDigit + 1) % DECODED.length;
@@ -144,6 +98,15 @@
       });
     }
 
-    setInterval(displayNextDigit, 2.5 * 1000);
-  }
+    interval = setInterval(displayNextDigit, 2 * 1000);
+  });
+
+  document.addEventListener("astro:before-preparation", () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = undefined;
+    }
+
+    currentDigit = 0;
+  });
 </script>
