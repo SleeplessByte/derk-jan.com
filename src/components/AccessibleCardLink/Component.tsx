@@ -29,7 +29,7 @@ export function AccessibleCardLink({
   useEffect(() => {
     onMouseUpRef.current = (e: OnMouseUpParameters[0]) => {
       // Ignore because this is on the link
-      if (e.target instanceof HTMLElement) {
+      if (e.target instanceof Element) {
         if (e.target.closest("a")) {
           return;
         }
