@@ -11,7 +11,7 @@
     position: absolute;
     background: currentColor;
     width: 50%;
-    height: 5%;
+    height: var(--thickness, 5%);
 
     left: 50%;
     top: 50%;

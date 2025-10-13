@@ -31,15 +31,6 @@
 </style>
 
 <script>
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockDigits"] [data-target="digit"]',
-  );
-  if (!target) {
-    throw new Error(
-      'Expected [data-component] PreviewTinyClockDigits with [data-target="digit"]',
-    );
-  }
-
   const ENCODED_DIGITS = `
 ┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
 │┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
@@ -72,17 +63,40 @@
     return faces;
   });
 
-  const tinyClocks = Array.from(target.children);
+  let interval: NodeJS.Timeout | undefined;
   let currentDigit = 0;
 
-  function displayNextDigit() {
-    currentDigit = (currentDigit + 1) % DECODED.length;
-    const digit = DECODED[currentDigit];
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector('[data-component="PreviewTinyClockDigits"]');
+    if (!component) {
+      return;
+    }
 
-    digit.forEach((tinyClockClass, tinyClockIndex) => {
-      tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
-    });
-  }
+    const target = document.querySelector('[data-target="digit"]');
+    if (!target) {
+      throw new Error(
+        'Expected [data-component] PreviewTinyClockDigits with [data-target="digit"]',
+      );
+    }
 
-  setInterval(displayNextDigit, 1000);
+    const tinyClocks = Array.from(target.children);
+
+    function displayNextDigit() {
+      currentDigit = (currentDigit + 1) % DECODED.length;
+      const digit = DECODED[currentDigit];
+
+      digit.forEach((tinyClockClass, tinyClockIndex) => {
+        tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
+      });
+    }
+
+    interval = setInterval(displayNextDigit, 1000);
+  });
+
+  document.addEventListener("astro:before-preparation", () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = undefined;
+    }
+  });
 </script>

@@ -96,23 +96,6 @@
 </style>
 
 <script>
-  const component = document.querySelector('[data-component="PreviewDisplayTemplated"]');
-  if (!component) {
-    throw new Error("Expected [data-component] PreviewDisplayTemplated");
-  }
-
-  const template = component.querySelector<HTMLTemplateElement>(
-    'template[data-template="digit"]',
-  );
-  const target = component.querySelector<HTMLElement>('[data-target="display"]');
-  const controls = component.querySelector<HTMLElement>('[data-target="controls"]');
-
-  if (!template || !target || !controls) {
-    throw new Error(
-      'Expected [data-component] PreviewDisplayTemplated with [data-template="digit"], [data-target="display"], and [data-target="controls"]',
-    );
-  }
-
   function write(style: CSSStyleDeclaration, property: string, angle: number) {
     style.setProperty(property, `${angle}deg`);
   }
@@ -130,36 +113,57 @@
     }
   }
 
-  for (let i = 0; i < 6; i++) {
-    const clone = template.content.cloneNode(true) as HTMLElement;
-    randomize(clone.firstElementChild!.children);
-
-    target.appendChild(clone);
-  }
-
-  controls.addEventListener("click", (event) => {
-    const clicked = event.target;
-    if (!(clicked instanceof Element)) {
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewDisplayTemplated"]',
+    );
+    if (!component) {
       return;
     }
 
-    const action = clicked.closest("button[data-action]");
-    if (!action) {
-      return;
+    const template = component.querySelector<HTMLTemplateElement>(
+      'template[data-template="digit"]',
+    );
+    const target = component.querySelector<HTMLElement>('[data-target="display"]');
+    const controls = component.querySelector<HTMLElement>('[data-target="controls"]');
+
+    if (!template || !target || !controls) {
+      throw new Error(
+        'Expected [data-component] PreviewDisplayTemplated with [data-template="digit"], [data-target="display"], and [data-target="controls"]',
+      );
     }
 
-    const action_ = action.getAttribute("data-action");
-    switch (action_) {
-      case "reset": {
-        target
-          .querySelectorAll<HTMLElement>(".digit")
-          .forEach((digit) => randomize(digit.children));
-        break;
+    for (let i = 0; i < 6; i++) {
+      const clone = template.content.cloneNode(true) as HTMLElement;
+      randomize(clone.firstElementChild!.children);
+
+      target.appendChild(clone);
+    }
+
+    controls.addEventListener("click", (event) => {
+      const clicked = event.target;
+      if (!(clicked instanceof Element)) {
+        return;
       }
-    }
-  });
 
-  controls.querySelectorAll("button[data-action]:disabled").forEach((button) => {
-    button.removeAttribute("disabled");
+      const action = clicked.closest("button[data-action]");
+      if (!action) {
+        return;
+      }
+
+      const action_ = action.getAttribute("data-action");
+      switch (action_) {
+        case "reset": {
+          target
+            .querySelectorAll<HTMLElement>(".digit")
+            .forEach((digit) => randomize(digit.children));
+          break;
+        }
+      }
+    });
+
+    controls.querySelectorAll("button[data-action]:disabled").forEach((button) => {
+      button.removeAttribute("disabled");
+    });
   });
 </script>

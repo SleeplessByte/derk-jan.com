@@ -1,5 +1,5 @@
-<section class="component" data-component="FunctionalClocksClock">
-  <div class="preview rounded-sm">
+<section class="component" data-component="PreviewClocksClock">
+  <div class="wrapper rounded-sm shadow-md dark:shadow-xl">
     <template data-template="digit">
       <div class="digit">
         <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅">
@@ -20,7 +20,7 @@
     <div class="display" data-target="display"></div>
   </div>
 
-  <div class="controls mt-2 flex flex-wrap gap-2" data-target="controls">
+  <div class="controls mt-4 flex flex-wrap gap-2" data-target="controls">
     <button
       type="button"
       disabled
@@ -105,8 +105,7 @@
 </section>
 
 <style>
-  .preview {
-    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+  .wrapper {
     background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
     max-width: 50rem;
@@ -125,6 +124,8 @@
 
       width: 100%;
 
+      --thickness: 12%;
+
       & > .digit {
         flex: 1 1 0;
 
@@ -132,13 +133,23 @@
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(6, 1fr);
 
-        gap: 4px;
+        gap: 1px;
 
         & > * {
-          outline-color: light-dark(var(--color-zinc-300), var(--color-zinc-700));
+          outline: none;
+          border-radius: 9999px;
+          border: 2px solid light-dark(var(--color-zinc-200), var(--color-zinc-900));
+
+          background: linear-gradient(
+            135deg,
+            light-dark(var(--color-zinc-200), var(--color-zinc-950)) 15%,
+            light-dark(var(--color-zinc-50), var(--color-zinc-800))
+          );
+          box-shadow: 1px 1px 5px light-dark(var(--color-zinc-200), var(--color-zinc-900));
 
           &::before,
           &::after {
+            border-radius: 9999px;
             transition: transform 0.5s ease-in-out;
           }
         }
@@ -266,6 +277,9 @@
     }
   }
 
+  let lastDisplayedTime = 0;
+  let isActive = false;
+
   function check() {
     if (!isActive) {
       return;
@@ -304,11 +318,8 @@
   const collections: HTMLCollection[] = [];
   const degrees: Record<string, [number, number]> = {};
 
-  let lastDisplayedTime = 0;
-  let isActive = false;
-
   document.addEventListener("astro:page-load", () => {
-    const component = document.querySelector('[data-component="FunctionalClocksClock"]');
+    const component = document.querySelector('[data-component="PreviewClocksClock"]');
     if (!component) {
       return;
     }
@@ -321,7 +332,7 @@
 
     if (!template || !target || !controls) {
       throw new Error(
-        'Expected [data-component] FunctionalClocksClock with [data-template="digit"], [data-target="display"], and [data-target="controls"]',
+        'Expected [data-component] PreviewClocksClock with [data-template="digit"], [data-target="display"], and [data-target="controls"]',
       );
     }
 
@@ -397,6 +408,11 @@
     controls.querySelectorAll("button[data-action]:disabled").forEach((button) => {
       button.removeAttribute("disabled");
     });
+
+    if (controls.getAttribute("data-autoplay") === "true") {
+      isActive = true;
+      requestAnimationFrame(check);
+    }
   });
 
   document.addEventListener("astro:before-preparation", () => {

@@ -38,15 +38,6 @@
 </style>
 
 <script>
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockWiseTransition"] [data-target="digit"]',
-  );
-  if (!target) {
-    throw new Error(
-      'Expected [data-component] PreviewTinyClockWiseTransition with [data-target="digit"]',
-    );
-  }
-
   const ENCODED_DIGITS = `
 ┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
 │┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
@@ -79,26 +70,52 @@
     return faces;
   });
 
-  const tinyClocks = Array.from(target.children) as HTMLElement[];
   let currentDigit = 0;
+  let interval: undefined | NodeJS.Timeout;
 
-  function displayNextDigit() {
-    currentDigit = (currentDigit + 1) % DECODED.length;
-    const digit = DECODED[currentDigit];
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewTinyClockWiseTransition"]',
+    );
+    if (!component) {
+      return;
+    }
 
-    digit.forEach((tinyClockClass, tinyClockIndex) => {
-      const tinyClock = tinyClocks[tinyClockIndex];
-      if (tinyClock.getAttribute("class") === tinyClockClass) {
-        return;
-      }
-
-      tinyClock.setAttribute("class", tinyClockClass);
-      tinyClock.style.setProperty(
-        "--iterations",
-        String(Number(tinyClock.style.getPropertyValue("--iterations") || "0") + 1),
+    const target = component.querySelector('[data-target="digit"]');
+    if (!target) {
+      throw new Error(
+        'Expected [data-component] PreviewTinyClockWiseTransition with [data-target="digit"]',
       );
-    });
-  }
+    }
 
-  setInterval(displayNextDigit, 2 * 1000);
+    const tinyClocks = Array.from(target.children) as HTMLElement[];
+    function displayNextDigit() {
+      currentDigit = (currentDigit + 1) % DECODED.length;
+      const digit = DECODED[currentDigit];
+
+      digit.forEach((tinyClockClass, tinyClockIndex) => {
+        const tinyClock = tinyClocks[tinyClockIndex];
+        if (tinyClock.getAttribute("class") === tinyClockClass) {
+          return;
+        }
+
+        tinyClock.setAttribute("class", tinyClockClass);
+        tinyClock.style.setProperty(
+          "--iterations",
+          String(Number(tinyClock.style.getPropertyValue("--iterations") || "0") + 1),
+        );
+      });
+    }
+
+    interval = setInterval(displayNextDigit, 2 * 1000);
+  });
+
+  document.addEventListener("astro:before-preparation", () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = undefined;
+    }
+
+    currentDigit = 0;
+  });
 </script>

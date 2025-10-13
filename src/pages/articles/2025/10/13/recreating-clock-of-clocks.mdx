@@ -1,9 +1,8 @@
 ---
 layout: /src/layouts/Article.astro
 title: "Recreating the clock made of clocks"
-date: "2025-10-12T21:56:00Z"
-description: ""
-published: false
+date: "2025-10-13T16:17:00Z"
+description: "My implementation and explanation of the HTML, CSS, and JavaScript challenge to recreate the clock made of clocks."
 ---
 
 import Component from "../../../../../components/Codepen/Embed.astro";
@@ -22,22 +21,34 @@ import PreviewTinyClockWiseSmoothTransition from "../../../../../articles/recrea
 import PreviewDisplayLayout from "../../../../../articles/recreating-clock-of-clocks/PreviewDisplayLayout.astro";
 import PreviewDisplayTemplated from "../../../../../articles/recreating-clock-of-clocks/PreviewDisplayTemplated.astro";
 import FunctionalClocksClock from "../../../../../articles/recreating-clock-of-clocks/FunctionalClocksClock.astro";
+import PreviewClocksClock from "../../../../../articles/recreating-clock-of-clocks/PreviewClocksClock.astro";
+import ClocksClock from "../../../../../articles/recreating-clock-of-clocks/ClocksClock.astro";
 
 import { Image } from "astro:assets"
 import clocksImage from "../../../../../assets/articles/recreating-clock-of-clocks/clocks.jpg";
 
-This article is my implementation for [the challenge I posted earlier](./challenge-clock-of-clocks) based on a [Reddit post I saw][source-reddit] of a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physical].
+This article is my implementation for [the challenge I posted earlier](../12/challenge-clock-of-clocks) based on a [Reddit post I saw][source-reddit] of a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physical].
 [The Codepen][source-codepen] shows a clock displaying the current (local) time, and each digit is composed of smaller clocks.
 
-<Component
-  pen:title="Clock made of clocks"
-  pen:author="EntropyReversed"
-  pen:hash="QwybYEJ"
-  pen:height={300}
-  pen:tab="result"
-/>
+<ClocksClock autoplay name="ClocksClockResult" />
 
-Follow along as I recreate the result (with some choices of my own) without looking at the implementation.
+Follow along as I recreate the result shown above without looking at the implementation of the Codepen.
+
+## Table of Contents
+
+1. [Requirements](#requirements)
+2. [Challenge](#challenge)
+3. [Digit layout](#digit-layout)
+4. [Tiny clock layout](#tiny-clock-layout)
+5. [Building a digit](#building-a-digit)
+6. [From unicode characters to digits](#from-unicode-characters-to-digits)
+7. [Animating a digit](#animating-a-digit)
+8. [Initial chaos](#initial-chaos)
+9. [Building the (big) clock layout](#building-the-big-clock-layout)
+10. [Using templates to fill the clock display](#using-templates-to-fill-the-clock-display)
+11. [Hooking up the current time](#hooking-up-the-current-time)
+12. [Functional result](#functional-result)
+13. [Visual changes](#visual-changes)
 
 ## Requirements
 
@@ -571,6 +582,22 @@ It satisfies the following requirements:
 
 I can probably make some further non-functional changes.
 
+## Visual changes
+
+Let's add a few changes to the tiny clocks:
+
+- Make them circular;
+- Give them a slight border;
+- Give them a slight inset shadow, for example using a background gradient;
+- Give them a regular slightly diffused box-shadow;
+- Make the hands thicker;
+- Add a border-radius to the hands so they are rounded-off;
+
+...and then see what that looks like.
+
+<PreviewClocksClock />
+
+Yeah, pretty happy with this result!
 
 [source-reddit]: https://www.reddit.com/r/webdev/comments/1nrx5n9/clock_made_of_clocks/
 [source-physical]: https://www.humanssince1982.com/en-eu

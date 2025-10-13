@@ -38,15 +38,6 @@
 </style>
 
 <script>
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockWiseSmoothTransition"] [data-target="digit"]',
-  );
-  if (!target) {
-    throw new Error(
-      'Expected [data-component] PreviewTinyClockWiseSmoothTransition with [data-target="digit"]',
-    );
-  }
-
   const ENCODED_DIGITS = `
 ┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
 │┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
@@ -127,40 +118,67 @@
 
   const degrees: Record<string, [number, number]> = {};
 
-  const tinyClocks = Array.from(target.children) as HTMLElement[];
-  const templateTinyClock = tinyClocks[0];
+  let currentDigit = 0;
+  let interval: NodeJS.Timeout | undefined;
 
-  // Read all shapes by temporarily turning the first tiny clock's clock into
-  // each valid shape, with the final shape being the original shape.
-  const shapes = ["┌", "┐", "┘", "└", "─", "│", "∅"];
-  const shapeStyle = window.getComputedStyle(templateTinyClock);
-  shapes.forEach((shape) => {
-    templateTinyClock.setAttribute("class", shape);
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewTinyClockWiseSmoothTransition"]',
+    );
+    if (!component) {
+      return;
+    }
 
-    const desiredAngleA = read(shapeStyle, "--angle-hour");
-    const desiredAngleB = read(shapeStyle, "--angle-minute");
+    const target = component.querySelector('[data-target="digit"]');
+    if (!target) {
+      throw new Error(
+        'Expected [data-component] PreviewTinyClockWiseSmoothTransition with [data-target="digit"]',
+      );
+    }
 
-    degrees[shape] = [desiredAngleA, desiredAngleB];
+    const tinyClocks = Array.from(target.children) as HTMLElement[];
+    const templateTinyClock = tinyClocks[0];
+
+    // Read all shapes by temporarily turning the first tiny clock's clock into
+    // each valid shape, with the final shape being the original shape.
+    const shapes = ["┌", "┐", "┘", "└", "─", "│", "∅"];
+    const shapeStyle = window.getComputedStyle(templateTinyClock);
+    shapes.forEach((shape) => {
+      templateTinyClock.setAttribute("class", shape);
+
+      const desiredAngleA = read(shapeStyle, "--angle-hour");
+      const desiredAngleB = read(shapeStyle, "--angle-minute");
+
+      degrees[shape] = [desiredAngleA, desiredAngleB];
+    });
+
+    function displayNextDigit() {
+      currentDigit = (currentDigit + 1) % DECODED.length;
+      const digit = DECODED[currentDigit];
+
+      digit.forEach((tinyClockClass, tinyClockIndex) => {
+        const tinyClock = tinyClocks[tinyClockIndex];
+        const tinyClockStyle = window.getComputedStyle(tinyClock);
+
+        const [nextHour, nextMinute] = nextHands(
+          [read(tinyClockStyle, "--angle-hour"), read(tinyClockStyle, "--angle-minute")],
+          degrees[tinyClockClass],
+        );
+
+        write(tinyClock.style, "--angle-hour", nextHour);
+        write(tinyClock.style, "--angle-minute", nextMinute);
+      });
+    }
+
+    setInterval(displayNextDigit, 2 * 1000);
   });
 
-  let currentDigit = 0;
-  function displayNextDigit() {
-    currentDigit = (currentDigit + 1) % DECODED.length;
-    const digit = DECODED[currentDigit];
+  document.addEventListener("astro:before-preparation", () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = undefined;
+    }
 
-    digit.forEach((tinyClockClass, tinyClockIndex) => {
-      const tinyClock = tinyClocks[tinyClockIndex];
-      const tinyClockStyle = window.getComputedStyle(tinyClock);
-
-      const [nextHour, nextMinute] = nextHands(
-        [read(tinyClockStyle, "--angle-hour"), read(tinyClockStyle, "--angle-minute")],
-        degrees[tinyClockClass],
-      );
-
-      write(tinyClock.style, "--angle-hour", nextHour);
-      write(tinyClock.style, "--angle-minute", nextMinute);
-    });
-  }
-
-  setInterval(displayNextDigit, 2 * 1000);
+    currentDigit = 0;
+  });
 </script>

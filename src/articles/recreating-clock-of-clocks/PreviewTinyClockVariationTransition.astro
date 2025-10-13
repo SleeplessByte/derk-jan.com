@@ -125,22 +125,6 @@
 </div>
 
 <script>
-  const component = document.querySelector(
-    '[data-component="PreviewTinyClockVariationTransition"]',
-  );
-  if (!component) {
-    throw new Error("Expected [data-component] PreviewTinyClockVariationTransition");
-  }
-
-  const target = component.querySelector<HTMLElement>('[data-target="clock"]');
-  const controls = component.querySelector<HTMLElement>('[data-target="controls"]');
-
-  if (!target || !controls) {
-    throw new Error(
-      'Expected [data-component] PreviewTinyClockVariationTransition with [data-target="clock"] and [data-target="controls"]',
-    );
-  }
-
   // Reading an angle from a property from a style
   function read(style: CSSStyleDeclaration, property: string): number {
     return Number(style.getPropertyValue(property).replace("deg", ""));
@@ -150,12 +134,6 @@
   function write(style: CSSStyleDeclaration, property: string, angle: number) {
     style.setProperty(property, `${angle}deg`);
   }
-
-  // Getting the current angles. The target is the clock that will be animated
-  // after clicking one of the buttons.
-  const targetStyle = window.getComputedStyle(target);
-  let currentHour = read(targetStyle, "--angle-hour");
-  let currentMinute = read(targetStyle, "--angle-minute");
 
   // Update currentHour and currentMinute based on the given angles
   function setHands([angleA, angleB]: [number, number]) {
@@ -189,38 +167,65 @@
   }
 
   const degrees: Record<string, [number, number]> = {};
+  let currentHour = 135;
+  let currentMinute = 135;
 
-  controls.querySelectorAll("button[data-shape]").forEach((button) => {
-    button.removeAttribute("disabled");
-  });
-
-  controls.addEventListener("click", (event) => {
-    if (!event.target || !(event.target instanceof Element)) {
+  document.addEventListener("astro:page-load", () => {
+    const component = document.querySelector(
+      '[data-component="PreviewTinyClockVariationTransition"]',
+    );
+    if (!component) {
       return;
     }
 
-    const button = event.target.closest<HTMLButtonElement>("button[data-shape]");
-    const shape = button?.getAttribute("data-shape");
-    if (!shape) {
-      return;
+    const target = component.querySelector<HTMLElement>('[data-target="clock"]');
+    const controls = component.querySelector<HTMLElement>('[data-target="controls"]');
+
+    if (!target || !controls) {
+      throw new Error(
+        'Expected [data-component] PreviewTinyClockVariationTransition with [data-target="clock"] and [data-target="controls"]',
+      );
     }
 
-    if (!degrees[shape]) {
-      const shapeElement = button!.querySelector(`.${shape}`);
-      if (!shapeElement) {
+    // Getting the current angles. The target is the clock that will be animated
+    // after clicking one of the buttons.
+    const targetStyle = window.getComputedStyle(target);
+    currentHour = read(targetStyle, "--angle-hour");
+    currentMinute = read(targetStyle, "--angle-minute");
+
+    // Enable the buttons
+    controls.querySelectorAll("button[data-shape]").forEach((button) => {
+      button.removeAttribute("disabled");
+    });
+
+    controls.addEventListener("click", (event) => {
+      if (!event.target || !(event.target instanceof Element)) {
         return;
       }
 
-      const shapeStyle = window.getComputedStyle(shapeElement);
-      const desiredAngleA = read(shapeStyle, "--angle-hour");
-      const desiredAngleB = read(shapeStyle, "--angle-minute");
+      const button = event.target.closest<HTMLButtonElement>("button[data-shape]");
+      const shape = button?.getAttribute("data-shape");
+      if (!shape) {
+        return;
+      }
 
-      degrees[shape] = [desiredAngleA, desiredAngleB];
-    }
+      if (!degrees[shape]) {
+        const shapeElement = button!.querySelector(`.${shape}`);
+        if (!shapeElement) {
+          return;
+        }
 
-    setHands(degrees[shape]);
+        const shapeStyle = window.getComputedStyle(shapeElement);
+        const desiredAngleA = read(shapeStyle, "--angle-hour");
+        const desiredAngleB = read(shapeStyle, "--angle-minute");
 
-    write(target.style, "--angle-hour", currentHour);
-    write(target.style, "--angle-minute", currentMinute);
+        degrees[shape] = [desiredAngleA, desiredAngleB];
+      }
+
+      setHands(degrees[shape]);
+
+      write(target.style, "--angle-hour", currentHour);
+      write(target.style, "--angle-minute", currentMinute);
+    });
   });
 </script>
