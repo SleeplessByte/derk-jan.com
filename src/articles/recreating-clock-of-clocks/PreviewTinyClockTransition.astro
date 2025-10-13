@@ -12,6 +12,7 @@
 <style>
   .preview {
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+    background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
     max-width: 480px;
     margin-left: auto;
@@ -27,68 +28,9 @@
       gap: 12px;
 
       & > * {
-        position: relative;
-
-        outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
-        aspect-ratio: 1 / 1;
-
         &::before,
         &::after {
-          content: "";
-          position: absolute;
-          background: light-dark(var(--color-pink-600), var(--color-orange-400));
-          width: 50%;
-          height: 5%;
-
-          left: 50%;
-          top: 50%;
-          transform-origin: left center;
-          transform: translate(0, -50%) rotate(var(--angle, 135deg));
-
           transition: transform 0.5s ease-in-out;
-        }
-
-        &::before {
-          --angle: var(--angle-hour, -135deg);
-        }
-
-        &::after {
-          --angle: var(--angle-minute);
-        }
-
-        &.─ {
-          --angle-hour: 0deg;
-          --angle-minute: 180deg;
-        }
-
-        &.│ {
-          --angle-hour: 90deg;
-          --angle-minute: 270deg;
-        }
-
-        &.┌ {
-          --angle-hour: 0deg;
-          --angle-minute: 90deg;
-        }
-
-        &.┐ {
-          --angle-hour: 180deg;
-          --angle-minute: 90deg;
-        }
-
-        &.┘ {
-          --angle-hour: 180deg;
-          --angle-minute: 270deg;
-        }
-
-        &.└ {
-          --angle-hour: 0deg;
-          --angle-minute: 270deg;
-        }
-
-        &.∅ {
-          --angle-hour: 125deg;
-          --angle-minute: 125deg;
         }
       }
     }
@@ -144,6 +86,6 @@
       });
     }
 
-    setInterval(displayNextDigit, 2.5 * 1000);
+    setInterval(displayNextDigit, 2 * 1000);
   }
 </script>

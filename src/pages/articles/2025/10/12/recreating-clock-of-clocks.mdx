@@ -7,6 +7,8 @@ published: false
 ---
 
 import Component from "../../../../../components/Codepen/Embed.astro";
+
+import "../../../../../articles/recreating-clock-of-clocks/shared.css";
 import PreviewDigitLayout from "../../../../../articles/recreating-clock-of-clocks/PreviewDigitLayout.astro";
 import PreviewTinyClockLayout from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockLayout.astro";
 import PreviewTinyClockCssVariable from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockCssVariable.astro";
@@ -16,11 +18,12 @@ import PreviewTinyClockDigits from "../../../../../articles/recreating-clock-of-
 import PreviewTinyClockTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockTransition.astro";
 import PreviewTinyClockWiseTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockWiseTransition.astro";
 import PreviewTinyClockVariationTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockVariationTransition.astro";
+import PreviewTinyClockWiseSmoothTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockWiseSmoothTransition.astro";
 
 import { Image } from "astro:assets"
 import clocksImage from "../../../../../assets/articles/recreating-clock-of-clocks/clocks.jpg";
 
-Recently [I saw][source-reddit] a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physical].
+This article is my implementation for [the challenge I posted earlier](./challenge-clock-of-clocks) based on a [Reddit post I saw][source-reddit] of a very intriguing concept of a Clock made of Clocks which made me think of a [real life object by Humans Since 1982][source-physical].
 [The Codepen][source-codepen] shows a clock displaying the current (local) time, and each digit is composed of smaller clocks.
 
 <Component
@@ -31,7 +34,7 @@ Recently [I saw][source-reddit] a very intriguing concept of a Clock made of Clo
   pen:tab="result"
 />
 
-In this article I recreate the result (with some choices of my own) without looking at the implementation.
+Follow along as I recreate the result (with some choices of my own) without looking at the implementation.
 
 ## Requirements
 
@@ -47,8 +50,9 @@ Having a look at the result I establish what I want my ClocksClock to be able to
 
 ## Challenge
 
-If you like to try this yourself, you should stop here and start working on your own implementation.
+If you like to try this yourself, you should stop here and [start working on your own implementation](./challenge-clock-of-clocks).
 If you want to see my implementation and thought process, [keep reading](#digit-layout).
+The article starts after the following image.
 
 <figure>
   <Image
@@ -58,9 +62,11 @@ If you want to see my implementation and thought process, [keep reading](#digit-
   <figcaption>Brown and white clocks by <a href="https://unsplash.com/@jontyson" target="_blank" rel="noreferrer">Jon Tyson</a></figcaption>
 </figure>
 
+This article won't detail every single choice or approach of implementation, but the source this website [is available on ny GitHub](https://github.com/SleeplessByte) and in your browser.
+
 ## Digit layout
 
-I think it makes most sense by starting with the grid layout for a single digit.
+I think it makes most sense by starting with [a grid layout][mdn-grid] for a single digit.
 There are many ways to accomplish this, such as creating each element in JavaScript, or copying a single node many times, but I think I'll go with an actual grid of elements first.
 If that works, I'll extract it to a [`<template>` element][mdn-template] and go from there.
 
@@ -76,6 +82,7 @@ If that works, I'll extract it to a [`<template>` element][mdn-template] and go 
 ```
 
 Let's start with ensuring this looks like a 4x6 grid.
+
 Because of the [`auto-flow`][mdn-grid-auto-flow] algorithm, there are again many ways to define this, but when the exact number of elements, rows, and columns are known, I'll often make it explicit.
 
 ```css
@@ -102,8 +109,8 @@ The individual cells (tiny clocks) are set-up to be square.
 
 The layout of the tiny clock is the clock face (and perhaps background and frame) with two hands.
 The hands are at most half the width of the face, and need to be placed with the "origin" (attachment point) in the center of the clock face.
-I can use the pseudo `::before` and `::after` elements to have CSS take care of this.
-For the rotation, a CSS variable can be used, which the `::before` and `::after` elements redirect to a different variable, so that it can be set on the tiny clock.
+I can use the [pseudo `::before` and `::after` elements][mdn-pseudo-elements] to have CSS take care of this.
+For the rotation, a [CSS variable][mdn-css-variable] can be used, which the `::before` and `::after` elements redirect to a different variable, so that it can be set on the tiny clock.
 
 ```css
 .digit > * {
@@ -137,6 +144,8 @@ Here one of the clocks has `--angle-minute` and `--angle-hour` set in the HTML:
 ```html
 <div style="--angle-hour: 145deg; --angle-minute: 22deg"></div>
 ```
+
+This results in a digit layout with one tiny clock set to the specified angles:
 
 <PreviewTinyClockLayout />
 
@@ -278,10 +287,12 @@ I could instead steadily increase the rotation.
 The easiest way to accomplish this is to take the current rotation (currently set by CSS), increase it to `360deg` and then add the expected rotation.
 But using `calc()` and a second variable that is the number of times the shape has changed makes it possible to not do any calculation in JavaScript!
 
-```css {3}
+```css {5}
 .digit > * {
   &::before, &::after {
-    transform: translate(0, -50%) rotate(calc(360deg * var(--iterations, 0) + var(--angle, 135deg)));
+    transform:
+      translate(0, -50%)
+      rotate(calc(360deg * var(--iterations, 0) + var(--angle, 135deg)));
   }
 }
 ```
@@ -297,22 +308,106 @@ I suppose the easiest way to solve this is to pull a bit of the logic into JavaS
 1. For each shape, pull the desired angles;
 2. Get the current angles;
 3. Find the minimum distance between both hands and the new angles;
-   a. If this is 0, then nothing has changed and no animation is needed;
-   b. If the new angle is smaller than the old angle, then animating to it by *adding* a circle will make it animate clockwise;
-   c. If the new angle is larger than the old angle, then animating to it can be accomplished without adding a full circle;
+   - If this is 0, then nothing has changed and no animation is needed;
+   - If the new angle is smaller than the old angle, then animating to it by *adding* a circle will make it animate clockwise;
+   - If the new angle is larger than the old angle, then animating to it can be accomplished without adding a full circle;
 4. Set the new angles;
 
-```javascript
-
-```
 
 <PreviewTinyClockVariationTransition />
+
+Here are the code snippets that accomplish this:
+
+```typescript
+// Reading an angle from a property from a style
+function read(style: CSSStyleDeclaration, property: string): number {
+  return Number(style.getPropertyValue(property).replace("deg", ""))
+}
+
+// Writing an angle to a property on an element's style
+function write(style: CSSStyleDeclaration, property: string, angle: number) {
+  style.setProperty(property, `${angle}deg`);
+}
+
+// Getting the current angles. The target is the clock that will be animated
+// after clicking one of the buttons.
+const targetStyle = window.getComputedStyle(target);
+let currentHour = read(targetStyle, '--angle-hour');
+let currentMinute = read(targetStyle, '--angle-minute');
+
+// Setting the next angles to the target element.
+write(target.style, '--angle-hour', currentHour);
+write(target.style, '--angle-minute', currentMinute);
+
+// Getting the desired angles for a tiny clock. The shape element is the clock
+// that is clicked inside the button.
+const shapeStyle = window.getComputedStyle(shape);
+const desiredAngleA = read(shapeStyle, '--angle-hour');
+const desiredAngleB = read(shapeStyle, '--angle-minute');
+
+// Calculating the distance between a current hand and a destination
+function distance(subject: number, destination: number) {
+  if (subject <= destination) {
+    return destination - subject;
+  }
+
+  return distance(subject, destination + 360);
+}
+
+// Update currentHour and currentMinute based on the given angles
+function setHands([angleA, angleB]: [number, number]) {
+  // Normalize the current angles to 0 - 360
+  const currentRelativeHour = currentHour % 360;
+  const currentRelativeMinute = currentMinute % 360;
+
+  // This sorts the angles ensuring that the least amount of degrees will be
+  // rotated. This is not a requirement for the solution, but it makes for the
+  // least busy transition!
+  const [nextRelativeHour, nextRelativeMinute] =
+    distance(currentRelativeHour, angleA) + distance(currentRelativeMinute, angleB) <
+    distance(currentRelativeHour, angleB) + distance(currentRelativeMinute, angleA)
+      ? [angleA, angleB]
+      : [angleB, angleA];
+
+  // The new angle must be larger (or equal) to the current, so the distance
+  // between the current angle and the next angle is what needs to be added to
+  // complete the transition
+  currentHour += distance(currentRelativeHour, nextRelativeHour);
+  currentMinute += distance(currentRelativeMinute, nextRelativeMinute);
+}
+```
+
+This results in this digit to digit transition:
+
+<PreviewTinyClockWiseSmoothTransition />
+
+## Initial chaos
+
+The initial clocks are all in a random configuration.
+The easiest way to generate a random angle is to use the pseudo random number generator,
+which will return a value between 0 (inclusive) and 1 (exclusive):
+
+```javascript
+Math.floor(Math.random() * 360)
+```
+
+Whilst I am aware that this [will be biased towards certain numbers][github-bias-random], I don't think it will matter or be noticeable.
+
+On page load, 2 random angles need to be generated for each tiny clock and set as the initial angles.
+
+## Building the (big) clock layout
+
+
 
 
 [source-reddit]: https://www.reddit.com/r/webdev/comments/1nrx5n9/clock_made_of_clocks/
 [source-physical]: https://www.humanssince1982.com/en-eu
 [source-codepen]: https://codepen.io/EntropyReversed/pen/QwybYEJ
+[mdn-grid]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout
 [mdn-template]: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/template
 [mdn-grid-auto-flow]: https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow
+[mdn-pseudo-elements]: https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements
+[mdn-css-variable]: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties
 [wiki-box-drawing-unicode]: https://en.wikipedia.org/wiki/Box-drawing_characters
 [web-flip]: https://aerotwist.com/blog/flip-your-animations/
+[github-bias-random]: https://github.com/lodash/lodash/issues/5099

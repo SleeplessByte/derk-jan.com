@@ -1,0 +1,65 @@
+.digit > * {
+  position: relative;
+
+  color: light-dark(var(--color-pink-600), var(--color-orange-400));
+  outline: 1px solid currentColor;
+  aspect-ratio: 1 / 1;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+    width: 50%;
+    height: 5%;
+
+    left: 50%;
+    top: 50%;
+    transform-origin: left center;
+    transform: translate(0, -50%)
+      rotate(calc(360deg * var(--iterations, 0) + var(--angle, 135deg)));
+  }
+
+  &::before {
+    --angle: var(--angle-hour, -135deg);
+  }
+
+  &::after {
+    --angle: var(--angle-minute);
+  }
+
+  &.─ {
+    --angle-hour: 0deg;
+    --angle-minute: 180deg;
+  }
+
+  &.│ {
+    --angle-hour: 270deg;
+    --angle-minute: 90deg;
+  }
+
+  &.┌ {
+    --angle-hour: 0deg;
+    --angle-minute: 90deg;
+  }
+
+  &.┐ {
+    --angle-hour: 180deg;
+    --angle-minute: 90deg;
+  }
+
+  &.┘ {
+    --angle-hour: 180deg;
+    --angle-minute: 270deg;
+  }
+
+  &.└ {
+    --angle-hour: 0deg;
+    --angle-minute: 270deg;
+  }
+
+  &.∅ {
+    --angle-hour: 125deg;
+    --angle-minute: 125deg;
+  }
+}
