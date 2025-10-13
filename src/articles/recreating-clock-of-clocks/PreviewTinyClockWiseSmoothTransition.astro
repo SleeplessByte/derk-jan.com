@@ -14,7 +14,7 @@
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
     background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
-    max-width: 480px;
+    max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
@@ -25,7 +25,7 @@
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(6, 1fr);
 
-      gap: 12px;
+      gap: 0.5rem;
 
       & > * {
         &::before,
@@ -38,6 +38,15 @@
 </style>
 
 <script>
+  const target = document.querySelector(
+    '[data-component="PreviewTinyClockWiseSmoothTransition"] [data-target="digit"]',
+  );
+  if (!target) {
+    throw new Error(
+      'Expected [data-component] PreviewTinyClockWiseSmoothTransition with [data-target="digit"]',
+    );
+  }
+
   const ENCODED_DIGITS = `
 ┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
 │┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
@@ -70,93 +79,88 @@
     return faces;
   });
 
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockWiseSmoothTransition"] [data-target="digit"]',
-  );
-  if (target) {
-    // Reading an angle from a property from a style
-    function read(style: CSSStyleDeclaration, property: string): number {
-      return Number(style.getPropertyValue(property).replace("deg", ""));
-    }
-
-    // Writing an angle to a property on an element's style
-    function write(style: CSSStyleDeclaration, property: string, angle: number) {
-      style.setProperty(property, `${angle}deg`);
-    }
-
-    // Update currentHour and currentMinute based on the given angles
-    function nextHands(
-      [currentHour, currentMinute]: [number, number],
-      [angleA, angleB]: [number, number],
-    ): [number, number] {
-      // Normalize the current angles to 0 - 360
-      const currentRelativeHour = currentHour % 360;
-      const currentRelativeMinute = currentMinute % 360;
-
-      // This sorts the angles ensuring that the least amount of degrees will be
-      // rotated. This is not a requirement for the solution, but it makes for the
-      // least busy transition!
-      const [nextRelativeHour, nextRelativeMinute] =
-        distance(currentRelativeHour, angleA) + distance(currentRelativeMinute, angleB) <
-        distance(currentRelativeHour, angleB) + distance(currentRelativeMinute, angleA)
-          ? [angleA, angleB]
-          : [angleB, angleA];
-
-      // The new angle must be larger (or equal) to the current, so the distance
-      // between the current angle and the next angle is what needs to be added to
-      // complete the transition
-      return [
-        currentHour + distance(currentRelativeHour, nextRelativeHour),
-        currentMinute + distance(currentRelativeMinute, nextRelativeMinute),
-      ];
-    }
-
-    // Calculating the distance between a current hand and a destination
-    function distance(subject: number, destination: number) {
-      if (subject <= destination) {
-        return destination - subject;
-      }
-
-      return distance(subject, destination + 360);
-    }
-
-    const degrees: Record<string, [number, number]> = {};
-
-    const tinyClocks = Array.from(target.children) as HTMLElement[];
-    const templateTinyClock = tinyClocks[0];
-
-    // Read all shapes by temporarily turning the first tiny clock's clock into
-    // each valid shape, with the final shape being the original shape.
-    const shapes = ["┌", "┐", "┘", "└", "─", "│", "∅"];
-    const shapeStyle = window.getComputedStyle(templateTinyClock);
-    shapes.forEach((shape) => {
-      templateTinyClock.setAttribute("class", shape);
-
-      const desiredAngleA = read(shapeStyle, "--angle-hour");
-      const desiredAngleB = read(shapeStyle, "--angle-minute");
-
-      degrees[shape] = [desiredAngleA, desiredAngleB];
-    });
-
-    let currentDigit = 0;
-    function displayNextDigit() {
-      currentDigit = (currentDigit + 1) % DECODED.length;
-      const digit = DECODED[currentDigit];
-
-      digit.forEach((tinyClockClass, tinyClockIndex) => {
-        const tinyClock = tinyClocks[tinyClockIndex];
-        const tinyClockStyle = window.getComputedStyle(tinyClock);
-
-        const [nextHour, nextMinute] = nextHands(
-          [read(tinyClockStyle, "--angle-hour"), read(tinyClockStyle, "--angle-minute")],
-          degrees[tinyClockClass],
-        );
-
-        write(tinyClock.style, "--angle-hour", nextHour);
-        write(tinyClock.style, "--angle-minute", nextMinute);
-      });
-    }
-
-    setInterval(displayNextDigit, 2 * 1000);
+  // Reading an angle from a property from a style
+  function read(style: CSSStyleDeclaration, property: string): number {
+    return Number(style.getPropertyValue(property).replace("deg", ""));
   }
+
+  // Writing an angle to a property on an element's style
+  function write(style: CSSStyleDeclaration, property: string, angle: number) {
+    style.setProperty(property, `${angle}deg`);
+  }
+
+  // Update currentHour and currentMinute based on the given angles
+  function nextHands(
+    [currentHour, currentMinute]: [number, number],
+    [angleA, angleB]: [number, number],
+  ): [number, number] {
+    // Normalize the current angles to 0 - 360
+    const currentRelativeHour = currentHour % 360;
+    const currentRelativeMinute = currentMinute % 360;
+
+    // This sorts the angles ensuring that the least amount of degrees will be
+    // rotated. This is not a requirement for the solution, but it makes for the
+    // least busy transition!
+    const [nextRelativeHour, nextRelativeMinute] =
+      distance(currentRelativeHour, angleA) + distance(currentRelativeMinute, angleB) <
+      distance(currentRelativeHour, angleB) + distance(currentRelativeMinute, angleA)
+        ? [angleA, angleB]
+        : [angleB, angleA];
+
+    // The new angle must be larger (or equal) to the current, so the distance
+    // between the current angle and the next angle is what needs to be added to
+    // complete the transition
+    return [
+      currentHour + distance(currentRelativeHour, nextRelativeHour),
+      currentMinute + distance(currentRelativeMinute, nextRelativeMinute),
+    ];
+  }
+
+  // Calculating the distance between a current hand and a destination
+  function distance(subject: number, destination: number) {
+    if (subject <= destination) {
+      return destination - subject;
+    }
+
+    return distance(subject, destination + 360);
+  }
+
+  const degrees: Record<string, [number, number]> = {};
+
+  const tinyClocks = Array.from(target.children) as HTMLElement[];
+  const templateTinyClock = tinyClocks[0];
+
+  // Read all shapes by temporarily turning the first tiny clock's clock into
+  // each valid shape, with the final shape being the original shape.
+  const shapes = ["┌", "┐", "┘", "└", "─", "│", "∅"];
+  const shapeStyle = window.getComputedStyle(templateTinyClock);
+  shapes.forEach((shape) => {
+    templateTinyClock.setAttribute("class", shape);
+
+    const desiredAngleA = read(shapeStyle, "--angle-hour");
+    const desiredAngleB = read(shapeStyle, "--angle-minute");
+
+    degrees[shape] = [desiredAngleA, desiredAngleB];
+  });
+
+  let currentDigit = 0;
+  function displayNextDigit() {
+    currentDigit = (currentDigit + 1) % DECODED.length;
+    const digit = DECODED[currentDigit];
+
+    digit.forEach((tinyClockClass, tinyClockIndex) => {
+      const tinyClock = tinyClocks[tinyClockIndex];
+      const tinyClockStyle = window.getComputedStyle(tinyClock);
+
+      const [nextHour, nextMinute] = nextHands(
+        [read(tinyClockStyle, "--angle-hour"), read(tinyClockStyle, "--angle-minute")],
+        degrees[tinyClockClass],
+      );
+
+      write(tinyClock.style, "--angle-hour", nextHour);
+      write(tinyClock.style, "--angle-minute", nextMinute);
+    });
+  }
+
+  setInterval(displayNextDigit, 2 * 1000);
 </script>

@@ -14,7 +14,7 @@
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
     background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
-    max-width: 480px;
+    max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
@@ -25,8 +25,7 @@
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(6, 1fr);
 
-      gap: 12px;
-
+      gap: 0.5rem;
       & > * {
         &::before,
         &::after {
@@ -38,6 +37,15 @@
 </style>
 
 <script>
+  const target = document.querySelector(
+    '[data-component="PreviewTinyClockTransition"] [data-target="digit"]',
+  );
+  if (!target) {
+    throw new Error(
+      'Expected [data-component] PreviewTinyClockTransition with [data-target="digit"]',
+    );
+  }
+
   const ENCODED_DIGITS = `
 ┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
 │┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
@@ -70,22 +78,17 @@
     return faces;
   });
 
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockTransition"] [data-target="digit"]',
-  );
-  if (target) {
-    const tinyClocks = Array.from(target.children);
-    let currentDigit = 0;
+  const tinyClocks = Array.from(target.children);
+  let currentDigit = 0;
 
-    function displayNextDigit() {
-      currentDigit = (currentDigit + 1) % DECODED.length;
-      const digit = DECODED[currentDigit];
+  function displayNextDigit() {
+    currentDigit = (currentDigit + 1) % DECODED.length;
+    const digit = DECODED[currentDigit];
 
-      digit.forEach((tinyClockClass, tinyClockIndex) => {
-        tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
-      });
-    }
-
-    setInterval(displayNextDigit, 2 * 1000);
+    digit.forEach((tinyClockClass, tinyClockIndex) => {
+      tinyClocks[tinyClockIndex].setAttribute("class", tinyClockClass);
+    });
   }
+
+  setInterval(displayNextDigit, 2 * 1000);
 </script>

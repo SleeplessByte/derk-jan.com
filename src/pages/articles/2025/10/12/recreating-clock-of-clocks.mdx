@@ -19,6 +19,9 @@ import PreviewTinyClockTransition from "../../../../../articles/recreating-clock
 import PreviewTinyClockWiseTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockWiseTransition.astro";
 import PreviewTinyClockVariationTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockVariationTransition.astro";
 import PreviewTinyClockWiseSmoothTransition from "../../../../../articles/recreating-clock-of-clocks/PreviewTinyClockWiseSmoothTransition.astro";
+import PreviewDisplayLayout from "../../../../../articles/recreating-clock-of-clocks/PreviewDisplayLayout.astro";
+import PreviewDisplayTemplated from "../../../../../articles/recreating-clock-of-clocks/PreviewDisplayTemplated.astro";
+import FunctionalClocksClock from "../../../../../articles/recreating-clock-of-clocks/FunctionalClocksClock.astro";
 
 import { Image } from "astro:assets"
 import clocksImage from "../../../../../assets/articles/recreating-clock-of-clocks/clocks.jpg";
@@ -260,6 +263,7 @@ const DECODED = Array.from(new Array(10), (_, digit) => {
 ```
 
 Now I can iterate through the digits by grabbing an array and overwriting the class list.
+Drawing a digit is grabbing `DECODED[digit]` and have each index correspond with a tiny clock.
 
 <PreviewTinyClockDigits />
 
@@ -395,10 +399,163 @@ Whilst I am aware that this [will be biased towards certain numbers][github-bias
 
 On page load, 2 random angles need to be generated for each tiny clock and set as the initial angles.
 
+```javascript
+function randomAngle() {
+  return Math.floor(Math.random() * 360)
+}
+
+document
+  .querySelectorAll('.digit > *')
+  .forEach((tinyClock) => {
+    write(tinyClock.style, '--angle-hour', randomAngle())
+    write(tinyClock.style, '--angle-minute', randomAngle())
+  })
+```
+
 ## Building the (big) clock layout
 
+Recreating the original layout, it looks like 3 pairs of 2 digits.
+Here are a few options:
 
+- A flex row with 6 elements, where the middle ones push outward or the second and fifth ones push inwards;
+- A grid layout with 6 elements, where the gap between the second and third, and between fourth and fifth is larger;
+- Either solution with 3 elements with a consistent gap and each element holding two numbers;
+- Either solution with 6 elements but instead of gaps, add some margin right to each second element and negative margin to the outer box;
+- Model the gaps as elements and use `flex-grow` or `flex-basis`, or `grid-template-columns` for sizing;
+- Grid template areas encoding the various digits and gaps:
 
+```css
+grid:
+    'h   h   .      m   m   .      s   s  ' auto
+   / 1fr 1fr 0.5rem 1fr 1fr 0.5rem 1fr 1fr;
+```
+
+I have no particular feel for any of them.
+For now I'll go with a 6 cell flex layout with margins set on the inner 2 items.
+
+```css
+.display {
+  display: flex;
+  flex-direction: row;
+
+  gap: 1rem;
+
+  & > * {
+    flex: 1 1 0;
+  }
+
+  & > :nth-child(3) {
+    margin-left: 2rem;
+  }
+
+  & > :nth-child(4) {
+    margin-right: 2rem;
+  }
+}
+```
+
+This produces the desired layout:
+
+<PreviewDisplayLayout />
+
+## Using templates to fill the clock display
+
+As mentioned [near the start](#digit-layout) of this article, I can use a `<template>` element to encode a single digit and use some JavaScript to build the layout.
+
+```html
+<template data-template="digit">
+  <div class="digit">
+    <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+  </div>
+</template>
+
+<!-- somehow inject into here -->
+<section data-target="display"></section>
+```
+
+Using JavaScript, the template can be cloned into the desired result:
+
+```javascript
+const template = document.querySelector('[data-template="digit"]')
+const target = document.querySelector('[data-target="display"]')
+
+for (let i = 0; i < 6; i++) {
+  const clone = template.content.cloneNode(true);
+
+  clone.children
+    .forEach((tinyClock) => {
+      write(tinyClock.style, '--angle-hour', randomAngle())
+      write(tinyClock.style, '--angle-minute', randomAngle())
+    })
+
+  target.appendChild(clone);
+}
+```
+
+The result looks like this:
+
+<PreviewDisplayTemplated />
+
+## Hooking up the current time
+
+There are many approaches to get the current time and display it, each with different accuracy and potential drift:
+
+Use `new Date()` to get the current time and:
+- Add a `setInterval` of 1s to redraw the display;
+- Add a `setTimeout` of 1s to redraw the display (and then queue a new one);
+- Add a `requestAnimationFrame` and keep track if the time has changed based on the current hour, minute, and second;
+
+Then, on redraw:
+- Use `Date.prototype.toLocaleDateString` to format a datetime to individual digits;
+- Use `Intl.DateTimeFormat` to format a datetime to individual digits;
+- Grab the digits and leftpad with 0s using `getHours`, `getMinutes` and `getSeconds`;
+
+I don't really care for the redrawing method, but both `setInterval` and `setTimeout` will drift, because they both schedule the next unit of work after *at least* the given time has passed, not *exactly* the given time has passed.
+
+```javascript
+let lastTime = 0
+
+function check(_delta) {
+  const now = new Date();
+  const thisTime = Math.round(now.getTime() / 1000);
+
+  if (lastTime !== thisTime) {
+    lastTime = thisTime
+    redraw(now)
+  }
+  requestAnimationFrame(check)
+}
+
+function redraw(now: Date) {
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+
+  const digits = [
+    Math.floor(hours /  10),
+    hours % 10,
+    Math.floor(minutes / 10),
+    minutes % 10,
+    Math.floor(seconds / 10),
+    seconds % 10
+  ]
+
+  // ...
+}
+
+requestAnimationFrame(check)
+```
+
+Now bringing it all together.
+
+## Functional result
+
+<FunctionalClocksClock />
 
 [source-reddit]: https://www.reddit.com/r/webdev/comments/1nrx5n9/clock_made_of_clocks/
 [source-physical]: https://www.humanssince1982.com/en-eu

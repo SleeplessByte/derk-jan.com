@@ -1,4 +1,4 @@
-<section data-component="PreviewTinyClockWiseTransition" class="preview">
+<section data-component="PreviewTinyClockWiseTransition" class="preview max-w">
   <div data-target="digit" class="digit">
     <div class="┌"></div><div class="─"></div><div class="─"></div><div class="┐"></div>
     <div class="│"></div><div class="┌"></div><div class="┐"></div><div class="│"></div>
@@ -14,7 +14,7 @@
     outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
     background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
-    max-width: 480px;
+    max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
@@ -25,7 +25,7 @@
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(6, 1fr);
 
-      gap: 12px;
+      gap: 0.5rem;
 
       & > * {
         &::before,
@@ -38,6 +38,15 @@
 </style>
 
 <script>
+  const target = document.querySelector(
+    '[data-component="PreviewTinyClockWiseTransition"] [data-target="digit"]',
+  );
+  if (!target) {
+    throw new Error(
+      'Expected [data-component] PreviewTinyClockWiseTransition with [data-target="digit"]',
+    );
+  }
+
   const ENCODED_DIGITS = `
 ┌──┐  ┌─┐.  ┌──┐  ┌──┐  ┌┐┌┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐  ┌──┐
 │┌┐│  └┐│.  └─┐│  └─┐│  ││││  │┌─┘  │┌─┘  └─┐│  │┌┐│  │┌┐│
@@ -70,31 +79,26 @@
     return faces;
   });
 
-  const target = document.querySelector(
-    '[data-component="PreviewTinyClockWiseTransition"] [data-target="digit"]',
-  );
-  if (target) {
-    const tinyClocks = Array.from(target.children) as HTMLElement[];
-    let currentDigit = 0;
+  const tinyClocks = Array.from(target.children) as HTMLElement[];
+  let currentDigit = 0;
 
-    function displayNextDigit() {
-      currentDigit = (currentDigit + 1) % DECODED.length;
-      const digit = DECODED[currentDigit];
+  function displayNextDigit() {
+    currentDigit = (currentDigit + 1) % DECODED.length;
+    const digit = DECODED[currentDigit];
 
-      digit.forEach((tinyClockClass, tinyClockIndex) => {
-        const tinyClock = tinyClocks[tinyClockIndex];
-        if (tinyClock.getAttribute("class") === tinyClockClass) {
-          return;
-        }
+    digit.forEach((tinyClockClass, tinyClockIndex) => {
+      const tinyClock = tinyClocks[tinyClockIndex];
+      if (tinyClock.getAttribute("class") === tinyClockClass) {
+        return;
+      }
 
-        tinyClock.setAttribute("class", tinyClockClass);
-        tinyClock.style.setProperty(
-          "--iterations",
-          String(Number(tinyClock.style.getPropertyValue("--iterations") || "0") + 1),
-        );
-      });
-    }
-
-    setInterval(displayNextDigit, 2 * 1000);
+      tinyClock.setAttribute("class", tinyClockClass);
+      tinyClock.style.setProperty(
+        "--iterations",
+        String(Number(tinyClock.style.getPropertyValue("--iterations") || "0") + 1),
+      );
+    });
   }
+
+  setInterval(displayNextDigit, 2 * 1000);
 </script>

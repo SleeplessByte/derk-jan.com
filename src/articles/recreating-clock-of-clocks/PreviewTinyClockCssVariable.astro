@@ -37,7 +37,7 @@
     display: grid;
     grid-template-columns: 13.5rem 1fr;
 
-    max-width: 480px;
+    max-width: 30rem;
     margin-left: auto;
     margin-right: auto;
 
@@ -58,7 +58,7 @@
       grid-template-columns: repeat(1, 1fr);
       grid-template-rows: repeat(1, 1fr);
 
-      gap: 12px;
+      gap: 0.5rem;
     }
   }
 </style>
@@ -68,40 +68,41 @@
   const component = document.querySelector(
     '[data-component="PreviewTinyClockCssVariable"]',
   );
-  if (component) {
-    const clock = component.querySelector<HTMLElement>('[data-target="clock"]')!;
-    const inputHour = component.querySelector<HTMLInputElement>('input[name="hour"]')!;
-    const outputHour = component.querySelector<HTMLOutputElement>(
-      'output[data-target="output-hour"]',
-    )!;
-    const inputMinute =
-      component.querySelector<HTMLInputElement>('input[name="minute"]')!;
-    const outputMinute = component.querySelector<HTMLOutputElement>(
-      'output[data-target="output-minute"]',
-    )!;
-
-    function onChangeHour(this: HTMLInputElement, event: Event) {
-      const newValue = Number(this.value);
-      const ratio = newValue / 12;
-      const angle = (Math.round(ratio * 360 - 90) + 360) % 360;
-
-      outputHour.textContent = `--angle-hour: ${angle}deg`;
-      clock.style.setProperty("--angle-hour", ` ${angle}deg`);
-    }
-
-    function onChangeMinute(this: HTMLInputElement, event: Event) {
-      const newValue = Number(this.value);
-      const ratio = newValue / 60;
-      const angle = (Math.round(ratio * 360 - 90) + 360) % 360;
-
-      outputMinute.textContent = `--angle-minute: ${angle}deg`;
-      clock.style.setProperty("--angle-minute", ` ${angle}deg`);
-    }
-
-    inputHour.addEventListener("input", onChangeHour);
-    inputMinute.addEventListener("input", onChangeMinute);
-
-    inputHour.removeAttribute("disabled");
-    inputMinute.removeAttribute("disabled");
+  if (!component) {
+    throw new Error("Expected [data-component] PreviewTinyClockCssVariable");
   }
+
+  const clock = component.querySelector<HTMLElement>('[data-target="clock"]')!;
+  const inputHour = component.querySelector<HTMLInputElement>('input[name="hour"]')!;
+  const outputHour = component.querySelector<HTMLOutputElement>(
+    'output[data-target="output-hour"]',
+  )!;
+  const inputMinute = component.querySelector<HTMLInputElement>('input[name="minute"]')!;
+  const outputMinute = component.querySelector<HTMLOutputElement>(
+    'output[data-target="output-minute"]',
+  )!;
+
+  function onChangeHour(this: HTMLInputElement, event: Event) {
+    const newValue = Number(this.value);
+    const ratio = newValue / 12;
+    const angle = (Math.round(ratio * 360 - 90) + 360) % 360;
+
+    outputHour.textContent = `--angle-hour: ${angle}deg`;
+    clock.style.setProperty("--angle-hour", ` ${angle}deg`);
+  }
+
+  function onChangeMinute(this: HTMLInputElement, event: Event) {
+    const newValue = Number(this.value);
+    const ratio = newValue / 60;
+    const angle = (Math.round(ratio * 360 - 90) + 360) % 360;
+
+    outputMinute.textContent = `--angle-minute: ${angle}deg`;
+    clock.style.setProperty("--angle-minute", ` ${angle}deg`);
+  }
+
+  inputHour.addEventListener("input", onChangeHour);
+  inputMinute.addEventListener("input", onChangeMinute);
+
+  inputHour.removeAttribute("disabled");
+  inputMinute.removeAttribute("disabled");
 </script>

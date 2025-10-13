@@ -1,0 +1,97 @@
+<section data-component="PreviewDisplayLayout" class="preview">
+  <div class="display">
+    <div class="digit">
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    </div>
+    <div class="digit">
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    </div>
+    <div class="digit">
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    </div>
+    <div class="digit">
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    </div>
+    <div class="digit">
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    </div>
+    <div class="digit">
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+      <div class="∅"></div><div class="∅"></div><div class="∅"></div><div class="∅"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .preview {
+    outline: 1px dotted light-dark(var(--color-zinc-800), var(--color-zinc-200));
+    background-color: light-dark(var(--color-white), var(--color-zinc-950));
+
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 1rem;
+    padding: clamp(2px, 1.5vw, 1rem);
+
+    & > .display {
+      display: flex;
+      flex-direction: row;
+
+      gap: 1rem;
+      gap: clamp(2px, 1.5vw, 1rem);
+
+      width: 100%;
+
+      & > .digit {
+        flex: 1 1 0;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+
+        gap: 0.5rem;
+        gap: clamp(1px, 1vw, 0.5rem);
+      }
+
+      & > :nth-child(3) {
+        margin-left: 2rem;
+        margin-left: clamp(4px, 2.5vw, 2rem);
+      }
+
+      & > :nth-child(4) {
+        margin-right: 2rem;
+        margin-right: clamp(4px, 2.5vw, 2rem);
+      }
+    }
+  }
+</style>
