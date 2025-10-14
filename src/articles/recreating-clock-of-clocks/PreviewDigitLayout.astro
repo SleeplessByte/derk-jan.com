@@ -30,6 +30,11 @@
       & > * {
         outline: 1px solid light-dark(var(--color-pink-600), var(--color-orange-400));
         aspect-ratio: 1 / 1;
+
+        &::before,
+        &::after {
+          display: none;
+        }
       }
     }
   }
