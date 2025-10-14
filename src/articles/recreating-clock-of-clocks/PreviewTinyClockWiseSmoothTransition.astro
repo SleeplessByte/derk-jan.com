@@ -170,7 +170,7 @@
       });
     }
 
-    setInterval(displayNextDigit, 2 * 1000);
+    interval = setInterval(displayNextDigit, 2 * 1000);
   });
 
   document.addEventListener("astro:before-preparation", () => {

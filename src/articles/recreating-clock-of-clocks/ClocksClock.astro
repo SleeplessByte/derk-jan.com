@@ -114,15 +114,19 @@ const { autoplay = false } = Astro.props;
 </section>
 
 <style>
+  .component {
+    display: flex;
+  }
   .wrapper {
     background-color: light-dark(var(--color-white), var(--color-zinc-950));
 
     max-width: 50rem;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
 
     padding: 1rem;
     padding: clamp(2px, 1.5vw, 1rem);
+
+    aspect-ratio: 4 / 1;
 
     & > .display {
       display: flex;
