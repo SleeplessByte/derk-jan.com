@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import elixirSrc from "/src/assets/talks/exercism-is-excellent/concepts-elixir.png";
+import elixirSrc from "./concepts-elixir.png";
 
 const NEXT_SLIDE_COUNT = 9;
 const NEXT_SLIDE_LABEL = "Feedback: analyzer";

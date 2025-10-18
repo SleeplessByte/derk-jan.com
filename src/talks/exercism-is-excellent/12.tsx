@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import mentoringSrc from "/src/assets/talks/exercism-is-excellent/mentoring.png";
+import mentoringSrc from "./mentoring.png";
 
 const NEXT_SLIDE_COUNT = 13;
 const NEXT_SLIDE_LABEL = "Community";

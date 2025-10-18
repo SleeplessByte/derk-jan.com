@@ -25,6 +25,7 @@ export function ExternalLink({
       } items-baseline py-1 px-4 -mx-4 focus:outline-none focus:ring-2 focus:ring-current transition rounded-sm`}
       aria-label={label}
       target={target}
+      data-astro-prefetch="hover"
       {...props}
     >
       <svg

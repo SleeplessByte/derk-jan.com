@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import representerResultSrc from "/src/assets/talks/exercism-is-excellent/representer.jpg";
-import representerResultSrc2 from "/src/assets/talks/exercism-is-excellent/representer2.jpg";
+import representerResultSrc from "./representer.jpg";
+import representerResultSrc2 from "./representer2.jpg";
 
 const NEXT_SLIDE_COUNT = 12;
 const NEXT_SLIDE_LABEL = "Human feedback";

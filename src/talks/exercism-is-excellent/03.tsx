@@ -1,8 +1,8 @@
 import type { Variants } from "motion";
 import { motion } from "motion/react";
 
-import exercismLogoSrc from "/src/assets/talks/exercism-is-excellent/logo.svg";
-import angelikaSrc from "/src/assets/talks/exercism-is-excellent/whats-new-in-v3-with-angelika.png";
+import exercismLogoSrc from "./logo.svg";
+import angelikaSrc from "./whats-new-in-v3-with-angelika.png";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
 const container: Variants = {

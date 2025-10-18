@@ -17,13 +17,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.6",
+    "@astrojs/mdx": "^4.3.7",
     "@astrojs/react": "^4.4.0",
     "@astrojs/sitemap": "^3.6.0",
     "@tailwindcss/vite": "^4.1.13",
     "@types/react": "^19.1.14",
     "@types/react-dom": "^19.1.9",
-    "astro": "^5.14.3",
+    "astro": "^5.14.5",
     "install": "^0.13.0",
     "mdast-util-to-string": "^4.0.0",
     "motion": "^12.23.22",

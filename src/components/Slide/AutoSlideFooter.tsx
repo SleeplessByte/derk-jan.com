@@ -60,6 +60,7 @@ function AutoNext({
       href={typeof next === "string" ? next : "#"}
       className="mx-auto prose-lg transition rounded-md focus:outline-none focus:ring-2 focus:ring-current mb-2 group shadow-sm"
       rel="next"
+      data-astro-prefetch="load"
     >
       <div className="p-4 rounded-md w-full h-full relative shadow-inner bg-gray-100  dark:bg-black/50">
         <div className="absolute bottom-0 left-0 rounded-md h-full w-full overflow-hidden">

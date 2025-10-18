@@ -1,14 +1,11 @@
 ---
-import SlidesLayout from "../../..//layouts/talks/embrace-the-patch.astro";
+import SlidesLayout from "../../../layouts/talks/embrace-the-patch.astro";
 import CodeSlide from "../../../components/Slide/CodeSlide.astro";
 import { Code } from "astro:components";
 ---
 
 <SlidesLayout title="Slide 0: setup">
-  <CodeSlide
-    next-href="/talks/embrace-the-patch/01"
-    next-label="Go to slide 1: history"
-  >
+  <CodeSlide next-href="/talks/embrace-the-patch/01" next-label="Go to slide 1: history">
     <Code
       slot="single"
       lang="ruby"

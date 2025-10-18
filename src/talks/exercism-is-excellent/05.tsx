@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import editorSrc from "/src/assets/talks/exercism-is-excellent/web-editor.png";
+import editorSrc from "./web-editor.png";
 
 const NEXT_SLIDE_COUNT = 6;
 const NEXT_SLIDE_LABEL = "Running tests";

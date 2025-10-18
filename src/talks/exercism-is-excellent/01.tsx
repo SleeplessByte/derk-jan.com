@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
-import headlineExercise from "/src/assets/talks/exercism-is-excellent/news-exercise.png";
-import headlineExposure from "/src/assets/talks/exercism-is-excellent/news-exposure.png";
-import headlineInterference from "/src/assets/talks/exercism-is-excellent/news-interference.png";
-import headlineLifetime from "/src/assets/talks/exercism-is-excellent/news-lifetime.png";
-import headlinePractice from "/src/assets/talks/exercism-is-excellent/news-practice.png";
+import headlineExercise from "./news-exercise.png";
+import headlineExposure from "./news-exposure.png";
+import headlineInterference from "./news-interference.png";
+import headlineLifetime from "./news-lifetime.png";
+import headlinePractice from "./news-practice.png";
 import { SlideFooter } from "../../components/Slide/SlideFooter";
 
 const HEADLINES = [

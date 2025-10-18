@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import communitySrc from "/src/assets/talks/exercism-is-excellent/community.png";
+import communitySrc from "./community.png";
 
 const NEXT_SLIDE_COUNT = 14;
 const NEXT_SLIDE_LABEL = "12 in 23";

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import testsSrc from "/src/assets/talks/exercism-is-excellent/tests.jpg";
+import testsSrc from "./tests.jpg";
 
 const NEXT_SLIDE_COUNT = 7;
 const NEXT_SLIDE_LABEL = "Syllabus";

@@ -22,7 +22,11 @@ const nextPost = currentPostIndex === 0 ? undefined : posts[currentPostIndex - 1
       {previousPost && (
         <p class="text-left">
           Previously:{" "}
-          <a href={`/articles/${previousPost.id}/`} rel="prev">
+          <a
+            href={`/articles/${previousPost.id}/`}
+            rel="prev"
+            data-astro-prefetch="viewport"
+          >
             {previousPost.data.title}
           </a>
         </p>
@@ -30,7 +34,7 @@ const nextPost = currentPostIndex === 0 ? undefined : posts[currentPostIndex - 1
       {nextPost && (
         <p class="text-right">
           Newer:{" "}
-          <a href={`/articles/${nextPost.id}/`} rel="next">
+          <a href={`/articles/${nextPost.id}/`} rel="next" data-astro-prefetch="viewport">
             {nextPost.data.title}
           </a>
         </p>

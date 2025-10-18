@@ -3,12 +3,12 @@ layout: /src/layouts/Article.astro
 title: Rails UJS · Custom Confirm
 date: "2020-10-06T22:34:00Z"
 description: "Using a custom confirmation dialog, when using Rails unobtrusive JavaScript driver."
-cover: "../../../../assets/articles/rails-ujs-custom-confirm/cover.jpg"
+cover: "../../../../articles/rails-ujs-custom-confirm/cover.jpg"
 ---
 
 In Rails, the [`@rails/ujs`][npm-rails-ujs] driver can be used to add interactions to a website, without needing to mix the JavaScript with the HTML. It's progressively enhancing a site, and will not do anything special if JavaScript is turned off. In particular, this driver allows to [Show a Confirmation][rails-guides-confirmations] before actually executing whatever the click / touch / interaction was supposed to do.
 
-![Thumbs up with a gradient background](../../../../assets/articles/rails-ujs-custom-confirm/cover.jpg)
+![Thumbs up with a gradient background](../../../../articles/rails-ujs-custom-confirm/cover.jpg)
 
 From the documentation, the following Ruby or ERB (Embedded Ruby) code...
 
@@ -195,5 +195,5 @@ It's a bit weird to override the synchronous nature of the default `Rails.confir
 
 [npm-rails-ujs]: https://www.npmjs.com/package/@rails/ujs
 [rails-guides-confirmations]: https://guides.rubyonrails.org/working_with_javascript_in_rails.html#confirmations
-[github-rails-ujs]: https://github.com/rails/rails/blob/e9aa7ecdee0aa7bb4dcfa5046881bde2f1fe21cc/actionview/app/assets/javascripts/rails-ujs/features/confirm.coffee#L8-L10
+[github-rails-ujs]: https://github.com/rails/rails/blob/e9aa7ecdee0aa7bb4dcfa5046881bde2f1fe21cc/actionview/app/javascripts/rails-ujs/features/confirm.coffee#L8-L10
 [web-sweetalert2]: https://sweetalert2.github.io/

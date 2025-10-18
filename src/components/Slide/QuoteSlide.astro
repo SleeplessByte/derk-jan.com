@@ -25,8 +25,7 @@ const {
       <blockquote cite={citeHref} class="">
         <slot name="quote" />
       </blockquote>
-      <cite class="opacity-65"
-        >&mdash; <a target="_blank" href={citeHref}>{cite}</a></cite
+      <cite class="opacity-65">&mdash; <a target="_blank" href={citeHref}>{cite}</a></cite
       >
     </figure>
   </div>
@@ -34,7 +33,7 @@ const {
   {
     nextHref ? (
       <footer class="controls" transition:name="next">
-        <a rel="next" href={nextHref} class="group">
+        <a rel="next" href={nextHref} class="group" data-astro-prefetch="load">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

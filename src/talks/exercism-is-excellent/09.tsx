@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import analyzerResultSrc from "/src/assets/talks/exercism-is-excellent/analyzer.jpg";
+import analyzerResultSrc from "./analyzer.jpg";
 import { Code } from "../../components/Slide/SlideCode";
 
 const NEXT_SLIDE_COUNT = 10;

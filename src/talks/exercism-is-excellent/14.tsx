@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { AutoSlideFooter } from "../../components/Slide/AutoSlideFooter";
 
-import eventSrc from "/src/assets/talks/exercism-is-excellent/12-in-23.png";
+import eventSrc from "./12-in-23.png";
 
 const NEXT_SLIDE_COUNT = 15;
 const NEXT_SLIDE_LABEL = "conclusions";
