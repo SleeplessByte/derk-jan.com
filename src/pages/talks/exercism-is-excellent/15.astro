@@ -1,8 +1,17 @@
 ---
-import Page from "../../../talks/exercism-is-excellent/15";
+import { ExternalLink } from "../../../components/ExternalLink";
 import SlidesLayout from "../../../layouts/talks/exercism-is-excellent.astro";
 ---
 
 <SlidesLayout title="Slide 15: Exercis[em] is Excellent">
-  <Page client:idle />
+  <section class="slide --center --cover">
+    <div class="slide-content h-full">
+      <header class="px-4 flex flex-col items-center justify-center h-full">
+        <h3 id="title-slide-1">Exercis[em] is Excellent</h3>
+        <ExternalLink href="https://exercism.org/profiles/SleeplessByte">
+          https://exercism.org/profiles/SleeplessByte
+        </ExternalLink>
+      </header>
+    </div>
+  </section>
 </SlidesLayout>

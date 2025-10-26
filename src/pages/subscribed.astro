@@ -2,16 +2,14 @@
 import Fallback from "../components/AccessibleCardLink/Fallback.astro";
 import Link from "../components/AccessibleCardLink/Link.astro";
 import ExternalLinks from "../components/ExternalLinks.astro";
-import Layout from "../layouts/Layout.astro";
+import HtmlLayout from "../layouts/HtmlLayout.astro";
 ---
 
-<Layout title="You are subscribed">
+<HtmlLayout title="You are subscribed">
   <main id="content" class="mx-auto w-full max-w-5xl px-5 py-8">
     <header class="px-4">
       <h1 class="text-5xl font-bold">Bits and Pieces</h1>
-      <p class="text-xl mt-1">
-        Talks, Articles, and Ramblings by Derk-Jan Karrenbeld
-      </p>
+      <p class="text-xl mt-1">Talks, Articles, and Ramblings by Derk-Jan Karrenbeld</p>
     </header>
 
     <section class="px-4 mt-16">
@@ -27,9 +25,7 @@ import Layout from "../layouts/Layout.astro";
       <h2 class="font-bold text-xl">Explore bits and pieces</h2>
     </header>
 
-    <nav
-      class="space-y-2 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4 mt-4 -mx-1"
-    >
+    <nav class="space-y-2 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4 mt-4 -mx-1">
       <Link
         className="transition relative p-6 rounded-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 shadow-sm dark:shadow-md group focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500 dark:focus-within:ring-yellow-500 hover:bg-white dark:hover:bg-zinc-700 active:bg-zinc-50 dark:active:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-200 active:border-zinc-200 dark:active:border-zinc-900 hover:shadow-md dark:hover:shadow-lg active:shadow-none cursor-pointer"
       >
@@ -74,10 +70,7 @@ import Layout from "../layouts/Layout.astro";
             stroke="currentColor"
             stroke-width="2"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
           </svg>
         </span>
       </Link>
@@ -127,15 +120,12 @@ import Layout from "../layouts/Layout.astro";
             stroke="currentColor"
             stroke-width="2"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
           </svg>
         </span>
       </Link>
     </nav>
 
-    <ExternalLinks />
+    <div class="mt-12 px-0 md:px-4"><ExternalLinks /></div>
   </aside>
-</Layout>
+</HtmlLayout>

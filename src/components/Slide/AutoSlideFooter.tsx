@@ -44,7 +44,7 @@ function AutoNext({
 
       timeout = setTimeout(() => {
         setAnimateClassName("");
-        refLink.current?.click();
+        //refLink.current?.click();
       }, 5000);
     }, duration - 5000);
 

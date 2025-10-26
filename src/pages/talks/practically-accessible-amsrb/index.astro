@@ -1,11 +1,10 @@
 ---
-import Layout from "../../../layouts/Layout.astro";
+import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 ---
 
-<Layout title="Practically Accessible (Talk)">
+<HtmlLayout title="Practically Accessible (Talk)">
   <div class="sr-only" aria-live="polite">
-    You are currently on Practically Accessible: Talk, on Code in Bits and
-    Pieces
+    You are currently on Practically Accessible: Talk, on Code in Bits and Pieces
   </div>
   <header class="mx-auto w-full max-w-5xl px-5 py-8 absolute top-0 z-10">
     <a
@@ -35,15 +34,12 @@ import Layout from "../../../layouts/Layout.astro";
       </a>
     </nav>
   </header>
-  <main
-    id="content"
-    class="prose-lg sm:prose-xl md:prose-2xl min-h-screen slides"
-  >
+  <main id="content" class="prose-lg sm:prose-xl md:prose-2xl min-h-screen slides">
     <h1 class="sr-only">Talk: Practically Accessible</h1>
 
     <p class="sr-only">
-      This page consists of multiple slides, each contained within its own
-      section. Each section has a link at the end to the next section.
+      This page consists of multiple slides, each contained within its own section. Each
+      section has a link at the end to the next section.
     </p>
 
     <h2 class="sr-only">Front page and slide of the talk</h2>
@@ -68,11 +64,9 @@ import Layout from "../../../layouts/Layout.astro";
         class="text-center max-w-md sm:max-w-lg md:max-w-xl mx-auto leading-7 sm:leading-7 md:leading-8"
       >
         Want to see me speak or listen to this talk?{" "}
-        <a href="https://youtu.be/kDh7DyWH5dM?t=3236">
-          Watch a recording on YouTube
-        </a>
+        <a href="https://youtu.be/kDh7DyWH5dM?t=3236"> Watch a recording on YouTube </a>
         .
       </p>
     </section>
   </main>
-</Layout>
+</HtmlLayout>

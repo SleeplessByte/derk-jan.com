@@ -14,8 +14,8 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
 
 <HtmlLayout
   title={title
-    ? `${title} · Exercism is Excellent: Talk, on Code in Bits and Pieces`
-    : "Exercism is Excellent: Talk, on Code in Bits and Pieces"}
+    ? `${title} · Practically Accessible: Talk, on Code in Bits and Pieces`
+    : "Practically Accessible: Talk, on Code in Bits and Pieces"}
   class="slide-wrapper"
 >
   <header>
@@ -23,10 +23,10 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
       <span>Skip to main content</span>
     </a>
     {
-      currentPath === "/talks/exercism-is-excellent" ||
-      currentPath === "/talks/exercism-is-excellent/15" ? (
+      currentPath === "/talks/practically-accessible" ||
+      currentPath === "/talks/practically-accessible/15" ? (
         <nav
-          class={`${currentPath !== "/talks/exercism-is-excellent" ? "opacity-20" : ""}`}
+          class={`${currentPath !== "/talks/practically-accessible" ? "opacity-20" : ""}`}
         >
           <a href="/talks" class="back-link z-20 bg-white/80 dark:bg-black/80">
             <svg
@@ -49,7 +49,7 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
     }
   </header>
 
-  <h1 class="sr-only">Talk: Exercise and Exercism are Excellent</h1>
+  <h1 class="sr-only">Talk: Practically Accessible</h1>
 
   <p class="sr-only">
     This talk consists of multiple slides, each contained within its own section. Each
@@ -60,7 +60,7 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
     <slot />
 
     <footer class="absolute right-0 bottom-0 p-6 text-sm opacity-75">
-      {slideNumber > 0 ? slideNumber : "??"} / 15
+      {slideNumber > 0 ? slideNumber : "??"} / 0
     </footer>
   </main>
 </HtmlLayout>

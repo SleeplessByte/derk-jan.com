@@ -1,0 +1,134 @@
+---
+import HtmlLayout from "../layouts/HtmlLayout.astro";
+import ExternalLinks from "../components/ExternalLinks.astro";
+import AccessibleCardLink from "../components/AccessibleCardLink/Link.astro";
+import AccessibleCardFallback from "../components/AccessibleCardLink/Fallback.astro";
+
+import ArticlesGraphic from "../components/ArticlesGraphic.astro";
+import TalksGraphic from "../components/TalksGraphic.astro";
+import RecipesGraphic from "../components/RecipesGraphic.astro";
+---
+
+<style>
+  .wrapper,
+  .wrapper > .sub-grid {
+    display: grid;
+    grid-template-columns: 1fr min(42rem, 100%) 1fr;
+  }
+
+  .wrapper {
+    padding-inline: 16px;
+  }
+
+  .wrapper > .sub-grid {
+    padding-inline: 0;
+  }
+
+  .wrapper > *,
+  .sub-grid > * {
+    grid-column: 2;
+  }
+
+  .full-bleed,
+  .wrapper > .sub-grid {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+</style>
+
+<HtmlLayout>
+  <main id="content" class="wrapper">
+    <header class="pt-8 lg:pt-12 xl:pt-16 px-4 md:px-0">
+      <h1 class="text-5xl lg:text-6xl xl:text-7xl font-bold">Bits and Pieces</h1>
+      <p class="text-xl mt-1">
+        Talks, Articles, and Ramblings by{" "}
+        <a href="/about">Derk-Jan Karrenbeld</a>
+      </p>
+    </header>
+
+    <nav class="sub-grid"></nav>
+
+    <nav
+      class="mt-10 sm:mt-16 space-y-2 sm:space-y-0 flex flex-col gap-y-2 sm:gap-y-4 sm:gap-4 -mx-1 sub-grid"
+    >
+      <div>
+        <AccessibleCardLink
+          className="transition relative p-6 rounded-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 shadow-sm dark:shadow-md group focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500 dark:focus-within:ring-yellow-500 hover:bg-white dark:hover:bg-zinc-700 active:bg-zinc-50 dark:active:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-200 active:border-zinc-200 dark:active:border-zinc-900 hover:shadow-md dark:hover:shadow-lg active:shadow-none cursor-pointer"
+        >
+          <div class="flex flex-row gap-2 sm:gap-8">
+            <div class="relative basis-20 sm:basis-32 sm:shrink-0 sm:grow-0 sm:-my-12">
+              <ArticlesGraphic
+                class="w-auto h-full sm:-translate-x-3 sm:-translate-y-6"
+              />
+            </div>
+
+            <div class="flex-1 my-auto sm:my-0">
+              <h2 class="text-lg font-medium">
+                <a class="focus:outline-none" href="/articles">
+                  <AccessibleCardFallback className="absolute inset-0" />
+                  Articles
+                </a>
+              </h2>
+              <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                Read articles or posts I've written about various subjects.
+              </p>
+            </div>
+          </div>
+        </AccessibleCardLink>
+      </div>
+
+      <div>
+        <AccessibleCardLink
+          className="transition relative p-6 rounded-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 shadow-sm dark:shadow-md group focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500 dark:focus-within:ring-yellow-500 hover:bg-white dark:hover:bg-zinc-700 active:bg-zinc-50 dark:active:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-200 active:border-zinc-200 dark:active:border-zinc-900 hover:shadow-md dark:hover:shadow-lg active:shadow-none cursor-pointer"
+        >
+          <div class="flex flex-row gap-2 sm:gap-8">
+            <div class="flex-1 text-right my-auto sm:my-0">
+              <h2 class="text-lg font-medium">
+                <a class="focus:outline-none" href="/talks">
+                  <AccessibleCardFallback className="absolute inset-0" />
+                  Talks & Slides
+                </a>
+              </h2>
+              <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                Read along or revisit the slides of the talks I've given.
+              </p>
+            </div>
+
+            <div class="relative basis-20 sm:basis-32 sm:shrink-0 sm:grow-0 sm:-my-12">
+              <TalksGraphic class="w-auto h-full sm:-translate-x-3 sm:-translate-y-6" />
+            </div>
+          </div>
+        </AccessibleCardLink>
+      </div>
+    </nav>
+
+    <div class="mt-12 grid sm:grid-cols-2 gap-4 sm:gap-2">
+      <aside><ExternalLinks /></aside>
+      {
+        process.env.NODE_ENV === "development" ? (
+          <div class="aspect-video sm:mt-12">
+            <AccessibleCardLink className="w-full transition relative p-6 rounded-md bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 shadow-sm dark:shadow-md group focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500 dark:focus-within:ring-yellow-500 hover:bg-white dark:hover:bg-zinc-700 active:bg-zinc-50 dark:active:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-200 active:border-zinc-200 dark:active:border-zinc-900 hover:shadow-md dark:hover:shadow-lg active:shadow-none cursor-pointer">
+              <div class="flex flex-row gap-2 sm:gap-2">
+                <div class="relative basis-20 sm:basis-32 sm:shrink-0 sm:grow-0 -ml-3 sm:-ml-20 -my-3 sm:-my-12">
+                  <RecipesGraphic class="w-auto h-full sm:-translate-x-3 sm:-translate-y-6" />
+                </div>
+
+                <div class="flex-1 my-auto sm:my-0">
+                  <h2 class="text-lg font-medium">
+                    <a class="focus:outline-none" href="/recipes">
+                      <AccessibleCardFallback className="absolute inset-0" />
+                      Recipes
+                    </a>
+                  </h2>
+                  <p class="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+                    My favourite recipes
+                  </p>
+                </div>
+              </div>
+            </AccessibleCardLink>
+          </div>
+        ) : null
+      }
+    </div>
+  </main>
+</HtmlLayout>

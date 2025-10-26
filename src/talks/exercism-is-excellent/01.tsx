@@ -7,19 +7,22 @@ import headlineInterference from "./news-interference.png";
 import headlineLifetime from "./news-lifetime.png";
 import headlinePractice from "./news-practice.png";
 import { SlideFooter } from "../../components/Slide/SlideFooter";
+import { Image } from "astro:assets";
 
 const HEADLINES = [
   {
     src: headlineExercise,
     alt: "Headline: exercise is good for you",
+    url: null,
     caption: "",
     width: 2360,
     height: 1640,
-    blur: { top: "12%", bottom: "58%" },
+    blur: { top: "2%", bottom: "58%" },
   },
   {
     src: headlinePractice,
     alt: "Headline: Practice makes perfect",
+    url: null,
     caption: "",
     width: 2360,
     height: 1640,
@@ -28,30 +31,35 @@ const HEADLINES = [
   {
     src: headlineLifetime,
     alt: "Headline: Learning a foreign language lasts forever",
+    url: null,
     caption: "",
     width: 2360,
     height: 1640,
-    blur: { top: "25%", bottom: "50%" },
+    blur: { top: "20%", bottom: "58%" },
   },
   {
     src: headlineExposure,
     alt: "Headline: Expose to multiple languages makes it easier to learn one",
+    url: null,
     caption: "",
     width: 2360,
     height: 1640,
 
-    blur: { top: "52%", bottom: "30%" },
+    blur: { top: "51%", bottom: "24%" },
   },
   {
     src: headlineInterference,
     alt: "Headline: Why is it difficult for developers to learn another programming language?",
+    url: null,
     caption: "",
     width: 2360,
     height: 1640,
 
-    blur: { top: "28%", bottom: "60%" },
+    blur: { top: "23%", bottom: "60%" },
   },
 ];
+
+const author = null;
 
 const HEADLINE_INTERVAL = 12 * 1000;
 const THIS_SLIDE = "/talks/exercism-is-excellent/01/{{index}}";
@@ -120,62 +128,51 @@ export default function Page({ currentUrl }: { currentUrl: URL }) {
   }, [headline]);
 
   return (
-    <div>
-      <header className="-mt-24">
-        <h2 className="font-semibold">
-          <span className="sr-only">Slide 1: headlines.</span> Exercise is
-          important
-        </h2>
-      </header>
+    <section className={`slide --image`}>
+      <figure className="relative">
+        <blockquote cite={headline.url || undefined}>
+          <img
+            src={headline.src.src}
+            width={headline.src.width}
+            height={headline.src.height}
+            alt={headline.alt}
+            className={`${"object-cover"}`}
+            loading="eager"
+          />
 
-      <div className="w-[236px] h-[164px] sm:w-[531px] sm:h-[369px] md:w-[708px] md:h-[492px] mx-auto sm:mx-0">
-        <AnimatePresence mode="popLayout">
-          <motion.figure
-            key={headline.src.src}
-            className="overflow-hidden block rounded-lg border-black/20 dark:border-black/50 border-4 shadow-xl relative"
-            style={{ margin: 0 }}
-            initial={{
-              opacity: 0,
-            }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.65, overflow: {} }}
-          >
-            <img
-              src={headline.src.src}
-              alt={headline.alt}
-              width={headline.width}
-              height={headline.height}
-              className="w-[236px] h-[164px] sm:w-[531px] sm:h-[369px] md:w-[708px] md:h-[492px]"
-            />
-            <div
-              className="bg-white/70 absolute top-0 left-0 right-0"
-              style={{ height: headline.blur.top }}
-            ></div>
+          <div
+            className="bg-white/70 absolute top-0 left-0 right-0"
+            style={{ height: headline.blur.top }}
+          ></div>
 
-            <div
-              className="bg-white/70 absolute bottom-0 left-0 right-0"
-              style={{ height: headline.blur.bottom }}
-            ></div>
-            {headline.caption ? (
-              <figcaption className="bottom-0 absolute p-4 bg-gradient-to-r from-black/90 via-black/80 to-black/70 w-full font-semibold md:text-3xl">
-                {headline.caption}
-              </figcaption>
+          <div
+            className="bg-white/70 absolute bottom-0 left-0 right-0"
+            style={{ height: headline.blur.bottom }}
+          ></div>
+        </blockquote>
+        <figcaption className="">
+          <span className="">
+            {headline.caption || "Exercise is important"}
+            {author ? (
+              <span>
+                By <cite>{author}</cite>.
+              </span>
             ) : null}
-            <div
-              ref={progressBar}
-              className={"absolute bottom-0 h-1 bg-yellow-600"}
-              style={{
-                transitionProperty: "width",
-                transitionDuration: "0ms",
-                transitionTimingFunction: "ease-in-out",
-              }}
-            ></div>
-          </motion.figure>
-        </AnimatePresence>
-      </div>
+          </span>
+        </figcaption>
+
+        <div
+          ref={progressBar}
+          className={"absolute bottom-0 h-1 bg-yellow-600"}
+          style={{
+            transitionProperty: "width",
+            transitionDuration: "0ms",
+            transitionTimingFunction: "ease-in-out",
+          }}
+        ></div>
+      </figure>
 
       <SlideFooter next={NEXT_SLIDE} nextCount={2} nextLabel={"introduction"} />
-    </div>
+    </section>
   );
 }

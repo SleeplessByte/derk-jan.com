@@ -17,7 +17,7 @@ import Newsletter from "../components/Newsletter.astro";
 import StaticDate from "../components/StaticDate";
 import TimeToRead from "../components/TimeToRead";
 import RelLinks from "../components/RelLinks.astro";
-import BaseLayout from "./Layout.astro";
+import BaseLayout from "./HtmlLayout.astro";
 import "../styles/transitions.css";
 
 const { frontmatter, id } = Astro.props;
@@ -68,9 +68,7 @@ const transitionName = md5(id || "");
           </span>
         </h1>
         <p style={{ marginTop: -24 }} class="font-bold">
-          <StaticDate date={frontmatter.date} aria-label="Published on" /> •{
-            " "
-          }
+          <StaticDate date={frontmatter.date} aria-label="Published on" /> •{" "}
           <TimeToRead minutes={frontmatter.minutesRead} />
         </p>
       </header>

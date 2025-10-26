@@ -16,10 +16,10 @@ Wage slip administration:
   5. Date: `<any day>-<month>-<year>`
   6. Due date: (automatically) `<last day>-<month+1>-<year>`
   7. Line items:
-     a. `4000 - Bruto loon`
-     b. `4021 - Kosten nettovergoedingen`
-     c. `2111 - Loonheffingen`
-     d. `1750 - Af tr dragen sociale premises werkgever`
+     1. `4000 - Bruto loon`
+     2. `4021 - Kosten nettovergoedingen`
+     3. `2111 - Loonheffingen`
+     4. `1750 - Af tr dragen sociale premises werkgever`
 - Book IRS transaction against `Relation: 1 - Belastingdienst`
 - Create &rarr; `62 - Wage slips` &rarr; Booking
   1. Upload the IRS specification
@@ -29,17 +29,17 @@ Wage slip administration:
   5. Date: `<Date sent>`
   6. Due date: (automatically) `<last day>-<month>-<year>`
   7. Line items:
-     a. `2111 - Loonheffing`
-     b. `1750 - Af te dragen sociale premises wergever`
-     c. `9200 - Rekenverschillen`: after reconciliation
+     1. `2111 - Loonheffing`
+     2. `1750 - Af te dragen sociale premises wergever`
+     3. `9200 - Rekenverschillen`: after reconciliation
 
 After both are paid:
 
 1. Reconcile wage slip `1671 - Te betalen lonen` per `Relation: (private)`
 2. Reconcile IRS payment `1671 - Te betalen lonen` for `Relation: 1 - Belastingdienst`
-   a. If necessary add extra line item `2111 - Loonheffing` to round number
-   b. If necessary add extra line item `1750 - Af te dragen sociale premises wergever` to round number
-   c. Set `9200 - Rekenverschillen` to negative matching rounding
+   1. If necessary add extra line item `2111 - Loonheffing` to round number
+   2. If necessary add extra line item `1750 - Af te dragen sociale premises wergever` to round number
+   3. Set `9200 - Rekenverschillen` to negative matching rounding
 
 Pension administration:
 
@@ -52,7 +52,7 @@ Pension administration:
   5. Date: `<any day>-<month>-<year>`
   6. Due date: (automatically) `<last day>-<month>-<year>`
   7. Line items:
-     a. `4052 - Pensioenkosten`
+     1. `4052 - Pensioenkosten`
 
 After it's paid:
 

@@ -1,57 +1,56 @@
 ---
 import { getCollection } from "astro:content";
 import HtmlLayout from "../../layouts/HtmlLayout.astro";
-import StaticDate from "../../components/StaticDate";
 import "../../styles/transitions.css";
 
-import md5 from "../../functions/md5";
+const recipes = (await getCollection("recipes")).filter(
+  (post) => post.data.published !== false || process.env.NODE_ENV === "development",
+);
 
-const articles = (await getCollection("articles"))
-  .filter(
-    (post) => post.data.published !== false || process.env.NODE_ENV === "development",
-  )
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+// .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<HtmlLayout title="Articles">
+<HtmlLayout title="Recipes">
   <main id="content" class="mx-auto w-full max-w-5xl px-5 py-8">
     <header class="px-4">
-      <h1 class="text-5xl font-bold">Articles on <a href="/">Bits and Pieces</a></h1>
-      <p class="text-xl mt-1">Articles by Derk-Jan Karrenbeld</p>
+      <h1 class="text-5xl font-bold">Recipes on <a href="/">Bits and Pieces</a></h1>
+      <p class="text-xl mt-1">Derk-Jan's favourite recipes</p>
     </header>
-
-    <section class="px-4 mt-12">
-      <a href="/talks">Looking for talks instead?</a>
-    </section>
 
     <ol class="mt-12 space-y-6" role="list">
       {
-        articles.map((article) => (
+        recipes.map((recipe) => (
           <li>
             <article class="transition p-4 focus-within:ring-2 focus-within:ring-pink-500 dark:focus-within:ring-yellow-500 max-w-2xl rounded-md">
               <header>
                 <h2>
                   <a
-                    href={`/articles/${article.id}`}
+                    href={`/recipes/${recipe.id}`}
                     class="text-3xl font-semibold no-underline focus:outline-none"
-                    aria-describedby={`${article.id}-description`}
+                    aria-describedby={`${recipe.id}-description`}
                     data-astro-prefetch
                   >
                     {/*transition:animate="slide"
                       transition:name={md5(article.id)}
                       */}
                     <span>
-                      {article.data.published === false ? "(Draft) " : ""}
-                      {article.data.title}
+                      {recipe.data.published === false ? "(Draft) " : ""}
+                      {recipe.data.title}
                     </span>
                   </a>
                 </h2>
                 <span class="text-zinc-600 dark:text-zinc-400">
-                  <StaticDate date={article.data.date} aria-label="Published on " />
+                  {recipe.data.vegan
+                    ? "vegan"
+                    : recipe.data.vegetarian
+                      ? "vegetarian"
+                      : recipe.data.pescetarian
+                        ? "pescetarian"
+                        : "omnivore"}
                 </span>
               </header>
-              <p id={`${article.id}-description`} class="mt-2 text-xl">
-                {article.data.description}
+              <p id={`${recipe.id}-description`} class="mt-2 text-xl">
+                {recipe.data.description}
               </p>
             </article>
           </li>

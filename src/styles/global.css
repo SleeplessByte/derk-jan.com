@@ -11,6 +11,7 @@
   font-style: normal;
   font-weight: 300 900;
   font-display: swap;
+  font-display: optional;
   src:
     url("/fonts/AlanSans-VariableFont_wght.ext.woff2") format("woff2"),
     url("/fonts/AlanSans-VariableFont_wght.ttf") format("truetype");
@@ -25,6 +26,7 @@
   font-style: normal;
   font-weight: 300 900;
   font-display: swap;
+  font-display: optional;
   src:
     url("/fonts/AlanSans-VariableFont_wght.woff2") format("woff2"),
     url("/fonts/AlanSans-VariableFont_wght.ttf") format("truetype");
@@ -56,6 +58,10 @@
 }
 
 @import "./imported";
+
+body .max-w-prose {
+  max-width: 50rem;
+}
 
 .astro-code {
   @apply border dark:border-0 !bg-zinc-900 text-zinc-50 dark:!bg-black/30 shadow-sm leading-6 sm:leading-6 md:leading-7 overflow-auto max-w-full max-h-[80%];

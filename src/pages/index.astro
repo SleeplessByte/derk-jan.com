@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import HtmlLayout from "../layouts/HtmlLayout.astro";
 import ExternalLinks from "../components/ExternalLinks.astro";
 import AccessibleCardLink from "../components/AccessibleCardLink/Link.astro";
 import AccessibleCardFallback from "../components/AccessibleCardLink/Fallback.astro";
 ---
 
-<Layout>
+<HtmlLayout>
   <main id="content" class="mx-auto w-full max-w-5xl px-5 py-8">
     <header class="px-4">
       <h1 class="text-5xl font-bold">Bits and Pieces</h1>
@@ -62,10 +62,7 @@ import AccessibleCardFallback from "../components/AccessibleCardLink/Fallback.as
             stroke="currentColor"
             stroke-width="2"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
           </svg>
         </span>
       </AccessibleCardLink>
@@ -115,15 +112,12 @@ import AccessibleCardFallback from "../components/AccessibleCardLink/Fallback.as
             stroke="currentColor"
             stroke-width="2"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
           </svg>
         </span>
       </AccessibleCardLink>
     </nav>
 
-    <ExternalLinks />
+    <aside class="mt-12 px-0 md:px-4"><ExternalLinks /></aside>
   </main>
-</Layout>
+</HtmlLayout>
