@@ -8,8 +8,8 @@ const currentPath = Astro.url.pathname;
 
 <Layout
   title={title
-    ? `${title} · Exercism is Excellent: Talk, on Code in Bits and Pieces`
-    : "Exercism is Excellent: Talk, on Code in Bits and Pieces"}
+    ? `${title} · Practically Accessible: Talk, on Code in Bits and Pieces`
+    : "Practically Accessible: Talk, on Code in Bits and Pieces"}
 >
   <header class="mx-auto w-full max-w-5xl px-5 py-8 absolute top-0 z-10">
     <a
@@ -19,10 +19,10 @@ const currentPath = Astro.url.pathname;
       <span class="block p-2">Skip to main content</span>
     </a>
     {
-      currentPath === "/talks/exercism-is-excellent" ? (
+      currentPath === "/talks/practically-accessible" ? (
         <nav
           class={`transition focus-within:opacity-100 hover:opacity-100 ${
-            currentPath !== "/talks/exercism-is-excellent" ? "opacity-20" : ""
+            currentPath !== "/talks/practically-accessible" ? "opacity-20" : ""
           }`}
         >
           <a
@@ -49,7 +49,7 @@ const currentPath = Astro.url.pathname;
     }
   </header>
 
-  <h1 class="sr-only">Talk: Exercise and Exercism are Excellent</h1>
+  <h1 class="sr-only">Talk: Practically Accessible</h1>
 
   <p class="sr-only">
     This talk consists of multiple slides, each contained within its own section. Each

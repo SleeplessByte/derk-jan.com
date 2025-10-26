@@ -18,6 +18,7 @@ export function SlideFooter({
           href={next}
           className="mx-auto prose-lg p-4 transition rounded-md focus:outline-none focus:ring-2 focus:ring-current mb-2 group"
           rel="next"
+          data-astro-prefetch="load"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

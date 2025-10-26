@@ -1,0 +1,16 @@
+---
+import Page from "../../../../../talks/practically-accessible/microsite/screen-reader";
+import HtmlLayout from "../../../../../layouts/Layout.astro";
+
+const fixOutlines = Astro.params.fixes !== "minimal";
+
+export function getStaticPaths() {
+  return [{ params: { fixes: "minimal" } }, { params: { fixes: "outlines" } }];
+}
+---
+
+<HtmlLayout
+  title="Practically Accessible microsite: This example page is not completely inaccessible"
+>
+  <Page client:idle fixOutlines={fixOutlines} />
+</HtmlLayout>
