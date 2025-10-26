@@ -1,0 +1,14 @@
+---
+import Page from "../../../../../talks/practically-accessible/microsite/looks-fine";
+import HtmlLayout from "../../../../../layouts/Layout.astro";
+
+const disableBlackout = Astro.params.light === "bright";
+
+export function getStaticPaths() {
+  return [{ params: { light: "lacking" } }, { params: { light: "bright" } }];
+}
+---
+
+<HtmlLayout title="Practically Accessible microsite: This example page looks fine">
+  <Page client:idle disableBlackout={disableBlackout} />
+</HtmlLayout>

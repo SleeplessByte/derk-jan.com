@@ -1,4 +1,5 @@
 ---
+import KeyboardControl from "../../components/KeyboardControl.astro";
 import HtmlLayout from "../../layouts/HtmlLayout.astro";
 import "../../styles/transitions.css";
 
@@ -9,6 +10,7 @@ type Props = {
 
 const { title, "slides-class": slidesClass } = Astro.props;
 const currentPath = Astro.url.pathname;
+
 const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
 ---
 
@@ -16,22 +18,28 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
   title={title
     ? `${title} · Practically Accessible: Talk, on Code in Bits and Pieces`
     : "Practically Accessible: Talk, on Code in Bits and Pieces"}
-  class="slide-wrapper"
 >
-  <header>
-    <a href="#content" class="skip-link">
-      <span>Skip to main content</span>
+  <header class="mx-auto w-full max-w-5xl px-5 py-8 absolute top-0 z-10">
+    <a
+      href="#content"
+      class="transition sr-only focus:not-sr-only rounded-md focus:fixed focus:top-4 focus:left-4 focus:dark:bg-zinc-900 focus:bg-zinc-100 focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-yellow-500"
+    >
+      <span class="block p-2">Skip to main content</span>
     </a>
     {
-      currentPath === "/talks/practically-accessible" ||
-      currentPath === "/talks/practically-accessible/15" ? (
+      currentPath === "/talks/practically-accessible" ? (
         <nav
-          class={`${currentPath !== "/talks/practically-accessible" ? "opacity-20" : ""}`}
+          class={`transition focus-within:opacity-100 hover:opacity-100 ${
+            currentPath !== "/talks/practically-accessible" ? "opacity-20" : ""
+          }`}
         >
-          <a href="/talks" class="back-link z-20 bg-white/80 dark:bg-black/80">
+          <a
+            href="/talks"
+            class="transition group inline-flex space-x-1 items-center focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-yellow-500 rounded-md p-2 -mx-2"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class=""
+              class="h-5 w-5 motion-safe:group-hover:animate-bouncel motion-safe:group-focus:animate-bouncel"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -60,7 +68,9 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
     <slot />
 
     <footer class="absolute right-0 bottom-0 p-6 text-sm opacity-75">
-      {slideNumber > 0 ? slideNumber : "??"} / 0
+      {slideNumber > 0 ? slideNumber : "??"} / 42
     </footer>
   </main>
+
+  <KeyboardControl />
 </HtmlLayout>

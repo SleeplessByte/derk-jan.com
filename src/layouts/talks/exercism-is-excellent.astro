@@ -1,4 +1,5 @@
 ---
+import KeyboardControl from "../../components/KeyboardControl.astro";
 import HtmlLayout from "../../layouts/HtmlLayout.astro";
 import "../../styles/transitions.css";
 
@@ -63,4 +64,6 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
       {slideNumber > 0 ? slideNumber : "??"} / 15
     </footer>
   </main>
+
+  <KeyboardControl />
 </HtmlLayout>
