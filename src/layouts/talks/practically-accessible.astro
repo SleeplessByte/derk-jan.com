@@ -64,7 +64,7 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
     section has a link at the end to the next section.
   </p>
 
-  <main id="content" class={`${slidesClass ?? "fixed-slides"}`}>
+  <main id="content" class={`${slidesClass ?? "slides"}`}>
     <slot />
 
     <footer class="absolute right-0 bottom-0 p-6 text-sm opacity-75">

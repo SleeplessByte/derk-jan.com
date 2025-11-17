@@ -1,5 +1,5 @@
 import { SlideFooter } from "../../components/Slide/SlideFooter";
-import statusIconsSrc from "../../assets/talks/practically-accessible/statusicons.png";
+import statusIconsSrc from "./statusicons.png";
 
 export default function Page() {
   return (
