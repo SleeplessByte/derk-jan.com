@@ -482,6 +482,18 @@ body:has(.fixed-slides) {
       }
     }
 
+    &.--bleeding {
+      @apply items-start;
+
+      & .slide-content {
+        @apply mx-auto mt-0 md:justify-start lg:justify-start md:pt-2 lg:pt-4;
+
+        & > header {
+          @apply px-6 mt-0;
+        }
+      }
+    }
+
     & .slanted-background {
       @apply w-full text-center !mt-0 md:pb-16 mx-auto;
 
@@ -496,6 +508,18 @@ body:has(.fixed-slides) {
         @apply max-w-md sm:max-w-prose m-auto;
         @apply w-full sm:w-auto;
         @apply sm:p-6;
+      }
+    }
+
+    & .full-background {
+      @apply absolute inset-0 w-full h-full m-0 p-0;
+
+      & img {
+        @apply absolute inset-0 w-full h-full overflow-clip object-cover !m-0;
+      }
+
+      & figcaption {
+        @apply sr-only;
       }
     }
 

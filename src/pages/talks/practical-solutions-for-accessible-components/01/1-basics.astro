@@ -1,0 +1,42 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/01/2-familiarize";
+const nextLabel = "Go to slide 1.2: Doing the right thing";
+---
+
+<SlidesLayout title="Slide 1.2: Doing the right thing">
+  <ListSlide
+    class=""
+    title="The Right Thing™"
+    type="ul"
+    next-href={nextHref}
+    next-label={nextLabel}
+    sizer="You Integrate Ethical Accessibility Considerations into QA processes"
+  >
+    <li>
+      Follow <a href="https://www.accessibility-developer-guide.com/" target="_blank"
+        >Accessibility Developer Guide</a
+      >
+    </li>
+    <li>
+      Familiarized yourself with <a
+        href="https://www.w3.org/WAI/standards-guidelines/"
+        target="_blank">Accessibility Standards</a
+      >
+    </li>
+    <li>
+      <a href="https://www.w3.org/WAI/test-evaluate/tools/list/" target="_blank"
+        >Evaluate</a
+      > your implementations
+    </li>
+    <li>
+      You <a
+        href="https://www.testdevlab.com/blog/ethical-and-accessibility-considerations-in-qa"
+        >integrate ethical accessibility considerations into QA processes</a
+      >
+    </li>
+    <li>Prioritize accessibility issues over new features</li>
+  </ListSlide>
+</SlidesLayout>

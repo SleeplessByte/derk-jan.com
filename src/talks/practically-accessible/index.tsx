@@ -1,10 +1,3 @@
-import { Link } from "@remix-run/react";
-
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Practically Accessible: Talk, on Code in Bits and Pieces",
-});
-
 export default function Page() {
   return (
     <>
@@ -25,16 +18,16 @@ export default function Page() {
         <div className="text-center max-w-md sm:max-w-lg md:max-w-xl mx-auto leading-7 sm:leading-7 md:leading-8 space-y-4">
           <p>
             Looking for the{" "}
-            <Link to="/talks/practically-accessible-amsrb">
+            <a href="/talks/practically-accessible-amsrb">
               Amsterdam.rb, The Amsterdam Ruby meetup group version
-            </Link>
+            </a>
             ?
           </p>
         </div>
 
         <footer className="absolute left-0 bottom-0 w-full flex items-center">
-          <Link
-            to="/talks/practically-accessible/01"
+          <a
+            href="/talks/practically-accessible/01"
             className="mx-auto prose-lg p-4 transition rounded-md focus:outline-none focus:ring-2 focus:ring-current mb-2"
           >
             <svg
@@ -51,7 +44,7 @@ export default function Page() {
               />
             </svg>
             <span className="sr-only">Goto slide 1: introduction</span>
-          </Link>
+          </a>
         </footer>
       </section>
     </>

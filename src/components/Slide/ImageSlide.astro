@@ -61,7 +61,12 @@ const {
   {
     nextHref ? (
       <footer class="controls" transition:name="next">
-        <a rel="next" href={nextHref} class="group" data-astro-prefetch="load">
+        <a
+          rel="next"
+          href={`${nextHref}#content`}
+          class="group"
+          data-astro-prefetch="load"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

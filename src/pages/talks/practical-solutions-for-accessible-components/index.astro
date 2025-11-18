@@ -1,14 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import Layout from "../../../layouts/talks/embrace-the-patch.astro";
+import Layout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
 
-import textileMarket from "../../../talks/embrace-the-patch/textile-market.jpg";
+import textileMarket from "../../../talks/practical-solutions-for-accessible-components/resourceful-boat.jpg";
 ---
 
 <Layout title="Front page & slide">
   <h2 class="sr-only">Front page and slide of the talk</h2>
 
-  <section class="slide --center --cover">
+  <section class="slide --cover --bleeding">
     <div class="slide-content">
       <header>
         <h3 id="title-slide-1">Practical solutions for accessible components</h3>
@@ -20,9 +20,9 @@ import textileMarket from "../../../talks/embrace-the-patch/textile-market.jpg";
         </p>
       </header>
 
-      <figure class="slanted-background">
+      <figure class="full-background">
         <blockquote
-          cite="https://www.pexels.com/photo/colorful-textile-market-aerial-view-with-vibrant-patterns-33434117/"
+          cite="https://unsplash.com/photos/blue-and-white-boat-on-body-of-water-during-daytime-B2lqs6Inru4"
         >
           <Image
             src={textileMarket}
@@ -34,14 +34,19 @@ import textileMarket from "../../../talks/embrace-the-patch/textile-market.jpg";
           />
         </blockquote>
         <figcaption>
-          A colorful textile market's aerial view, mimicking the vibrant patterns of
-          textile patchwork, by <cite>Rakibul alam khan</cite>.
+          Blue and white boat on body of water during daytime with the name <em
+            translate="no">RESOURCEFUL<sup>2</sup></em
+          >, by <cite>Hao Dong</cite>.
         </figcaption>
       </figure>
     </div>
 
     <footer>
-      <a href="/talks/embrace-the-patch/setup" rel="next" data-astro-prefetch="load">
+      <a
+        href="/talks/practical-solutions-for-accessible-components/setup#content"
+        rel="next"
+        data-astro-prefetch="load"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
