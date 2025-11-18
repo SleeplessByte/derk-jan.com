@@ -1,4 +1,4 @@
-import logoSrc from "../../../assets/talks/practically-accessible/logo2-bug.png";
+import logoSrc from "../logo2-bug.png";
 
 const DATA = {
   status: [
