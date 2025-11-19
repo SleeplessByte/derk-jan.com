@@ -1,0 +1,39 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+---
+
+<SlidesLayout title="Slide 53.4: Tabs (or: how I find information)">
+  <ListSlide
+    type="ol"
+    title="Building some tabs"
+    class="flex-wrap content-center gap-4"
+    next-href="/talks/practical-solutions-for-accessible-components/54"
+    next-label="Go to slide 54: Tabs"
+  >
+    <li>
+      <a href="https://inclusive-components.design/tabbed-interfaces/"
+        >Inclusive Components</a
+      > by Heydon Pickering
+    </li>
+    <li>
+      <a href="https://www.a11y-collective.com/blog/accessibility-tab/"
+        >A11y Collective Blog</a
+      > by Level Level & Rian Rietveld
+    </li>
+    <li>
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tablist_role"
+        target="_blank"><code translate="no">tablist role</code></a
+      >,
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role"
+        target="_blank"><code translate="no">tabpanel role</code></a
+      >, and
+      <a
+        href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tab_role"
+        target="_blank"><code translate="no">tab role</code></a
+      > by MDN
+    </li>
+  </ListSlide>
+</SlidesLayout>

@@ -1,0 +1,34 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ShellSlide from "../../../../components/Slide/ShellSlide.astro";
+import { Code } from "astro:components";
+import { words } from "../../../../functions/transformations";
+---
+
+<SlidesLayout title="Slide 55.15: Tabs HTML">
+  <ShellSlide
+    class="flex-wrap content-center gap-4"
+    next-href="/talks/practical-solutions-for-accessible-components/55/16-state"
+    next-label="Go to slide 55.16: Tabs HTML"
+  >
+    <Code
+      slot="single"
+      lang="html"
+      meta="/hidden/"
+      transformers={words}
+      code={`
+<h3>More about fruits</h3>
+
+<div role="tablist">
+  <button id="tab-a" type="button" role="tab" aria-controls="tp-app">Apple</button>
+  <button id="tab-b" type="button" role="tab" aria-controls="tp-ban">Banana</button>
+  <button id="tab-g" type="button" role="tab" aria-controls="tp-gra">Grape</button>
+</div>
+
+<div role="tabpanel" id="tp-app" aria-labelledby="tab-a">Eve, don't do it</div>
+<div role="tabpanel" id="tp-ban" aria-labelledby="tab-b" hidden>Minion's favourite</div>
+<div role="tabpanel" id="tp-gra" aria-labelledby="tab-g" hidden>Basically Wine</div>
+`.trim()}
+    />
+  </ShellSlide>
+</SlidesLayout>

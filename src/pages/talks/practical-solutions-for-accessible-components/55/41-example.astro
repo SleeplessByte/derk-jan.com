@@ -1,0 +1,254 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/56";
+const nextLabel = "Go to slide 56: Reprise";
+---
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const tablist = document.getElementById(
+      "practical-solutions-for-accessible-components-55-41-tablist",
+    );
+
+    if (!tablist) {
+      return;
+    }
+
+    const options = tablist.querySelectorAll('[role="tab"]');
+    const firstOption = options.item(0);
+    const lastOption = options.item(options.length - 1);
+
+    function selectFirst() {
+      firstOption.focus();
+
+      // automatic activation
+      onActivate(firstOption);
+    }
+
+    function selectLast() {
+      lastOption.focus();
+
+      // automatic activation
+      onActivate(lastOption);
+    }
+
+    function selectNext() {
+      const currentOption = tablist.querySelector(`[aria-selected="true"]`);
+      const nextOption = currentOption.nextElementSibling || firstOption;
+
+      nextOption.focus();
+
+      // automatic activation
+      onActivate(nextOption);
+    }
+
+    function selectPrevious() {
+      const currentOption = tablist.querySelector(`[aria-selected="true"]`);
+      const previousOption = currentOption.previousElementSibling || lastOption;
+
+      previousOption.focus();
+
+      // automatic activation
+      onActivate(previousOption);
+    }
+
+    function onKeyPress(event) {
+      switch (event.key) {
+        case "ArrowRight": {
+          selectNext();
+          event.preventDefault();
+          break;
+        }
+
+        case "ArrowLeft": {
+          selectPrevious();
+          event.preventDefault();
+          break;
+        }
+
+        case "Home": {
+          selectFirst();
+          event.preventDefault();
+          break;
+        }
+
+        case "End": {
+          selectLast();
+          event.preventDefault();
+          break;
+        }
+      }
+    }
+
+    function onClick(event) {
+      const clickedTab = event.target.closest('[role="tab"]');
+      if (!clickedTab) {
+        return;
+      }
+
+      onActivate(clickedTab);
+    }
+
+    function onActivate(tab) {
+      // deselect old tab
+      const oldTab = tablist.querySelector('[aria-selected="true"]');
+      oldTab.setAttribute("tabindex", "-1");
+      oldTab.setAttribute("aria-selected", "false");
+
+      // deactivate old panel
+      const oldPanel = document.getElementById(oldTab.getAttribute("aria-controls"));
+      oldPanel.setAttribute("hidden", "");
+      oldPanel.removeAttribute("tabindex");
+
+      // select new tab
+      tab.setAttribute("tabindex", "0");
+      tab.setAttribute("aria-selected", "true");
+
+      // activate new panel
+      const newPanel = document.getElementById(tab.getAttribute("aria-controls"));
+      newPanel.removeAttribute("hidden", "");
+      newPanel.setAttribute("tabindex", "0");
+    }
+
+    tablist.addEventListener("keydown", onKeyPress);
+    tablist.addEventListener("click", onClick);
+  });
+</script>
+
+<style>
+  #practical-solutions-for-accessible-components-55-41-tablist {
+    margin-bottom: 12px;
+
+    & [role="tab"] {
+      background-color: var(--color-zinc-800);
+      border-bottom: 3px solid transparent;
+      color: white;
+      padding: 3px 6px;
+      margin-right: 3px;
+
+      &:hover {
+        background-color: var(--color-zinc-700);
+        color: white;
+      }
+    }
+
+    & [role="tab"]:focus {
+      outline: 3px dotted var(--color-pink-500);
+    }
+
+    & [role="tab"][aria-selected="true"] {
+      border-bottom-color: var(--color-pink-500);
+    }
+  }
+
+  #practical-solutions-for-accessible-components-55-41-example {
+    & [role="tabpanel"]:not([hidden]) {
+    }
+
+    & [role="tabpanel"][hidden] {
+    }
+
+    & [role="tabpanel"]:focus {
+      outline: 3px dotted var(--color-pink-500);
+    }
+  }
+</style>
+
+<SlidesLayout title="Slide 55.41: Tabs">
+  <section class={`slide --custom flex-col`} transition:name="slide">
+    <h2 transition:name="title">Tabs</h2>
+    <div class="m-6" id="practical-solutions-for-accessible-components-55-41-example">
+      <h3
+        id="practical-solutions-for-accessible-components-55-41-tablist-title"
+        class="!text-lg font-bold my-0"
+      >
+        More about fruits
+      </h3>
+
+      <div
+        id="practical-solutions-for-accessible-components-55-41-tablist"
+        role="tablist"
+        aria-labelledby="practical-solutions-for-accessible-components-55-41-tablist-title"
+        class="text-base"
+      >
+        <button
+          id="practical-solutions-for-accessible-components-55-41-tab-a"
+          role="tab"
+          aria-controls="practical-solutions-for-accessible-components-55-41-tp-app"
+          aria-selected="true"
+          tabindex="0">Apple</button
+        >
+        <button
+          id="practical-solutions-for-accessible-components-55-41-tab-b"
+          role="tab"
+          aria-controls="practical-solutions-for-accessible-components-55-41-tp-ban"
+          aria-selected="false"
+          tabindex="-1">Banana</button
+        >
+        <button
+          id="practical-solutions-for-accessible-components-55-41-tab-g"
+          role="tab"
+          aria-controls="practical-solutions-for-accessible-components-55-41-tp-gra"
+          aria-selected="false"
+          tabindex="-1">Grape</button
+        >
+      </div>
+
+      <div
+        role="tabpanel"
+        id="practical-solutions-for-accessible-components-55-41-tp-app"
+        aria-labelledby="practical-solutions-for-accessible-components-55-41-tab-a"
+        tabindex="0"
+      >
+        Eve, don't do it
+      </div>
+      <div
+        role="tabpanel"
+        id="practical-solutions-for-accessible-components-55-41-tp-ban"
+        aria-labelledby="practical-solutions-for-accessible-components-55-41-tab-b"
+        hidden
+      >
+        Minion's favourite
+      </div>
+      <div
+        role="tabpanel"
+        id="practical-solutions-for-accessible-components-55-41-tp-gra"
+        aria-labelledby="practical-solutions-for-accessible-components-55-41-tab-g"
+        hidden
+      >
+        Basically Wine
+      </div>
+    </div>
+
+    {
+      nextHref ? (
+        <footer class="controls" transition:name="next">
+          <a
+            rel="next"
+            href={`${nextHref}#content`}
+            class="group"
+            data-astro-prefetch="load"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              role="img"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+              <title>{nextLabel}</title>
+            </svg>
+          </a>
+        </footer>
+      ) : null
+    }
+  </section>
+</SlidesLayout>

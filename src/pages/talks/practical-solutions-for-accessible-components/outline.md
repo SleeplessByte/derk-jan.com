@@ -12,7 +12,6 @@
 - 20:00 · 1 · CSS-only solutions
 - 22:00 · 1 · CSS & interactivity
 - 24:00 · 1 · Tabs
-- 26:00 · 1 · Disclosure navigation
 - 28:00 · 1 · Outro
 
 # TOC
@@ -141,3 +140,7 @@ Practically Accessible is not Accessible
 If you want to make an accessibility claim
 
 https://adrianroselli.com/2022/11/your-accessibility-claims-are-wrong-unless.html
+
+https://inclusive-components.design/tabbed-interfaces/
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/tabpanel_role
+https://www.w3.org/WAI/ARIA/apg/patterns/tabs/

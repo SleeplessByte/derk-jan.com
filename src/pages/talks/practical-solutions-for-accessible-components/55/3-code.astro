@@ -1,0 +1,31 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ShellSlide from "../../../../components/Slide/ShellSlide.astro";
+import { Code } from "astro:components";
+---
+
+<SlidesLayout title="Slide 55.3: Tabs HTML">
+  <ShellSlide
+    class="flex-wrap content-center gap-4"
+    next-href="/talks/practical-solutions-for-accessible-components/55/4-code"
+    next-label="Go to slide 55.4: Tabs HTML"
+  >
+    <Code
+      slot="single"
+      lang="html"
+      code={`
+<h3>More about fruits</h3>
+
+<div>
+  <button type="button">Apple</button>
+  <button type="button">Banana</button>
+  <button type="button">Grape</button>
+</div>
+
+<div>Eve, don't do it</div>
+<div>Minion's favourite</div>
+<div>Basically Wine</div>
+`.trim()}
+    />
+  </ShellSlide>
+</SlidesLayout>

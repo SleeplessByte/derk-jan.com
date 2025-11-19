@@ -1,0 +1,31 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import TextSlide from "../../../../components/Slide/TextSlide.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+---
+
+<SlidesLayout title="Slide 53.2: Tabs (or: how I find information)">
+  <ListSlide
+    type="ol"
+    title="Building some tabs"
+    class="flex-wrap content-center gap-4"
+    next-href="/talks/practical-solutions-for-accessible-components/53/3-prework"
+    next-label="Go to slide 53.3: Tabs (or: how I find information)"
+  >
+    <li>
+      <a href="https://inclusive-components.design/tabbed-interfaces/"
+        >Inclusive Components</a
+      > by Heydon Pickering
+    </li>
+    <li>
+      <a href="https://www.a11y-collective.com/blog/accessibility-tab/"
+        >A11y Collective Blog</a
+      > by Level Level & Rian Rietveld
+    </li>
+    <li>
+      <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/"
+        >ARIA Authoring Practices Guide (APG)</a
+      >
+    </li>
+  </ListSlide>
+</SlidesLayout>

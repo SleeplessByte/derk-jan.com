@@ -1,0 +1,36 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ShellSlide from "../../../../components/Slide/ShellSlide.astro";
+import { Code } from "astro:components";
+import { lines } from "../../../../functions/transformations";
+---
+
+<SlidesLayout title="Slide 55.39: Tabs JavaScript">
+  <ShellSlide
+    class="flex-wrap content-center gap-4"
+    next-href="/talks/practical-solutions-for-accessible-components/55/40-javascript"
+    next-label="Go to slide 55.40: Tabs JavaScript"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      transformers={lines}
+      meta="{9,10}"
+      code={`
+function onActivate(tab) {
+  // deselect old tab
+  // ...
+
+  // deactivate old panel
+  // ...
+
+  // select new tab
+  tab.setAttribute('tabindex', '0');
+  tab.setAttribute('aria-selected', 'true');
+
+  // activate new panel
+}
+      `.trim()}
+    />
+  </ShellSlide>
+</SlidesLayout>
