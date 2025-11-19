@@ -1,0 +1,20 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/04/2-toc";
+const nextLabel = "Go to slide 4.2: TOC";
+---
+
+<SlidesLayout title="Slide 4.1: TOC">
+  <ListSlide
+    class="--indigo"
+    title="Today"
+    type="ul"
+    next-href={nextHref}
+    next-label={nextLabel}
+    sizer="Tabs (or: how I find information)"
+  >
+    <li>I talk a lot</li>
+  </ListSlide>
+</SlidesLayout>

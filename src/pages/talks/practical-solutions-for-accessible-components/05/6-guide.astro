@@ -1,0 +1,28 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/06";
+const nextLabel = "Go to slide 6: Accessibility claims";
+---
+
+<SlidesLayout title="Slide 5.6: Between practical and professional">
+  <ListSlide
+    class="--blue"
+    title="Testing"
+    type="ul"
+    next-href={nextHref}
+    next-label={nextLabel}
+    sizer="Screen reader (at least 1 combination)"
+  >
+    <li>Keyboard (only)</li>
+    <li>Mouse</li>
+    <li>Touch</li>
+    <li>Screen reader (at least 1 combination)</li>
+    <li>
+      Follow <a href="https://www.accessibility-developer-guide.com/" target="_blank"
+        >Accessibility Developer Guide</a
+      >
+    </li>
+  </ListSlide>
+</SlidesLayout>

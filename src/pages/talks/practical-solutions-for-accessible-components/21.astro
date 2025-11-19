@@ -1,0 +1,14 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import CodeSlide from "../../../components/Slide/CodeSlide.astro";
+import { Code } from "astro:components";
+---
+
+<SlidesLayout title="Slide 21: Focus is not selection">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/22"
+    next-label="Go to slide 22: Programmatically focus"
+  >
+    <Code slot="single" lang="javascript" code={`window.getSelection()`.trim()} />
+  </CodeSlide>
+</SlidesLayout>

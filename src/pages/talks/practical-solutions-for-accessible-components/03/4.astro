@@ -1,0 +1,65 @@
+---
+import { Image } from "astro:assets";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+import invalidSrc from "../../../../talks/practical-solutions-for-accessible-components/invalid-fixed-dark.jpg";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/04";
+const nextLabel = "Go to slide 4: TOC";
+const className = "flex-wrap content-center";
+---
+
+<SlidesLayout title="Slide 3.4: Hello">
+  <section class={`slide ${className}`} transition:name="slide">
+    <div
+      class="grid grid-cols-2 w-full h-full"
+      style="grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);"
+    >
+      <div class="pt-4 px-4 col-span-full">
+        <h2
+          transition:name="title"
+          class="border-double border-4 rounded-lg border-zinc-300 dark:border-zinc-800 text-center !m-0 self-center justify-center py-4 lg:py-6 xl:text-7xl lg:text-6xl md:text-5xl sm:text-3xl text-lg font-bold"
+        >
+          Derk-Jan Karrenbeld
+        </h2>
+      </div>
+      <div class="col-span-full row-span-2 p-4" transition:name="invalid">
+        <Image
+          src={invalidSrc}
+          alt="Invalid as name in a First name field without an error message 'First name is invalid'"
+          class="!my-0 !mx-auto max-h-full w-auto h-full rounded-lg border-4 border-zinc-600 dark:border-zinc-400"
+        />
+      </div>
+    </div>
+
+    {
+      nextHref ? (
+        <footer class="controls" transition:name="next">
+          <a
+            rel="next"
+            href={`${nextHref}#content`}
+            class="group"
+            data-astro-prefetch="load"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              role="img"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+              <title>{nextLabel}</title>
+            </svg>
+          </a>
+        </footer>
+      ) : null
+    }
+  </section>
+</SlidesLayout>

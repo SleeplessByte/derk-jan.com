@@ -1,0 +1,14 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import TextSlide from "../../../../components/Slide/TextSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/01/8-emotions";
+const nextLabel = "Go to slide 1.8: Doing the right thing";
+---
+
+<SlidesLayout title="Slide 1.7: Doing the right thing">
+  <TextSlide class="" next-href={nextHref} next-label={nextLabel}>
+    Is it practical?
+  </TextSlide>
+</SlidesLayout>

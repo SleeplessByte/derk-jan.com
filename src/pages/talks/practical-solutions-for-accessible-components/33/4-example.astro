@@ -1,0 +1,20 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/34";
+const nextLabel = "Go to slide 34: Restore the focus";
+---
+
+<SlidesLayout title="Slide 33.4: Dialog Decisions">
+  <CodeSlide next-href={nextHref} next-label={nextLabel}>
+    <Code
+      slot="single"
+      lang="javascript"
+      code={`
+closeButton.focus();
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

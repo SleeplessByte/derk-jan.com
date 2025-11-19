@@ -1,0 +1,21 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 8: It is accessible">
+  <QuoteSlide
+    next-href="/talks/practical-solutions-for-accessible-components/08/1-radix"
+    next-label="Go to slide 8.1: It is accessible"
+    cite:href="https://react-spectrum.adobe.com/react-aria/accessibility.html#:~:text=React%20Aria%20helps%20you%20build%20accessible%20components"
+    cite="React Aria / React Spectrum"
+  >
+    <Fragment slot="title">It is accessible</Fragment>
+    <Fragment slot="quote">
+      React Aria helps you build accessible components by providing many aspects of
+      accessibility out of the box, including <strong class="font-bold"
+        >full screen reader</strong
+      > and <strong class="font-bold">keyboard navigation support</strong>.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

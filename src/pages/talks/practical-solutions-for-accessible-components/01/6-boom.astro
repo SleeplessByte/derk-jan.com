@@ -1,0 +1,18 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/01/7-done";
+const nextLabel = "Go to slide 1.7: Doing the right thing";
+---
+
+<SlidesLayout title="Slide 1.6: Doing the right thing">
+  <ListSlide
+    class=""
+    title="The Right Thing™ 👍🏽"
+    type="ul"
+    next-href={nextHref}
+    next-label={nextLabel}
+    sizer="You Integrate Ethical Accessibility Considerations into QA processes"
+  />
+</SlidesLayout>

@@ -1,0 +1,19 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 8.2: It is accessible">
+  <QuoteSlide
+    next-href="/talks/practical-solutions-for-accessible-components/08/3-shadcn"
+    next-label="Go to slide 8.3: It is accessible"
+    cite:href="https://headlessui.com/#:~:text=Completely%20unstyled%2C-,fully%20accessible,-UI%20components%2C%20designed"
+    cite="Headless UI (Tailwind)"
+  >
+    <Fragment slot="title">It is accessible</Fragment>
+    <Fragment slot="quote">
+      Completely unstyled, <strong class="font-bold">fully accessible</strong> UI components,
+      designed to integrate beautifully with Tailwind CSS.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

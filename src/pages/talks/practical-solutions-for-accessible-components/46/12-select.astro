@@ -1,0 +1,24 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 46.12: aria-activedescendant">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/46/13-click"
+    next-label="Go to slide 46.13: aria-activedescendant"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      code={`
+function selectNext() {
+  const currentId = combobox.getAttribute('aria-activedescendant');
+  const nextOption = listbox.querySelector(\`#\${currentId} + [role="option"]\`);
+  combobox.setAttribute('aria-activedescendant', (nextOption || firstOption).id);
+}
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

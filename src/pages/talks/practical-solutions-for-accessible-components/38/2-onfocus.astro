@@ -1,0 +1,27 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import { linesAndWords } from "../../../../functions/transformations";
+---
+
+<SlidesLayout title="Slide 38.2: How to trap focus?">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/38/3-onfocus"
+    next-label="Go to slide 38.3: How to trap focus"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      meta="{3},/event.target/"
+      transformers={linesAndWords}
+      code={`
+const component = document.getElementById('my-component');
+
+function trapFocus(event) {
+    return component.contains(event.target);
+}
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

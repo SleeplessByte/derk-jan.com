@@ -1,0 +1,33 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import TextSlide from "../../../components/Slide/TextSlide.astro";
+import { Image } from "astro:assets";
+
+import notTodaySrc from "../../../talks/practical-solutions-for-accessible-components/the-other-c-in-css.png";
+---
+
+<SlidesLayout title="Slide 51: CSS-only solutions">
+  <TextSlide
+    class="flex-wrap content-center gap-4"
+    title:class="my-auto mx-0 text-center flex-1"
+    next-href="/talks/practical-solutions-for-accessible-components/52"
+    next-label="Go to slide 52: CSS with aria"
+  >
+    <Fragment>The “Other” C in CSS, by Sara Soueidan</Fragment>
+
+    <a
+      href="https://www.youtube.com/watch?v=ob_M_qXeDVE"
+      target="_blank"
+      slot="meta"
+      class="group"
+    >
+      <Image
+        src={notTodaySrc}
+        width={notTodaySrc.width}
+        height={notTodaySrc.height}
+        alt="Watch the talk"
+        class="max-h-64 w-auto rounded-lg !m-0 group-hover:scale-95 transition group-active:opacity-70 group-active:scale-90"
+      />
+    </a>
+  </TextSlide>
+</SlidesLayout>

@@ -549,4 +549,12 @@ body:has(.fixed-slides) {
       }
     }
   }
+
+  & .slide.--custom {
+    & h2 {
+      @apply m-auto;
+      @apply xl:text-7xl lg:text-6xl md:text-5xl sm:text-3xl text-lg;
+      @apply font-bold;
+    }
+  }
 }

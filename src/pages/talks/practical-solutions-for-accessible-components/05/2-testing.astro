@@ -1,0 +1,20 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/05/3-mouse";
+const nextLabel = "Go to slide 5.3: Between practical and professional";
+---
+
+<SlidesLayout title="Slide 5.2: Between practical and professional">
+  <ListSlide
+    class="--blue"
+    title="Testing"
+    type="ul"
+    next-href={nextHref}
+    next-label={nextLabel}
+    sizer="Screen reader (at least 1 combination)"
+  >
+    <li>Keyboard (only)</li>
+  </ListSlide>
+</SlidesLayout>

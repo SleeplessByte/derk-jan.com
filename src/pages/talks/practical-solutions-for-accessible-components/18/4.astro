@@ -1,0 +1,23 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/19";
+const nextLabel = "Slide 19: What is focus";
+---
+
+<SlidesLayout title="Slide 18.4: Focus">
+  <ListSlide
+    class="--amber"
+    title="Focus topics"
+    type="ol"
+    next-href={nextHref}
+    next-label={nextLabel}
+    sizer="Focus & moving focus"
+  >
+    <li>Focus & moving focus</li>
+    <li>Focus restoration</li>
+    <li>Focus trapping</li>
+    <li>Focus zones</li>
+  </ListSlide>
+</SlidesLayout>

@@ -1,0 +1,21 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 29: Assistive Technology">
+  <QuoteSlide
+    cite:href="https://www.accessibility-developer-guide.com/knowledge/screen-readers/desktop/browse-focus-modes/#:~:text=The%20most%20common%20ones%20are%20browse%20mode%20and%20focus%20mode."
+    cite="Accessibility Developer Guide"
+    next-href="/talks/practical-solutions-for-accessible-components/30"
+    next-label="Go to slide 30: Custom components"
+  >
+    <Fragment slot="title">Assistive Technology often uses focus</Fragment>
+    <Fragment slot="quote"
+      >The relevant desktop screen readers on Windows offer different ways of interacting
+      with the underlying application. The most common ones are <strong class="font-bold"
+        >browse mode</strong
+      > and <strong class="font-bold">focus mode</strong>.</Fragment
+    >
+  </QuoteSlide>
+</SlidesLayout>

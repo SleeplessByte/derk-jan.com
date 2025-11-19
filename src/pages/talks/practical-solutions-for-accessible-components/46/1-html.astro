@@ -1,0 +1,31 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 46.1: aria-activedescendant">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/46/2-html"
+    next-label="Go to slide 46.2: aria-activedescendant"
+  >
+    <Code
+      slot="single"
+      lang="html"
+      code={`
+<input type="text"
+       role="combobox"
+       aria-expanded="false"
+       aria-controls="my-listbox">
+
+<ul id="my-listbox" role="listbox" hidden>
+  <li role="option">Apple</li>
+  <li role="option">Banana</li>
+  <li role="option">Grape</li>
+  <li role="option">Pear</li>
+  <li role="option">Strawberry</li>
+</ul>
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

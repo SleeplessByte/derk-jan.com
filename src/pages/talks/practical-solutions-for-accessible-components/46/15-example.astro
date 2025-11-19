@@ -1,0 +1,210 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/47";
+const nextLabel = "Go to slide 47: Solved problem";
+---
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const listbox = document.getElementById(
+      "practical-solutions-for-accessible-components-46-13-listbox",
+    );
+
+    if (!listbox) {
+      return;
+    }
+
+    const combobox = document.getElementById(
+      "practical-solutions-for-accessible-components-46-13-combobox",
+    );
+
+    const options = listbox.querySelectorAll('[role="option"]');
+    const firstOption = options.item(0);
+    const lastOption = options.item(options.length - 1);
+
+    function selectNext() {
+      const currentId = combobox.getAttribute("aria-activedescendant");
+      const currentOption = listbox.querySelector(`#${currentId}`);
+      currentOption.classList.remove("focus");
+
+      const nextOption = currentOption.nextElementSibling || firstOption;
+      nextOption.classList.add("focus");
+      combobox.setAttribute("aria-activedescendant", nextOption.id);
+    }
+
+    function selectPrevious() {
+      const currentId = combobox.getAttribute("aria-activedescendant");
+      const currentOption = listbox.querySelector(`#${currentId}`);
+      currentOption.classList.remove("focus");
+
+      const previousOption = currentOption.previousElementSibling || lastOption;
+      previousOption.classList.add("focus");
+      combobox.setAttribute("aria-activedescendant", previousOption.id);
+    }
+
+    function onKeyPress(event) {
+      switch (event.key) {
+        case "Escape": {
+          onCancel();
+          document.querySelector('a[rel="next"]').focus();
+          event.preventDefault();
+          break;
+        }
+
+        case "Tab": {
+          onCancel();
+          break;
+        }
+
+        case "Enter": {
+          onCommit();
+          document.querySelector('a[rel="next"]').focus();
+          event.preventDefault();
+          break;
+        }
+
+        case "ArrowDown": {
+          selectNext();
+          event.preventDefault();
+          break;
+        }
+
+        case "ArrowUp": {
+          selectPrevious();
+          event.preventDefault();
+          break;
+        }
+      }
+    }
+
+    function onOptionClick(event) {
+      const clickedOption = event.target.closest('[role="option"]');
+      if (!clickedOption) {
+        return;
+      }
+      const currentId = combobox.getAttribute("aria-activedescendant");
+      const currentOption = listbox.querySelector(`#${currentId}`);
+      currentOption.classList.remove("focus");
+
+      combobox.setAttribute("aria-activedescendant", clickedOption.id);
+      onCommit();
+      event.preventDefault();
+
+      document.querySelector('a[rel="next"]').focus();
+    }
+
+    function onCommit() {
+      const currentId = combobox.getAttribute("aria-activedescendant");
+      const currentOption = listbox.querySelector(`#${currentId}`);
+
+      combobox.value = currentOption.textContent;
+      onCancel();
+    }
+
+    function onActivate() {
+      let currentOption = firstOption;
+
+      for (let option of options) {
+        if (option.textContent == combobox.value) {
+          currentOption = option;
+        }
+      }
+
+      listbox.removeAttribute("hidden");
+      combobox.setAttribute("aria-expanded", "true");
+      combobox.setAttribute("aria-activedescendant", currentOption.id);
+      currentOption.classList.add("focus");
+
+      combobox.addEventListener("keydown", onKeyPress);
+      listbox.addEventListener("click", onOptionClick);
+    }
+
+    function onCancel() {
+      const currentId = combobox.getAttribute("aria-activedescendant");
+      const currentOption = listbox.querySelector(`#${currentId}`);
+      currentOption.classList.remove("focus");
+
+      listbox.setAttribute("hidden", "");
+      combobox.setAttribute("aria-expanded", "false");
+      combobox.removeAttribute("aria-activedescendant");
+
+      combobox.removeEventListener("keydown", onKeyPress);
+      listbox.removeEventListener("click", onOptionClick);
+    }
+
+    combobox.addEventListener("focus", onActivate);
+  });
+</script>
+
+<style>
+  #practical-solutions-for-accessible-components-46-13-listbox {
+    & [role="option"].focus {
+      font-weight: bold;
+      color: var(--color-pink-600);
+    }
+  }
+</style>
+
+<SlidesLayout title="Slide 38.15: How to trap focus? Example">
+  <section class={`slide --custom flex-col`} transition:name="slide">
+    <h2 transition:name="title">aria-activedescendant</h2>
+    <div class="m-6">
+      <label>
+        Pick a fruit
+
+        <input
+          id="practical-solutions-for-accessible-components-46-13-combobox"
+          type="text"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="practical-solutions-for-accessible-components-46-13-listbox"
+          class="focus:outline-dotted focus:outline-4 focus:outline-pink-500 bg-pink-950 text-white border-2 border-zinc-500"
+        /></label
+      >
+
+      <ul
+        id="practical-solutions-for-accessible-components-46-13-listbox"
+        role="listbox"
+        hidden
+        class="text-base divide-y-2 divide-zinc-500"
+      >
+        <li id="fruit-apple" role="option">Apple</li>
+        <li id="fruit-banana" role="option">Banana</li>
+        <li id="fruit-grape" role="option">Grape</li>
+        <li id="fruit-pear" role="option">Pear</li>
+        <li id="fruit-strawberry" role="option">Strawberry</li>
+      </ul>
+    </div>
+
+    {
+      nextHref ? (
+        <footer class="controls" transition:name="next">
+          <a
+            rel="next"
+            href={`${nextHref}#content`}
+            class="group"
+            data-astro-prefetch="load"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              role="img"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+              <title>{nextLabel}</title>
+            </svg>
+          </a>
+        </footer>
+      ) : null
+    }
+  </section>
+</SlidesLayout>

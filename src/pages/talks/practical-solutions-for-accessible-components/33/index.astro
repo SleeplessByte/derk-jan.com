@@ -1,0 +1,17 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/33/1-small";
+const nextLabel = "Go to slide 33.1: Dialog Decisions";
+---
+
+<SlidesLayout title="Slide 33: Dialog Decisions">
+  <ListSlide
+    next-href={nextHref}
+    next-label={nextLabel}
+    type="ul"
+    title="Practical Dialog Decisions"
+    sizer="Small & informational: focus the close button"
+  />
+</SlidesLayout>

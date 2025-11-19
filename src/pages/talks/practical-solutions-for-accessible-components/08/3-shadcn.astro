@@ -1,0 +1,20 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 8.3: It is accessible">
+  <QuoteSlide
+    next-href="/talks/practical-solutions-for-accessible-components/08/4-heroui"
+    next-label="Go to slide 8.4: It is accessible"
+    cite:href="https://ui.shadcn.com/docs#:~:text=shadcn/ui%20is%20a%20set%20of%20beautifully%2Ddesigned%2C%20accessible%20components%20and%20a%20code%20distribution%20platform"
+    cite="shadcn/ui on top of Radix"
+  >
+    <Fragment slot="title">It is accessible</Fragment>
+    <Fragment slot="quote">
+      <code>shadcn/ui</code> is a set of beautifully-designed, <strong class="font-bold"
+        >accessible</strong
+      > components and a code distribution platform.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

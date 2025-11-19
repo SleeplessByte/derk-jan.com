@@ -1,0 +1,30 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 38.12: How to trap focus?">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/38/13-final"
+    next-label="Go to slide 38.13: How to trap focus?"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      code={`
+// Re-focus inside our component... (simplified)
+function attemptFocus(element) {
+  ignoreFocusEvents = true;
+  try {
+    element.focus();
+  } catch (e) {
+    // ignore errors
+  }
+  ignoreFocusEvents = false;
+  return document.activeElement === element;
+}
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

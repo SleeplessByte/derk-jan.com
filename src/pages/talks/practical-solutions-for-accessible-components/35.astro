@@ -1,0 +1,20 @@
+---
+import { Code } from "astro:components";
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import CodeSlide from "../../../components/Slide/CodeSlide.astro";
+---
+
+<SlidesLayout title="Slide 35: Restore the focus">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/36"
+    next-label="Go to slide 36: Trapping the focus"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      code={`
+dialogButton.focus();
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

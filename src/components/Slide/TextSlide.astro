@@ -1,5 +1,5 @@
 ---
-type Props = { class?: string } & (
+type Props = { class?: string; "title:class"?: string } & (
   | { "next-href"?: undefined; "next-label"?: undefined }
   | {
       "next-href": string;
@@ -11,11 +11,12 @@ const {
   "next-href": nextHref,
   "next-label": nextLabel,
   class: className = "",
+  "title:class": titleClassName = "",
 } = Astro.props;
 ---
 
 <section class={`slide ${className} --text`} transition:name="slide">
-  <h2 transition:name="title" class="">
+  <h2 transition:name="title" class={titleClassName}>
     <slot />
   </h2>
 

@@ -1,0 +1,20 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 8.4: It is accessible">
+  <QuoteSlide
+    next-href="/talks/practical-solutions-for-accessible-components/08/5-it-is-accessible"
+    next-label="Go to slide 8.5: It is accessible"
+    cite:href="https://www.heroui.com/#:~:text=Beautiful%2C%20fast%20and%20modern%20React%20UI%20library%20for%20building%20accessible%20and%20customizable%20web%20applications."
+    cite="HeroUI on top of React Aria"
+  >
+    <Fragment slot="title">It is accessible</Fragment>
+    <Fragment slot="quote">
+      Beautiful, fast and modern React UI library for building <strong class="font-bold"
+        >accessible</strong
+      > and customizable web applications.</Fragment
+    >
+  </QuoteSlide>
+</SlidesLayout>

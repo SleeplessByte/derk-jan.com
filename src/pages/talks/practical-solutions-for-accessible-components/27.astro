@@ -1,0 +1,19 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import TextSlide from "../../../components/Slide/TextSlide.astro";
+---
+
+<SlidesLayout title="Slide 27: Moving the focus interactively">
+  <TextSlide
+    next-href="/talks/practical-solutions-for-accessible-components/28"
+    next-label="Go to slide 28: Why do we care?"
+  >
+    <code>#anchor</code> links<a
+      href="https://hidde.blog/where-focus-goes-when-following-in-page-links/"
+      target="_blank"
+      ><span aria-hidden="true" class="text-pink-500">*</span><span class="sr-only"
+        >see notes</span
+      ></a
+    >
+  </TextSlide>
+</SlidesLayout>

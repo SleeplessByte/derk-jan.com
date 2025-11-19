@@ -1,0 +1,21 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/33/4-example";
+const nextLabel = "Go to slide 33.4: Dialog Decisions";
+---
+
+<SlidesLayout title="Slide 33.3: Dialog Decisions">
+  <ListSlide
+    next-href={nextHref}
+    next-label={nextLabel}
+    type="ul"
+    title="Practical Dialog Decisions"
+    sizer="Small & informational: focus the close button"
+  >
+    <li><em>Small &amp; informational:</em> focus the close button</li>
+    <li><em>Destructive:</em> focus the cancel / nope button or dialog</li>
+    <li><em>Complex:</em> focus the dialog</li>
+  </ListSlide>
+</SlidesLayout>

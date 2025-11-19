@@ -1,0 +1,18 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 49: CSS-only solutions">
+  <QuoteSlide
+    cite="Chris Ferdinandi"
+    cite:href="https://gomakethings.com/css-only-solutions-are-not-accessible/"
+    next-href="/talks/practical-solutions-for-accessible-components/50"
+    next-label="Go to slide 50: CSS-only solutions"
+  >
+    <Fragment slot="title">CSS-only solutions are not accessible</Fragment>
+    <Fragment slot="quote">
+      CSS-only solutions like that are often worse for accessibility than other options.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

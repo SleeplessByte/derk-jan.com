@@ -1,0 +1,18 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+---
+
+<SlidesLayout title="Slide 23.3: What can be focused?">
+  <ListSlide
+    title="What can be .focus()ed?"
+    next-href="/talks/practical-solutions-for-accessible-components/23/4-rendered"
+    next-label="Go to slide 23.4: What can be focused?"
+    type="ul"
+    sizer="Elements that are interactive (buttons, links, etc.)"
+  >
+    <li>Elements that are interactive (buttons, links, etc.)</li>
+    <li>Elements made interactive with <code>tabindex</code></li>
+    <li>...but not <code>disabled</code></li>
+  </ListSlide>
+</SlidesLayout>

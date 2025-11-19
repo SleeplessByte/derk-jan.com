@@ -1,17 +1,16 @@
 # Embrace the patch
 
-- 00:30 · 1 · Yeah but I am using ...
-- 02:00 · 1 · TOC
-- 04:00 · 1 · Testing
-- 06:00 · 1 · Event bubbling
-- 08:00 · 1 · Event delegation
+- 00:30 · 1 · Good intentions
+- 02:00 · 1 · Hello
+- 04:00 · 1 · TOC
+- 06:00 · 1 · Testing
+- 08:00 · 1 · Accessibility claims
 - 10:00 · 1 · Focus management
 - 12:00 · 1 · Focus restoration
 - 14:00 · 1 · Focus trapping
-- 16:00 · 1 · Focus disabled
-- 18:00 · 1 · Focus zone (aria-activedescendant)
+- 16:00 · 1 · Focus zone (aria-activedescendant)
 - 20:00 · 1 · CSS-only solutions
-- 22:00 · 1 · CSS & Interactivity
+- 22:00 · 1 · CSS & interactivity
 - 24:00 · 1 · Tabs
 - 26:00 · 1 · Disclosure navigation
 - 28:00 · 1 · Outro
@@ -20,9 +19,36 @@
 
 https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/
 
+# It is accessible
+
+Devon Govett
+https://react-spectrum.adobe.com/blog/building-a-combobox.html
+https://react-spectrum.adobe.com/blog/creating-a-pointer-friendly-submenu-experience.html
+https://github.com/adobe/react-spectrum/wiki/Tracker-for-External-Browser-Bugs,-Library-Bugs,-and-Features
+
+# Is it accessible?
+
+https://adrianroselli.com/2024/08/things-to-do-before-asking-is-this-accessible.html
+
 # Focus management
 
+- What is focus? With focus we generally mean which element will receive keyboard inputs.
+- `document.activeElement` will give you that element, and `<body>` or `document` if nothing is focused.
+- `window.getSelection()` is not the same as focus. It's what content is currently highlighted as a selected content.
+
+the element's tabindex value is non-null, or the element is determined by the user agent to be focusable;
+the element is either not a shadow host, or has a shadow root whose delegates focus is false;
+the element is not actually disabled;
+the element is not inert;
+the element is either being rendered, delegating its rendering to its children, or being used as relevant canvas fallback content.
+
+https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
+
 # Focus restoration
+
+https://www.accessibility-developer-guide.com/knowledge/screen-readers/desktop/browse-focus-modes/
+https://adrianroselli.com/2025/06/where-to-put-focus-when-opening-a-modal-dialog.html
+https://adrianroselli.com/2023/08/where-to-put-focus-when-deleting-a-thing.html
 
 # Focus trapping
 
@@ -59,18 +85,10 @@ aria.Utils.focusFirstDescendant = function (element) {
 }; // end focusFirstDescendant
 ```
 
-the element's tabindex value is non-null, or the element is determined by the user agent to be focusable;
-the element is either not a shadow host, or has a shadow root whose delegates focus is false;
-the element is not actually disabled;
-the element is not inert;
-the element is either being rendered, delegating its rendering to its children, or being used as relevant canvas fallback content.
-
-https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
-
 # Focus zone (roving)
 
-https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/
 https://github.com/jsoref/primer-behaviors/blob/main/docs/focus-zone.md
+https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/examples/toolbar/
 https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_activedescendant
 https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-actions/
 
@@ -82,6 +100,15 @@ https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
 # Focus & disabled
 
 https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#focusabilityofdisabledcontrols
+https://adrianroselli.com/2024/02/dont-disable-form-controls.html
+
+Disabled buttons suck by Hampus Sethfors, 7 July 2017.
+Why you shouldn’t include disabled interaction elements in your design system by Chris Atherton, 12 February, 2019 (ugh, Medium).
+Why heuristics are only rules of thumb: the case of the disabled button by Matthew Standage, 9 May 2020.
+Making Disabled Buttons More Inclusive by Sandrina Pereira, 12 May 2021 (doesn’t go far enough, and I reviewed it).
+Usability Pitfalls of Disabled Buttons, and How To Avoid Them by Vitaly Friedman, 5 August 2021 (lets Wise off the hook on other bad patterns).
+Disabled Buttons in User Interface by Nick Babich, 2 October 2021 (doesn’t go far enough, also ugh Medium).
+The problem with disabled buttons and what to do instead by Adam Silver, 14 May 2023.
 
 Keep focusable:
 
@@ -89,6 +116,14 @@ Keep focusable:
 - Menu items in a Menu or menu bar
 - Tab elements in a set of Tabs
 - Tree items in a Tree View
+
+# CSS-only solutions
+
+https://www.sarasoueidan.com/blog/css-carousels-accessibility/
+https://gomakethings.com/css-only-solutions-are-not-accessible/
+https://adrianroselli.com/2023/03/css-only-widgets-are-inaccessible.html
+
+https://www.youtube.com/watch?v=ob_M_qXeDVE&t=1404s
 
 # Tabs
 
@@ -98,3 +133,11 @@ Keep focusable:
 # Disclosure navigation
 
 https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation-hybrid/
+
+# Closing remarks
+
+Practically Accessible is not Accessible
+
+If you want to make an accessibility claim
+
+https://adrianroselli.com/2022/11/your-accessibility-claims-are-wrong-unless.html

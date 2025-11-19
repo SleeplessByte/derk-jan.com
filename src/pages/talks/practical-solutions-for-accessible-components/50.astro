@@ -1,0 +1,22 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 50: CSS-only solutions">
+  <QuoteSlide
+    cite="Adrian Roselli"
+    cite:href="https://adrianroselli.com/2023/03/css-only-widgets-are-inaccessible.html"
+    next-href="/talks/practical-solutions-for-accessible-components/51"
+    next-label="Go to slide 51: CSS-only solutions"
+  >
+    <Fragment slot="title">CSS-only Widgets Are Inaccessible</Fragment>
+    <Fragment slot="quote">
+      Not everything that relies on CSS for interaction is inaccessible. There are always
+      going to be <a
+        href="https://adrianroselli.com/2021/12/under-engineered-dependency-questions.html"
+        target="_blank">exceptions</a
+      >, but those are (and should be) rare.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

@@ -1,0 +1,28 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 11: Is it accessible?">
+  <QuoteSlide
+    next-href="/talks/practical-solutions-for-accessible-components/12"
+    next-label="Go to slide 12: Is it usable?"
+    cite:href="https://front-end.social/@a11ycollective/113061687479393443"
+    cite="The A11y Collective"
+  >
+    <Fragment slot="quote"
+      >"Is this accessible?" is often not a question with a simple "yes" or "no" answer.
+      The answer depends on many factors. The grumpy zaddy of accessibility, <a
+        href="https://front-end.social/@aardrian@toot.cafe"
+        target="_blank">@aardrian</a
+      >, has a checklist for you:
+
+      <a
+        href="https://adrianroselli.com/2024/08/things-to-do-before-asking-is-this-accessible.html"
+        target="_blank"
+      >
+        Things to Do Before Asking “Is This Accessible?”</a
+      >
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

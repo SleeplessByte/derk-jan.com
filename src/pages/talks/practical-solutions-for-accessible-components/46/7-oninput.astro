@@ -1,0 +1,30 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 46.7: aria-activedescendant">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/46/8-oninput"
+    next-label="Go to slide 46.8: aria-activedescendant"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      code={`
+function onInput(event) {
+  switch(event.key): {
+    case 'ArrowDown': {
+      selectNext();
+
+      break;
+    }
+  }
+}
+
+combobox.addEventListener('keydown', onActive);
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

@@ -1,0 +1,22 @@
+---
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 47: Solved problem">
+  <QuoteSlide
+    cite="github.com/primer/behaviors"
+    cite:href="https://github.com/primer/behaviors/blob/main/docs/focus-zone.md"
+    next-href="/talks/practical-solutions-for-accessible-components/48"
+    next-label="Go to slide 48: CSS-only solutions"
+  >
+    <Fragment slot="title">Focus Zone</Fragment>
+    <Fragment slot="quote">
+      The focusZone behavior is used to designate a container where focus can be moved
+      using keys other than <kbd>Tab</kbd>.
+      <br />
+      [...]<br />
+      The focusZone behavior supports two modes of operation: DOM Focus and Active Descendant.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

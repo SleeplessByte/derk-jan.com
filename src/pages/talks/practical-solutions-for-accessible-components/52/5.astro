@@ -1,0 +1,26 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 52.5: CSS with aria">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/52/6"
+    next-label="Go to slide 52.6: CSS with aria"
+  >
+    <Code
+      class="!max-h-full !my-0"
+      slot="before"
+      lang="css"
+      code={`.page.current { /* */ }`.trim()}
+    />
+
+    <Code
+      class="!max-h-full !my-0"
+      slot="after"
+      lang="css"
+      code={`.page.current { /* */ }`.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

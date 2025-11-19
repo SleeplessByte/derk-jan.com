@@ -1,0 +1,22 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+---
+
+<SlidesLayout title="Slide 45.3: Roving tabindex">
+  <ListSlide
+    title="Roving tabindex"
+    next-href="/talks/practical-solutions-for-accessible-components/45/4-re-enter"
+    next-label="Go to slide 45.4: Roving tabindex"
+    type="ul"
+    sizer="On keydown (e.g. arrow key), change which element has tabindex='0' and focus it"
+  >
+    <li>Set <code translate="no">tabindex="0"</code> on the initial element</li>
+    <li>Set <code translate="no">tabindex="-1"</code> on all other options</li>
+    <li>
+      On <code translate="no">keydown</code> (e.g. arrow key), set element <code
+        translate="no">tabindex="0"</code
+      > and focus it
+    </li>
+  </ListSlide>
+</SlidesLayout>

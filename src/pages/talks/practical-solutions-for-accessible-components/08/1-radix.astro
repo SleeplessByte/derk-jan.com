@@ -1,0 +1,20 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import QuoteSlide from "../../../../components/Slide/QuoteSlide.astro";
+---
+
+<SlidesLayout title="Slide 8.1: It is accessible">
+  <QuoteSlide
+    next-href="/talks/practical-solutions-for-accessible-components/08/2-headless"
+    next-label="Go to slide 8.2: It is accessible"
+    cite:href="https://www.radix-ui.com/primitives#:~:text=We%20agonise%20over%20API%20design%2C%20performance%2C%20and%20accessibility%20so%20you%20don%27t%20need%20to."
+    cite="Radix UI primitives"
+  >
+    <Fragment slot="title">It is accessible</Fragment>
+    <Fragment slot="quote">
+      We agonise over API design, performance, and <strong class="font-bold"
+        >accessibility</strong
+      > so you don't need to.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

@@ -1,0 +1,80 @@
+---
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+import TextSlide from "../../../../components/Slide/TextSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+
+const nextHref = "/talks/practical-solutions-for-accessible-components/02";
+const nextLabel = "Go to slide 2: Doing the professional thing";
+---
+
+<style>
+  /* Loading Animation System by Neale Van Fleet from Rogue Amoeba */
+  .enter-animation.--pop {
+    animation-duration: 0.75s;
+    animation-timing-function: cubic-bezier(0.26, 0.53, 0.74, 1);
+    animation-fill-mode: backwards;
+    animation-delay: calc(2s * var(--delay, 0));
+
+    animation-name: animate-pop;
+  }
+
+  @keyframes animate-pop {
+    0% {
+      opacity: 0;
+      font-size: 1rem;
+    }
+    100% {
+      opacity: 1;
+      zoom: 1;
+      font-size: 2.25rem;
+    }
+  }
+</style>
+<SlidesLayout title="Slide 1.6: Doing the right thing">
+  <TextSlide class="flex-wrap content-center" next-href={nextHref} next-label={nextLabel}>
+    <Fragment>The Right Thing™ ❓</Fragment>
+    <span
+      slot="meta"
+      class="!m-0 font-normal md:px-12 py-2 md:py-6 text-base md:mx-12 self-center justify-self-center w-full text-center"
+    >
+      <span class="text-4xl" style="line-height: 1.5;">
+        <span class="enter-animation --pop" style="--delay: 1;"
+          ><span role="presentation">💸</span><span
+            id="slide-1.8-boom-expensive"
+            class="sr-only">Expensive</span
+          ></span
+        >
+        <span class="enter-animation --pop" style="--delay: 2;"
+          ><span role="presentation">😣</span><span
+            id="slide-1.8-boom-hard"
+            class="sr-only">Hard</span
+          ></span
+        >
+        <span class="enter-animation --pop" style="--delay: 3;"
+          ><span role="presentation">⌛</span><span
+            id="slide-1.8-boom-time-consuming"
+            class="sr-only">Time consuming</span
+          ></span
+        >
+        <span class="enter-animation --pop" style="--delay: 4;"
+          ><span role="presentation">🆘</span><span
+            id="slide-1.8-boom-sos"
+            class="sr-only">You don't know where to start</span
+          ></span
+        >
+        <span class="enter-animation --pop" style="--delay: 5;"
+          ><span role="presentation">😤</span><span
+            id="slide-1.8-boom-frustrating"
+            class="sr-only">Frustrating</span
+          ></span
+        >
+        <span class="enter-animation --pop" style="--delay: 6;"
+          ><span role="presentation">🤬</span><span
+            id="slide-1.8-boom-angry"
+            class="sr-only">Angry clients</span
+          ></span
+        >
+      </span>
+    </span>
+  </TextSlide>
+</SlidesLayout>

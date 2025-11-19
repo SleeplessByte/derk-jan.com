@@ -1,0 +1,21 @@
+---
+import QuoteSlide from "../../../components/Slide/QuoteSlide.astro";
+import TextSlide from "../../../components/Slide/TextSlide.astro";
+import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 39: Solved problem">
+  <QuoteSlide
+    cite="github.com/primer/behaviors"
+    cite:href="https://github.com/primer/behaviors/blob/main/docs/focus-trap.md"
+    next-href="/talks/practical-solutions-for-accessible-components/40"
+    next-label="Go to slide 40: Focus recap"
+  >
+    <Fragment slot="title">Focus Trap</Fragment>
+    <Fragment slot="quote">
+      The focusTrap behavior is used prevent focus from leaving a particular element. This
+      is useful for implementing modal dialogs: only the content within the dialog should
+      be interactive, even though the UI underneath may still be visible.
+    </Fragment>
+  </QuoteSlide>
+</SlidesLayout>

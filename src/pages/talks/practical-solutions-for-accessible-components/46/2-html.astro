@@ -1,0 +1,34 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import { words } from "../../../../functions/transformations";
+---
+
+<SlidesLayout title="Slide 46.2: aria-activedescendant">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/46/3-onfocus"
+    next-label="Go to slide 46.3: aria-activedescendant"
+  >
+    <Code
+      slot="single"
+      lang="html"
+      transformers={words}
+      meta="/id=/"
+      code={`
+<input type="text"
+       role="combobox"
+       aria-expanded="false"
+       aria-controls="my-listbox">
+
+<ul id="my-listbox" role="listbox" hidden>
+  <li id="fruit-apple" role="option">Apple</li>
+  <li id="fruit-banana" role="option">Banana</li>
+  <li id="fruit-grape" role="option">Grape</li>
+  <li id="fruit-pear" role="option">Pear</li>
+  <li id="fruit-strawberry" role="option">Strawberry</li>
+</ul>
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>

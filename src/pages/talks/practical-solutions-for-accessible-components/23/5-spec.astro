@@ -1,0 +1,27 @@
+---
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+import ListSlide from "../../../../components/Slide/ListSlide.astro";
+---
+
+<SlidesLayout title="Slide 23.5: What can be focused?">
+  <ListSlide
+    title="What can be .focus()ed?"
+    next-href="/talks/practical-solutions-for-accessible-components/24"
+    next-label="Go to slide 24: Moving the focus interactively"
+    type="ul"
+    sizer="Elements that are interactive (buttons, links, etc.)"
+  >
+    <li>Elements that are interactive (buttons, links, etc.)</li>
+    <li>Elements made interactive with <code>tabindex</code></li>
+    <li>...but not <code>disabled</code></li>
+    <li>
+      ...but not <code>hidden</code>, <code>inert</code>, <code>display: none;</code>
+    </li>
+    <li>
+      Read <a
+        href="https://html.spec.whatwg.org/multipage/interaction.html#focusable-area"
+        target="_blank">the HTML spec on the focusable area</a
+      >.
+    </li>
+  </ListSlide>
+</SlidesLayout>

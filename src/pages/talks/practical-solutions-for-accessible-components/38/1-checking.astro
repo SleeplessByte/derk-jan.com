@@ -1,0 +1,23 @@
+---
+import { Code } from "astro:components";
+import CodeSlide from "../../../../components/Slide/CodeSlide.astro";
+import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-accessible-components.astro";
+---
+
+<SlidesLayout title="Slide 38.1: How to trap focus?">
+  <CodeSlide
+    next-href="/talks/practical-solutions-for-accessible-components/38/2-onfocus"
+    next-label="Go to slide 38.2: How to trap focus"
+  >
+    <Code
+      slot="single"
+      lang="javascript"
+      code={`
+const component = document.getElementById('my-component');
+
+// Check if someElement is inside component
+component.contains(someElement)
+      `.trim()}
+    />
+  </CodeSlide>
+</SlidesLayout>
