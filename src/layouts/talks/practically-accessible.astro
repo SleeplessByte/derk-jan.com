@@ -27,7 +27,8 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
       <span class="block p-2">Skip to main content</span>
     </a>
     {
-      currentPath === "/talks/practically-accessible" ? (
+      currentPath === "/talks/practically-accessible" ||
+      currentPath === "/talks/practically-accessible/" ? (
         <nav
           class={`transition focus-within:opacity-100 hover:opacity-100 ${
             currentPath !== "/talks/practically-accessible" ? "opacity-20" : ""

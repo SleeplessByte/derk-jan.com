@@ -26,7 +26,9 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
     </a>
     {
       currentPath === "/talks/embrace-the-patch" ||
-      currentPath === "/talks/embrace-the-patch/final" ? (
+      currentPath === "/talks/embrace-the-patch/" ||
+      currentPath === "/talks/embrace-the-patch/final" ||
+      currentPath === "/talks/embrace-the-patch/final/" ? (
         <nav class={`${currentPath !== "/talks/embrace-the-patch" ? "opacity-20" : ""}`}>
           <a href="/talks" class="back-link z-20 bg-white/80 dark:bg-black/80">
             <svg

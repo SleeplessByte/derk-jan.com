@@ -25,7 +25,9 @@ const slideNumber = Number(title.split(" ")[1]?.split(":").shift() || "-1");
     </a>
     {
       currentPath === "/talks/exercism-is-excellent" ||
-      currentPath === "/talks/exercism-is-excellent/15" ? (
+      currentPath === "/talks/exercism-is-excellent/" ||
+      currentPath === "/talks/exercism-is-excellent/15" ||
+      currentPath === "/talks/exercism-is-excellent/15/" ? (
         <nav
           class={`${currentPath !== "/talks/exercism-is-excellent" ? "opacity-20" : ""}`}
         >
