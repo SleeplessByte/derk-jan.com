@@ -1,13 +1,98 @@
 ---
 import SlidesLayout from "../../../layouts/talks/practical-solutions-for-accessible-components.astro";
 import TextSlide from "../../../components/Slide/TextSlide.astro";
+import { Image } from "astro:assets";
+
+import headlessUi from "../../../talks/practical-solutions-for-accessible-components/headless-ui.png";
+import radixUi from "../../../talks/practical-solutions-for-accessible-components/radix-ui.png";
+import reactSpectrum from "../../../talks/practical-solutions-for-accessible-components/react-spectrum.png";
+import shadcnUi from "../../../talks/practical-solutions-for-accessible-components/shadcn-ui.png";
+import ImageSlide from "../../../components/Slide/ImageSlide.astro";
 ---
 
+<style>
+  #practical-solutions-for-accessible-components-10-images {
+    padding: 0;
+    margin: auto;
+
+    & > li {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      max-height: 100%;
+    }
+  }
+</style>
+
+<script is:inline>
+  let interval;
+
+  document.addEventListener("astro:page-load", () => {
+    clearInterval(interval);
+
+    const list = document.getElementById(
+      "practical-solutions-for-accessible-components-10-images",
+    );
+    if (!list) {
+      return;
+    }
+
+    const images = list.children;
+    let index = 0;
+
+    interval = setInterval(() => {
+      images.item(index).setAttribute("hidden", "");
+
+      index = (index + 1) % images.length;
+      images.item(index).removeAttribute("hidden");
+    }, 1000);
+  });
+</script>
+
 <SlidesLayout title="Slide 10: Is it accessible?">
-  <TextSlide
-    next-href="/talks/practical-solutions-for-accessible-components/11"
-    next-label="Go to slide 11: Is it accessible"
-  >
-    <!-- Replace with Slideshow -->
-  </TextSlide>
+  <ul id="practical-solutions-for-accessible-components-10-images" class="">
+    <li>
+      <ImageSlide
+        cite-url=""
+        caption="Open accessibility issues for Radix UI"
+        src={radixUi}
+        next-href="/talks/practical-solutions-for-accessible-components/11"
+        next-label="Go to slide 11: Is it accessible"
+        mode="cover"
+      />
+    </li>
+
+    <li hidden>
+      <ImageSlide
+        cite-url=""
+        caption="Open accessibility issues for React Spectrum"
+        src={reactSpectrum}
+        next-href="/talks/practical-solutions-for-accessible-components/11"
+        next-label="Go to slide 11: Is it accessible"
+        mode="cover"
+      />
+    </li>
+
+    <li hidden>
+      <ImageSlide
+        cite-url=""
+        caption="Open accessibility issues for HeadlessUI"
+        src={headlessUi}
+        next-href="/talks/practical-solutions-for-accessible-components/11"
+        next-label="Go to slide 11: Is it accessible"
+        mode="cover"
+      />
+    </li>
+
+    <li hidden>
+      <ImageSlide
+        cite-url=""
+        caption="Open accessibility issues for Shadcn UI"
+        src={shadcnUi}
+        next-href="/talks/practical-solutions-for-accessible-components/11"
+        next-label="Go to slide 11: Is it accessible"
+        mode="cover"
+      />
+    </li>
+  </ul>
 </SlidesLayout>

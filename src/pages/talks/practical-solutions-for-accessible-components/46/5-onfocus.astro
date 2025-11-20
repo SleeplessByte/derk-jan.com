@@ -15,7 +15,7 @@ import SlidesLayout from "../../../../layouts/talks/practical-solutions-for-acce
       code={`
 const firstOption = listbox.querySelector('[role="option"]');
 
-function onActivate() {
+function onActivate() {                                        //
   listbox.removeAttribute('hidden');
   combobox.setAttribute('aria-expanded', 'true');
   combobox.setAttribute('aria-activedescendant', firstOption.id);
