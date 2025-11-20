@@ -69,7 +69,6 @@ const nextLabel = "Go to slide 39: Solved problem";
     }
 
     const dialog = document.getElementById(openButton.getAttribute("aria-controls"));
-    dialog.addEventListener("click", () => {});
 
     openButton.addEventListener("click", () => {
       openButton.setAttribute("aria-expanded", "true");
@@ -77,6 +76,11 @@ const nextLabel = "Go to slide 39: Solved problem";
       document.addEventListener("focus", trapFocus, true);
       document.addEventListener("click", outsideClick, true);
       document.addEventListener("keydown", onKeyPress);
+
+      // Both actions can just close the dialog in this example
+      dialog.querySelectorAll("button[data-action]").forEach((button) => {
+        button.addEventListener("click", closeDialog);
+      });
 
       focusFirst(dialog);
     });
@@ -87,6 +91,10 @@ const nextLabel = "Go to slide 39: Solved problem";
       document.removeEventListener("focus", trapFocus, true);
       document.removeEventListener("click", outsideClick, true);
       document.removeEventListener("keydown", onKeyPress);
+
+      dialog.querySelectorAll("button[data-action]").forEach((button) => {
+        button.removeEventListener("click", closeDialog);
+      });
 
       openButton.focus();
     }
@@ -156,11 +164,13 @@ const nextLabel = "Go to slide 39: Solved problem";
           <div class="mt-5 sm:mt-4 sm:flex">
             <button
               type="button"
+              data-action="cancel"
               class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20"
               >Cancel</button
             >
             <button
               type="button"
+              data-action="deactivate"
               class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto dark:bg-red-500 dark:shadow-none dark:hover:bg-red-400"
               >Deactivate</button
             >
