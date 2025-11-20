@@ -1,18 +1,21 @@
 # Embrace the patch
 
 - 00:30 · 1 · Good intentions
-- 02:00 · 1 · Hello
-- 04:00 · 1 · TOC
+- 01:30 · 1 · Hello
+- 02:30 · 1 · TOC
 - 06:00 · 1 · Testing
-- 08:00 · 1 · Accessibility claims
-- 10:00 · 1 · Focus management
-- 12:00 · 1 · Focus restoration
-- 14:00 · 1 · Focus trapping
-- 16:00 · 1 · Focus zone (aria-activedescendant)
-- 20:00 · 1 · CSS-only solutions
-- 22:00 · 1 · CSS & interactivity
-- 24:00 · 1 · Tabs
-- 28:00 · 1 · Outro
+- 06:30 · 1 · Accessibility claims
+- 10:45 · 1 · Focus management
+- 14:30 · 1 · Practical Dialog Decisions
+- 15:00 · 34 · Focus Restoration
+- 15:15 · 36 · Focus trapping
+- 20:00 · 40 · Focus Recap
+- 22:30 · 46 · Focus zone (aria-activedescendant)
+- 27:00 · 48 · CSS-only solutions
+- 28:00 · 52 · CSS & interactivity
+- 29:00 · 1 · Tabs
+- 31:00 · 1 · Tabs, process
+- 35:00 · 57 · Outro
 
 # TOC
 
