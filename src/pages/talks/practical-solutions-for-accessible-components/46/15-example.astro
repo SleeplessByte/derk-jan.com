@@ -7,11 +7,15 @@ const nextLabel = "Go to slide 47: Solved problem";
 
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
+    const component = document.getElementById(
+      "practical-solutions-for-accessible-components-46-13-example",
+    );
+
     const listbox = document.getElementById(
       "practical-solutions-for-accessible-components-46-13-listbox",
     );
 
-    if (!listbox) {
+    if (!component || !listbox) {
       return;
     }
 
@@ -23,55 +27,107 @@ const nextLabel = "Go to slide 47: Solved problem";
     const firstOption = options.item(0);
     const lastOption = options.item(options.length - 1);
 
-    function selectNext() {
+    function unselectCurrent() {
       const currentId = combobox.getAttribute("aria-activedescendant");
       const currentOption = listbox.querySelector(`#${currentId}`);
       currentOption.classList.remove("focus");
 
+      return currentOption;
+    }
+
+    function select(option) {
+      option.classList.add("focus");
+      combobox.setAttribute("aria-activedescendant", option.id);
+    }
+
+    function selectFirst() {
+      unselectCurrent();
+      select(firstOption);
+    }
+
+    function selectLast() {
+      unselectCurrent();
+      select(lastOption);
+    }
+
+    function selectNext() {
+      const currentOption = unselectCurrent();
       const nextOption = currentOption.nextElementSibling || firstOption;
-      nextOption.classList.add("focus");
-      combobox.setAttribute("aria-activedescendant", nextOption.id);
+
+      select(nextOption);
     }
 
     function selectPrevious() {
-      const currentId = combobox.getAttribute("aria-activedescendant");
-      const currentOption = listbox.querySelector(`#${currentId}`);
-      currentOption.classList.remove("focus");
-
+      const currentOption = unselectCurrent();
       const previousOption = currentOption.previousElementSibling || lastOption;
-      previousOption.classList.add("focus");
-      combobox.setAttribute("aria-activedescendant", previousOption.id);
+
+      select(previousOption);
     }
 
     function onKeyPress(event) {
+      // combobox.getAttribute("aria-activedescendant") checks if the listbox
+      // is active. Checking for `hidden` on the listbox could also have worked.
+
+      // Whilst autocomplete / type-ahead is not required, I would normally
+      // implement it on `input` event, and filter the options. Outside of the
+      // scope of this talk.
       switch (event.key) {
         case "Escape": {
-          onCancel();
-          document.querySelector('a[rel="next"]').focus();
-          event.preventDefault();
+          if (combobox.getAttribute("aria-activedescendant")) {
+            onCancel();
+            event.preventDefault();
+          }
           break;
         }
 
         case "Tab": {
-          onCancel();
+          if (combobox.getAttribute("aria-activedescendant")) {
+            onCancel();
+          }
           break;
         }
 
         case "Enter": {
-          onCommit();
-          document.querySelector('a[rel="next"]').focus();
+          // If already opened, enter closes
+          if (combobox.getAttribute("aria-activedescendant")) {
+            onCommit();
+          } else {
+            // Otherwise it activates
+            onActivate();
+          }
+
           event.preventDefault();
           break;
         }
 
         case "ArrowDown": {
+          if (!combobox.getAttribute("aria-activedescendant")) {
+            onActivate();
+          }
+
           selectNext();
           event.preventDefault();
           break;
         }
 
         case "ArrowUp": {
+          if (!combobox.getAttribute("aria-activedescendant")) {
+            onActivate();
+          }
+
           selectPrevious();
+          event.preventDefault();
+          break;
+        }
+
+        case "Home": {
+          selectFirst();
+          event.preventDefault();
+          break;
+        }
+
+        case "End": {
+          selectLast();
           event.preventDefault();
           break;
         }
@@ -81,6 +137,10 @@ const nextLabel = "Go to slide 47: Solved problem";
     function onOptionClick(event) {
       const clickedOption = event.target.closest('[role="option"]');
       if (!clickedOption) {
+        if (!component.contains(event.target)) {
+          onCancel();
+        }
+
         return;
       }
       const currentId = combobox.getAttribute("aria-activedescendant");
@@ -116,8 +176,7 @@ const nextLabel = "Go to slide 47: Solved problem";
       combobox.setAttribute("aria-activedescendant", currentOption.id);
       currentOption.classList.add("focus");
 
-      combobox.addEventListener("keydown", onKeyPress);
-      listbox.addEventListener("click", onOptionClick);
+      document.addEventListener("click", onOptionClick);
     }
 
     function onCancel() {
@@ -129,10 +188,10 @@ const nextLabel = "Go to slide 47: Solved problem";
       combobox.setAttribute("aria-expanded", "false");
       combobox.removeAttribute("aria-activedescendant");
 
-      combobox.removeEventListener("keydown", onKeyPress);
-      listbox.removeEventListener("click", onOptionClick);
+      document.removeEventListener("click", onOptionClick);
     }
 
+    combobox.addEventListener("keydown", onKeyPress);
     combobox.addEventListener("focus", onActivate);
   });
 </script>
@@ -149,7 +208,10 @@ const nextLabel = "Go to slide 47: Solved problem";
 <SlidesLayout title="Slide 38.15: How to trap focus? Example">
   <section class={`slide --custom flex-col`} transition:name="slide">
     <h2 transition:name="title">aria-activedescendant</h2>
-    <div class="m-6 self-end pr-12">
+    <div
+      id="practical-solutions-for-accessible-components-46-13-example"
+      class="m-6 self-end pr-12"
+    >
       <label>
         Pick a fruit
 
