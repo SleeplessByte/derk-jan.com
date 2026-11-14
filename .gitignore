@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Local Netlify folder
+.netlify
+
+# AI stuff I don't use
+/.agents
+/.vscode/mcp.json

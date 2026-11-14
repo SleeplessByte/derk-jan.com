@@ -1,5 +1,6 @@
 @import "tailwindcss" source("../");
 @plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
 
 :root {
   scroll-padding-top: 32px;
@@ -64,7 +65,7 @@ body .max-w-prose {
 }
 
 .astro-code {
-  @apply border dark:border-0 !bg-zinc-900 text-zinc-50 dark:!bg-black/30 shadow-sm leading-6 sm:leading-6 md:leading-7 overflow-auto max-w-full max-h-[80%];
+  @apply border dark:border-0 bg-zinc-900! text-zinc-50 dark:bg-black/30! shadow-sm leading-6 sm:leading-6 md:leading-7 overflow-auto max-w-full max-h-[80%];
 
   &[data-language] {
     @apply flex flex-col relative pt-12;
@@ -280,14 +281,14 @@ body:has(.fixed-slides) {
     }
 
     & h2 {
-      @apply !m-0;
+      @apply m-0!;
       @apply xl:text-6xl lg:text-5xl md:text-4xl sm:text-3xl text-lg;
       @apply font-bold;
     }
 
     & ul,
     & ol {
-      @apply !m-0 !p-0;
+      @apply m-0! p-0!;
       @apply list-inside;
 
       & > li {
@@ -309,12 +310,12 @@ body:has(.fixed-slides) {
 
     &.--embedded {
       & .grid {
-        @apply !m-0 !py-0 !px-2;
+        @apply m-0! py-0! px-2!;
       }
     }
 
     & .grid {
-      @apply !m-0;
+      @apply m-0!;
       @apply px-2 sm:p-6 md:px-12;
       @apply sm:mx-6 md:mx-12;
 
@@ -342,7 +343,7 @@ body:has(.fixed-slides) {
     }
 
     & .astro-code {
-      @apply !my-2;
+      @apply my-2!;
     }
   }
 
@@ -351,12 +352,12 @@ body:has(.fixed-slides) {
 
     &.--embedded {
       & .grid {
-        @apply !m-0 !py-0 !px-2;
+        @apply m-0! py-0! px-2!;
       }
     }
 
     & .grid {
-      @apply !m-0;
+      @apply m-0!;
       @apply px-2 sm:p-6 md:px-12;
       @apply sm:mx-6 md:mx-12;
 
@@ -383,7 +384,7 @@ body:has(.fixed-slides) {
     }
 
     & .astro-code {
-      @apply !my-2 !max-h-full max-w-full;
+      @apply my-2! max-h-full! max-w-full;
       @apply min-w-52;
 
       &.tiny-zoom {
@@ -430,7 +431,7 @@ body:has(.fixed-slides) {
       }
 
       & > .grid-item > .astro-code {
-        @apply !my-0;
+        @apply my-0!;
         @apply min-w-52;
       }
     }
@@ -438,19 +439,19 @@ body:has(.fixed-slides) {
 
   & .slide.--image {
     & > figure {
-      @apply !my-0 !mx-auto !p-0 flex flex-col h-full overflow-hidden;
+      @apply my-0! mx-auto! p-0! flex flex-col h-full overflow-hidden;
 
       & > blockquote {
-        @apply !p-0 min-h-full min-w-full;
+        @apply p-0! min-h-full min-w-full;
 
         & img {
-          @apply w-full h-full !m-0;
+          @apply w-full h-full m-0!;
         }
       }
 
       & > figcaption {
         @apply absolute bottom-0 left-0 right-0;
-        @apply !m-0 block overflow-hidden;
+        @apply m-0! block overflow-hidden;
 
         & > span {
           @apply block text-zinc-800 dark:text-zinc-200 bg-white/95 dark:bg-zinc-800/95;
@@ -468,7 +469,7 @@ body:has(.fixed-slides) {
       @apply sm:p-6 sm:mt-12;
 
       & > h3 {
-        @apply font-semibold text-center !mt-4;
+        @apply font-semibold text-center mt-4!;
       }
 
       & > p {
@@ -495,10 +496,10 @@ body:has(.fixed-slides) {
     }
 
     & .slanted-background {
-      @apply w-full text-center !mt-0 md:pb-16 mx-auto;
+      @apply w-full text-center mt-0! md:pb-16 mx-auto;
 
       & img {
-        @apply absolute inset-0 w-full h-full overflow-clip object-cover !m-0;
+        @apply absolute inset-0 w-full h-full overflow-clip object-cover m-0!;
 
         clip-path: polygon(0 0, 0 40%, 100% 0, 0 0);
       }
@@ -515,7 +516,7 @@ body:has(.fixed-slides) {
       @apply absolute inset-0 w-full h-full m-0 p-0;
 
       & img {
-        @apply absolute inset-0 w-full h-full overflow-clip object-cover !m-0;
+        @apply absolute inset-0 w-full h-full overflow-clip object-cover m-0!;
       }
 
       & figcaption {
@@ -555,6 +556,59 @@ body:has(.fixed-slides) {
       @apply m-auto;
       @apply xl:text-7xl lg:text-6xl md:text-5xl sm:text-3xl text-lg;
       @apply font-bold;
+    }
+  }
+}
+
+input:where([type="text"]),
+input:where(:not([type])),
+input:where([type="email"]),
+input:where([type="url"]),
+input:where([type="password"]),
+input:where([type="number"]),
+input:where([type="date"]),
+input:where([type="datetime-local"]),
+input:where([type="month"]),
+input:where([type="search"]),
+input:where([type="tel"]),
+input:where([type="time"]),
+input:where([type="week"]),
+select:where([multiple]),
+textarea,
+select {
+  &.form-input,
+  &.form-textarea,
+  &.form-select,
+  &.form-multiselect {
+    @apply dark:text-zinc-50 dark:bg-zinc-950 dark:border-zinc-600;
+
+    &::placeholder {
+      @apply dark:text-zinc-400;
+    }
+
+    &:focus {
+      @apply ring-offset-white ring-pink-600 border-pink-600;
+      @apply dark:ring-offset-black dark:ring-orange-400 dark:border-orange-400;
+    }
+  }
+}
+
+select {
+  &.form-select {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="%2371717b" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 8l4 4 4-4"/></svg>');
+  }
+}
+
+input:where([type="checkbox"]),
+input:where([type="radio"]) {
+  &.form-checkbox,
+  &.form-radio {
+    @apply bg-zinc-50 text-pink-600 border-zinc-500;
+    @apply dark:bg-zinc-950 dark:text-orange-400 dark:border-zinc-600;
+
+    &:focus {
+      @apply ring-offset-white ring-pink-600 border-pink-600;
+      @apply dark:ring-offset-black dark:ring-orange-400 dark:border-orange-400;
     }
   }
 }

@@ -9,7 +9,7 @@
   },
   "license": "UNLICENSED",
   "type": "module",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -17,28 +17,33 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.7",
-    "@astrojs/react": "^4.4.0",
-    "@astrojs/sitemap": "^3.6.0",
-    "@tailwindcss/vite": "^4.1.13",
-    "@types/react": "^19.1.14",
-    "@types/react-dom": "^19.1.9",
-    "astro": "^5.14.5",
+    "@astrojs/markdown-remark": "^7.3.9",
+    "@astrojs/mdx": "8.1.6",
+    "@astrojs/netlify": "^8.2.14",
+    "@astrojs/react": "7.1.9",
+    "@astrojs/sitemap": "3.7.5",
+    "@netlify/blobs": "^11.1.9",
+    "astro": "7.4.12",
     "install": "^0.13.0",
     "mdast-util-to-string": "^4.0.0",
-    "motion": "^12.23.22",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "motion": "^14.14.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "reading-time": "^1.5.0",
-    "shiki": "^3.13.0",
-    "tailwindcss": "^4.1.13"
+    "shiki": "^4.6.0",
+    "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
-    "@shikijs/transformers": "^3.13.0",
-    "@tailwindcss/typography": "^0.5.19",
-    "prettier": "^3.6.2",
-    "prettier-plugin-astro": "^0.14.1",
-    "sharp": "^0.34.4"
+    "@netlify/vite-plugin": "^3.0.1",
+    "@shikijs/transformers": "^4.6.0",
+    "@tailwindcss/forms": "^0.5.11",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
+    "sharp": "^0.35.5"
   },
-  "packageManager": "pnpm@10.18.2+sha512.9fb969fa749b3ade6035e0f109f0b8a60b5d08a1a87fdf72e337da90dcc93336e2280ca4e44f2358a649b83c17959e9993e777c2080879f3801e6f0d999ad3dd"
+  "packageManager": "pnpm@12.18.0"
 }

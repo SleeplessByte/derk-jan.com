@@ -8,10 +8,12 @@
     "figcaption",
     "frontmatter",
     "grayscale",
+    "intolerances",
     "Karrenbeld",
     "microsite",
     "Monkeypatch",
     "noreferrer",
+    "nums",
     "pescetarian"
   ],
   "astro.content-intellisense": true,
@@ -22,6 +24,7 @@
   "mdx.validate.validateReferences": "error",
   "mdx.validate.validateUnusedLinkDefinitions": "warning",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.prettierPath": "./node_modules/prettier",
   "[mdx]": {
     "editor.defaultFormatter": "unifiedjs.vscode-mdx"
   }
