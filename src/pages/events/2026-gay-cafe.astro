@@ -39,7 +39,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
               class="text-orange-700 dark:text-pink-300"
               title="Sunday, 27 December"
             >
-              third christmas
+              third Christmas
             </strong>{" "}
             day, from{" "}
             <strong class="text-orange-700 dark:text-pink-300">12:00 to 17:28</strong>.
@@ -167,7 +167,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       class="relative mt-1 size-6 md:size-4 form-radio"
                     />
                     <label for="rsvp-no">
-                      Unfortunately no, invite me again next time
+                      Unfortunately no, but please invite me again next time
                     </label>
                   </div>
                   <div class="flex gap-x-2.5">
@@ -179,9 +179,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       required
                       class="relative mt-1 size-6 md:size-4 form-radio"
                     />
-                    <label for="rsvp-never">
-                      Unfortunately no, and do not invite me again
-                    </label>
+                    <label for="rsvp-never">No, and do not invite me again</label>
                   </div>
                   <div class="flex gap-x-2.5">
                     <input
@@ -454,7 +452,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                           d="M13.2803 1.7803A.75.75 0 0 0 12.2197.7197L10.8223 2.117C8.6573.0434 5.2212.0717 3.0909 2.202c-.4407.4407-.4407 1.1552 0 1.596l7.1111 7.1111c.4408.4407 1.1553.4407 1.596 0 2.1303-2.1303 2.1586-5.5665.085-7.7314z"
                         />
                       </svg>
-                      <span>Nuts (whole, oil, etc. - any other than peanuts)</span>
+                      <span>Other nuts (whole, oil, etc.)</span>
                     </label>
                   </div>
                   <div class="flex gap-x-2.5">
@@ -560,7 +558,9 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                           d="M.2197.2197a.75.75 0 0 1 1.0606 0l12.5 12.5a.75.75 0 0 1 0 1.0606.75.75 0 0 1-1.0606 0l-12.5-12.5a.75.75 0 0 1 0-1.0606"
                         />
                       </svg>
-                      <span>Alcohol (including when processed / cooked)</span>
+                      <span>
+                        Alcohol (including when processed, cooked, or as ingredient)
+                      </span>
                     </label>
                   </div>
 
@@ -619,7 +619,13 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                           d="M7.2148 3.0303a.5.5 0 0 1 .545.1084L10.037 5.416a.5.5 0 0 1 0 .707L7.7598 8.4005a.501.501 0 0 1-.545.1084.501.501 0 0 1-.3086-.462V6.5196H4.5665a.75.75 0 1 1 0-1.5h2.3399V3.4922c0-.202.122-.3844.3085-.462"
                         />
                       </svg>
-                      <span>Other (use comment field)</span>
+                      <span>
+                        Other (use{" "}
+                        <a href="#message" class="link">
+                          comment field
+                        </a>
+                        )
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -675,6 +681,21 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       class="form-label flex items-center"
                     >
                       <span>Cappuccino / Latte</span>
+                    </label>
+                  </div>
+                  <div class="flex gap-x-2.5">
+                    <input
+                      id="preferences-filtered"
+                      type="checkbox"
+                      name="preferences[drinks][]"
+                      value="filtered"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                    />
+                    <label
+                      for="preferences-filtered"
+                      class="form-label flex items-center"
+                    >
+                      <span>Filtered coffee (light roast)</span>
                     </label>
                   </div>
                   <div class="flex gap-x-2.5">
@@ -776,7 +797,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 
             <div class="mt-4" data-netlify-recaptcha="true"></div>
 
-            <div class="mt-10 flex justify-between border-t border-zinc-900/10 pt-8 dark:border-white/10 gap-2">
+            <div class="mt-10 flex justify-between items-start border-t border-zinc-900/10 pt-8 dark:border-white/10 gap-2">
               <p class="dark:text-zinc-300">
                 If you RSVPed yes, we will send our address and further details just
                 before Christmas.
