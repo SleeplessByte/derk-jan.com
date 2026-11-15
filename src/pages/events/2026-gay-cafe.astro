@@ -56,7 +56,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
               <div>
                 <label for="first-name" class="block text-sm/6 font-semibold form-label">
                   First name{" "}
-                  <span aria-hidden class="text-pink-600 dark:text-orange-600">
+                  <span aria-hidden="true" class="text-pink-600 dark:text-orange-600">
                     *
                   </span>
                   <span class="sr-only">(required)</span>
@@ -144,6 +144,17 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                   </strong>
                   ?
                 </legend>
+
+                <label class="sr-only" aria-hidden="true">
+                  Your RSVP
+                  <input
+                    type="radio"
+                    name="rsvp"
+                    value=""
+                    class="sr-only"
+                    tabindex="-1"
+                  />
+                </label>
 
                 <div class="mt-4 space-y-2 text-base/8 md:text-sm/6 tabular-nums dark:text-zinc-300">
                   <div class="flex gap-x-2.5">
@@ -275,6 +286,17 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                   unexpected trip to the hospital, or hours on the toilet. Please indicate
                   your allergies and intolerances.
                 </p>
+
+                <label class="sr-only" aria-hidden="true">
+                  Allergies &amp; intolerances
+                  <input
+                    type="checkbox"
+                    name="allergens[]"
+                    value=""
+                    class="sr-only"
+                    tabindex="-1"
+                  />
+                </label>
 
                 <div class="mt-4 space-y-2 text-base/8 md:text-sm/6 tabular-nums dark:text-zinc-300">
                   <div class="flex gap-x-2.5">
@@ -598,6 +620,17 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                   plan ahead.
                 </p>
 
+                <label class="sr-only" aria-hidden="true">
+                  Preferred drink(s)
+                  <input
+                    type="checkbox"
+                    name="preferences[drinks][]"
+                    value=""
+                    class="sr-only"
+                    tabindex="-1"
+                  />
+                </label>
+
                 <div class="mt-4 space-y-2 text-base/8 md:text-sm/6 tabular-nums dark:text-zinc-300">
                   <div class="flex gap-x-2.5">
                     <input
@@ -726,7 +759,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
               </div>
             </div>
 
-            <div data-netlify-recaptcha="true"></div>
+            <div class="mt-4" data-netlify-recaptcha="true"></div>
 
             <div class="mt-10 flex justify-end border-t border-zinc-900/10 pt-8 dark:border-white/10">
               <button
