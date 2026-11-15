@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import HtmlLayout from "../../layouts/HtmlLayout.astro";
 
 import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
+import kitchenImage from "../../assets/IMG_20240825_233805_104.jpg";
 ---
 
 <HtmlLayout title="RSVP to Gay Café 2026">
@@ -32,6 +33,14 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
               welcome.
             </p>
           </header>
+
+          <figure>
+            <Image
+              src={kitchenImage}
+              alt="Tom making a coffee, whilst DJ is enjoying one"
+              class="aspect-square rounded-xl shadow-md object-cover my-4"
+            />
+          </figure>
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
             The café will be open during the afternoon on the{" "}
@@ -153,6 +162,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                     value=""
                     class="sr-only"
                     tabindex="-1"
+                    disabled
                   />
                 </label>
 
@@ -308,6 +318,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                     value=""
                     class="sr-only"
                     tabindex="-1"
+                    disabled
                   />
                 </label>
 
@@ -318,7 +329,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="milk"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-milk" class="form-label flex items-start">
                       <svg
@@ -353,7 +364,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="lactose"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-lactose" class="form-label flex items-start">
                       <svg
@@ -380,7 +391,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="eggs"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-eggs" class="form-label flex items-start">
                       <svg
@@ -407,7 +418,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="peanuts"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-peanuts" class="form-label flex items-start">
                       <svg
@@ -434,7 +445,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="nuts"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-nuts" class="form-label flex items-start">
                       <svg
@@ -461,7 +472,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="sesame"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-sesame" class="form-label flex items-start">
                       <svg
@@ -486,7 +497,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="gluten"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-gluten" class="form-label flex items-start">
                       <svg
@@ -513,7 +524,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="soy"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-soy" class="form-label flex items-start">
                       <svg
@@ -540,7 +551,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="alcohol"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-alcohol" class="form-label flex items-start">
                       <svg
@@ -570,7 +581,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="vegan"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-vegan" class="form-label flex items-start">
                       <svg
@@ -601,7 +612,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="allergens[]"
                       value="other"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-other" class="form-label flex items-start">
                       <svg
@@ -649,6 +660,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                     value=""
                     class="sr-only"
                     tabindex="-1"
+                    disabled
                   />
                 </label>
 
@@ -659,7 +671,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="espresso"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-espresso"
@@ -674,7 +686,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="cappuccino"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-cappuccino"
@@ -689,7 +701,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="filtered"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-filtered"
@@ -704,7 +716,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="chocolate"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-chocolate"
@@ -719,7 +731,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="tea"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-herbal-tea"
@@ -734,7 +746,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="ginger-tea"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-ginger-tea"
@@ -749,7 +761,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="mint-tea"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label
                       for="preferences-mint-tea"
@@ -764,7 +776,7 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       type="checkbox"
                       name="preferences[drinks][]"
                       value="alcohol"
-                      class="relative mt-1 size-6 md:size-4 form-checkbox"
+                      class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="preferences-alcohol" class="form-label flex items-center">
                       <span>Alcoholic beverage</span>
