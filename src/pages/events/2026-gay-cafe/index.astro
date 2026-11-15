@@ -1,9 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import HtmlLayout from "../../layouts/HtmlLayout.astro";
+import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 
-import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
-import kitchenImage from "../../assets/IMG_20240825_233805_104.jpg";
+import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
+import kitchenImage from "../../../assets/IMG_20240825_233805_104.jpg";
+
+const formName = "events/2026-gay-cafe";
+const successPage = `/${formName}/success`;
+const eventGate = 1798369200;
+const signupGate = 1797634799;
 ---
 
 <HtmlLayout title="RSVP to Gay Café 2026">
@@ -24,14 +29,24 @@ import kitchenImage from "../../assets/IMG_20240825_233805_104.jpg";
               Join us for a festive coffee and pastry
             </h2>
             <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300">
-              You are invited to enjoy and celebrate surviving another year{" "}
-              <em>(in this climate?)</em>. We will serve coffee{" "}
-              <em>(including milk alternatives)</em>, tea <em>(without microplastics)</em>
-              , cake, pie, and pastries.
+              You{" "}
+              <span data-target="tense" data-past="were">
+                are
+              </span>{" "}
+              invited to enjoy and celebrate surviving another year{" "}
+              <em>(in this climate?)</em>. We{" "}
+              <span data-target="tense" data-past="served">
+                will serve
+              </span>{" "}
+              coffee <em>(including milk alternatives)</em>, tea{" "}
+              <em>(without microplastics)</em>, cake, pie, and pastries.
             </p>
             <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300">
-              The price is merely your attendance (it's free), monetary donations are
-              welcome.
+              The price{" "}
+              <span data-target="tense" data-past="was">
+                is
+              </span>{" "}
+              merely your attendance (it's free), monetary donations are welcome.
             </p>
           </header>
 
@@ -45,7 +60,11 @@ import kitchenImage from "../../assets/IMG_20240825_233805_104.jpg";
           </figure>
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
-            The café will be open during the afternoon on the{" "}
+            The café{" "}
+            <span data-target="tense" data-past="was">
+              will be
+            </span>{" "}
+            open during the afternoon on the{" "}
             <strong
               class="text-orange-700 dark:text-pink-300"
               title="Sunday, 27 December"
@@ -56,8 +75,19 @@ import kitchenImage from "../../assets/IMG_20240825_233805_104.jpg";
             <strong class="text-orange-700 dark:text-pink-300">12:00 to 17:28</strong>.
           </p>
 
+          <template data-target="when-closed">
+            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+              <div class="sm:col-span-2">
+                <p class="mt-8 text-lg">
+                  You can no longer RSVP to this event. See you again next time!
+                </p>
+              </div>
+            </div>
+          </template>
+
           <form
-            name="events/2026-gay-cafe"
+            action={successPage}
+            name={formName}
             method="POST"
             data-netlify="true"
             data-netlify-recaptcha="true"
@@ -829,4 +859,37 @@ import kitchenImage from "../../assets/IMG_20240825_233805_104.jpg";
       </div>
     </div>
   </div>
+
+  <script
+    data-astro-rerun
+    data-target="variables"
+    data-variable-event-gate={eventGate}
+    data-variable-signup-gate={signupGate}
+    data-variable-form-name={formName}
+  >
+    const renderTime = new Date().getTime() / 1000;
+
+    const variables = document.querySelector('[data-target="variables"]');
+    const eventIsPast = renderTime > Number(variables.dataset.variableEventGate);
+    const signupIsClosed = renderTime > Number(variables.dataset.variableSignupGate);
+
+    if (eventIsPast) {
+      document.querySelectorAll('[data-target="tense"]').forEach((node) => {
+        node.innerText = node.dataset.past;
+      });
+    }
+
+    if (signupIsClosed) {
+      /** @type {HTMLTemplateElement} */
+      const formReplacementTemplate = document.querySelector(
+        'template[data-target="when-closed"]',
+      );
+      const formReplacement =
+        formReplacementTemplate.content.firstElementChild.cloneNode(true);
+
+      document
+        .querySelector(`form[name="${variables.dataset.variableFormName}"]`)
+        .replaceWith(formReplacement);
+    }
+  </script>
 </HtmlLayout>

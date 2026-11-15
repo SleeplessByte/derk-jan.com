@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import HtmlLayout from "../../../layouts/HtmlLayout.astro";
+
+import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
+import successVideoAv1 from "../../../assets/kling_20261115_VIDEO_Make_the_s_2487_0.webm";
+import successVideoMp4 from "../../../assets/kling_20261115_VIDEO_Make_the_s_2487_0.mp4";
+---
+
+<HtmlLayout title="RSVP to Gay Café 2026">
+  <div class="relative">
+    <div class="lg:absolute lg:inset-0 lg:left-1/2">
+      <Image
+        src={backgroundImage}
+        alt=""
+        class="h-64 w-full bg-zinc-50 object-[center_80%] md:object-[center_75%] lg:object-center object-cover sm:h-80 lg:absolute lg:h-full dark:bg-zinc-800"
+        loading="eager"
+      />
+    </div>
+    <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
+      <div class="px-6 lg:px-8">
+        <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
+          <header>
+            <h2 class="text-4xl font-semibold tracking-tight text-pretty text-zinc-900 sm:text-4xl dark:text-white">
+              Thank you for your RSVP!
+            </h2>
+            <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300"></p>
+            <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300">
+              Don't forget: the price{" "}
+              <span data-target="tense" data-past="was">
+                is
+              </span>{" "}
+              merely your attendance (it's free), monetary donations are welcome. Please
+              do <strong>not</strong> bring food to protect our anaphylactic friends.
+            </p>
+          </header>
+
+          <figure>
+            <video
+              class="aspect-square rounded-xl shadow-md object-cover my-4"
+              autoplay
+              controls
+              controlslist="nodownload nofullscreen noremoteplayback"
+              disablepictureinpicture
+              disableRemotePlayback
+              playsinline
+            >
+              <source type="video/webm" src={successVideoAv1} />
+              <source type="video/mp4" src={successVideoMp4} />
+            </video>
+          </figure>
+
+          <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
+            The café{" "}
+            <span data-target="tense" data-past="was">
+              will be
+            </span>{" "}
+            open during the afternoon on the{" "}
+            <strong
+              class="text-orange-700 dark:text-pink-300"
+              title="Sunday, 27 December"
+            >
+              third Christmas
+            </strong>{" "}
+            day, from{" "}
+            <strong class="text-orange-700 dark:text-pink-300">12:00 to 17:28</strong>.
+          </p>
+
+          <div class="mt-10 flex justify-between items-start border-t border-zinc-900/10 pt-8 dark:border-white/10 gap-2">
+            <p class="dark:text-zinc-300">
+              If you RSVPed yes, we will send our address and further details just before
+              Christmas.
+            </p>
+
+            <a
+              href="mailto:derk-jan@karrenbeld.info?subject=RSVP Gay Café 2026"
+              class="no-underline transition shrink-0 rounded-md pointer bg-pink-600 dark:bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:shadow-md active:shadow-none dark:shadow-lg dark:hover:shadow-xl dark:active:shadow-sm hover:bg-pink-500 dark:hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 dark:focus-visible:outline-orange-600 active:bg-pink-700 dark:active:bg-orange-800 hover:-translate-y-px active:translate-y-px"
+            >
+              Change your RSVP
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</HtmlLayout>
