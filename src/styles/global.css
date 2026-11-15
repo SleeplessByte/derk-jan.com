@@ -603,7 +603,7 @@ input:where([type="checkbox"]),
 input:where([type="radio"]) {
   &.form-checkbox,
   &.form-radio {
-    @apply bg-zinc-50 text-pink-600 border-zinc-500;
+    @apply bg-current text-pink-600 border-zinc-500;
     @apply dark:bg-zinc-950 dark:text-orange-400 dark:border-zinc-600;
 
     &:focus {
