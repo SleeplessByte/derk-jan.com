@@ -603,8 +603,8 @@ input:where([type="checkbox"]),
 input:where([type="radio"]) {
   &.form-checkbox,
   &.form-radio {
-    @apply bg-current text-pink-600 border-zinc-500;
-    @apply dark:bg-zinc-950 dark:text-orange-400 dark:border-zinc-600;
+    @apply checked:bg-current text-pink-600 border-zinc-500;
+    @apply dark:bg-zinc-950 dark:text-orange-500 dark:border-zinc-600;
 
     &:focus {
       @apply ring-offset-white ring-pink-600 border-pink-600;

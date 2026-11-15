@@ -166,7 +166,22 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
                       required
                       class="relative mt-1 size-6 md:size-4 form-radio"
                     />
-                    <label for="rsvp-no">Unfortunately no</label>
+                    <label for="rsvp-no">
+                      Unfortunately no, invite me again next time
+                    </label>
+                  </div>
+                  <div class="flex gap-x-2.5">
+                    <input
+                      id="rsvp-never"
+                      type="radio"
+                      name="rsvp"
+                      value="-0"
+                      required
+                      class="relative mt-1 size-6 md:size-4 form-radio"
+                    />
+                    <label for="rsvp-never">
+                      Unfortunately no, and do not invite me again
+                    </label>
                   </div>
                   <div class="flex gap-x-2.5">
                     <input
@@ -761,10 +776,15 @@ import backgroundImage from "../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 
             <div class="mt-4" data-netlify-recaptcha="true"></div>
 
-            <div class="mt-10 flex justify-end border-t border-zinc-900/10 pt-8 dark:border-white/10">
+            <div class="mt-10 flex justify-between border-t border-zinc-900/10 pt-8 dark:border-white/10 gap-2">
+              <p class="dark:text-zinc-300">
+                If you RSVPed yes, we will send our address and further details just
+                before Christmas.
+              </p>
+
               <button
                 type="submit"
-                class="transition rounded-md pointer bg-pink-600 dark:bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:shadow-md active:shadow-none dark:shadow-lg dark:hover:shadow-xl dark:active:shadow-sm hover:bg-pink-500 dark:hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 dark:focus-visible:outline-orange-600 active:bg-pink-700 dark:active:bg-orange-800 hover:-translate-y-px active:translate-y-px"
+                class="transition shrink-0 rounded-md pointer bg-pink-600 dark:bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:shadow-md active:shadow-none dark:shadow-lg dark:hover:shadow-xl dark:active:shadow-sm hover:bg-pink-500 dark:hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 dark:focus-visible:outline-orange-600 active:bg-pink-700 dark:active:bg-orange-800 hover:-translate-y-px active:translate-y-px"
               >
                 Send RSVP
               </button>
