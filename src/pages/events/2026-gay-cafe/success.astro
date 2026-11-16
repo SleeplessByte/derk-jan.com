@@ -5,16 +5,22 @@ import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import successVideoAv1 from "../../../assets/video/kling_20261115_VIDEO_Make_the_s_2487_0.webm";
 import successVideoMp4 from "../../../assets/video/kling_20261115_VIDEO_Make_the_s_2487_0.mp4";
+import fruityXmasMp3 from "../../../assets/audio/2026-fruity-xmas.mp3";
+import sideVideoMp4 from "../../../assets/video/kling_20261116_VIDEO_Make_the_s_2710_0.mp4";
 ---
 
 <HtmlLayout title="RSVP to Gay Café 2026">
   <div class="relative">
-    <div class="lg:absolute lg:inset-0 lg:left-1/2">
+    <div
+      class="lg:fixed lg:inset-0 lg:left-1/2 shadow-xl dark:shadow-2xl"
+      transition:name="side"
+    >
       <Image
         src={backgroundImage}
         alt=""
         class="h-64 w-full bg-zinc-50 object-[center_80%] md:object-[center_75%] lg:object-center object-cover sm:h-80 lg:absolute lg:h-full dark:bg-zinc-800"
         loading="eager"
+        data-target="side"
       />
     </div>
     <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
@@ -35,7 +41,7 @@ import successVideoMp4 from "../../../assets/video/kling_20261115_VIDEO_Make_the
             </p>
           </header>
 
-          <figure>
+          <figure class="relative pb-16 -ml-2 pl-2">
             <video
               class="aspect-square rounded-xl shadow-md object-cover my-4"
               autoplay
@@ -48,6 +54,14 @@ import successVideoMp4 from "../../../assets/video/kling_20261115_VIDEO_Make_the
               <source type="video/webm" src={successVideoAv1} />
               <source type="video/mp4" src={successVideoMp4} />
             </video>
+
+            <audio
+              controls
+              src={fruityXmasMp3}
+              class="absolute bottom-2 left-2"
+              transition:name="audio"
+              transition:persist
+            />
           </figure>
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
@@ -83,4 +97,52 @@ import successVideoMp4 from "../../../assets/video/kling_20261115_VIDEO_Make_the
       </div>
     </div>
   </div>
+
+  <script
+    data-astro-rerun
+    data-target="variables"
+    data-variable-side-video-mp4={sideVideoMp4}
+  >
+    {
+      const variables = document.querySelector('[data-target="variables"]');
+      const sideElement = document.querySelector('[data-target="side"]');
+      const replacementVideo = document.createElement("video");
+
+      let replacementVideoLoaded = false;
+      let replacementVideoPlayed = false;
+
+      replacementVideo.setAttribute("transition:persist", "");
+      replacementVideo.autoplay = true;
+      replacementVideo.muted = true;
+      replacementVideo.loop = true;
+      replacementVideo.addEventListener(
+        "canplaythrough",
+        () => {
+          replacementVideo.setAttribute("class", sideElement.getAttribute("class"));
+          sideElement.replaceWith(replacementVideo);
+          replacementVideo
+            .play()
+            .then(() => {
+              replacementVideoPlayed = true;
+            })
+            .catch(() => {
+              replacementVideoLoaded = true;
+            });
+        },
+        { once: true },
+      );
+      replacementVideo.src = variables.dataset.variableSideVideoMp4;
+
+      document.addEventListener(
+        "click",
+        () => {
+          if (replacementVideoLoaded && !replacementVideoPlayed) {
+            replacementVideo.play();
+            replacementVideoPlayed = true;
+          }
+        },
+        { once: true },
+      );
+    }
+  </script>
 </HtmlLayout>

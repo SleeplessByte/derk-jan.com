@@ -5,6 +5,7 @@ import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../assets/IMG_20240825_233805_104.jpg";
 import fruityXmasMp3 from "../../../assets/audio/2026-fruity-xmas.mp3";
+import sideVideoMp4 from "../../../assets/video/kling_20261116_VIDEO_Make_the_s_2710_0.mp4";
 
 const formName = "events/2026-gay-cafe";
 const successPage = `/${formName}/success`;
@@ -14,12 +15,16 @@ const signupGate = 1797634799;
 
 <HtmlLayout title="RSVP to Gay Café 2026">
   <div class="relative">
-    <div class="lg:fixed lg:inset-0 lg:left-1/2">
+    <div
+      class="lg:fixed lg:inset-0 lg:left-1/2 shadow-xl dark:shadow-2xl"
+      transition:name="side"
+    >
       <Image
         src={backgroundImage}
         alt=""
         class="h-64 w-full bg-zinc-50 object-[center_80%] md:object-[center_75%] lg:object-center object-cover sm:h-80 lg:absolute lg:h-full dark:bg-zinc-800"
         loading="eager"
+        data-target="side"
       />
     </div>
     <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
@@ -58,7 +63,13 @@ const signupGate = 1797634799;
               class="aspect-square rounded-xl shadow-md object-cover my-4"
               loading="eager"
             />
-            <audio controls src={fruityXmasMp3} class="absolute bottom-2 left-2" />
+            <audio
+              controls
+              src={fruityXmasMp3}
+              class="absolute bottom-2 left-2"
+              transition:name="audio"
+              transition:persist
+            />
           </figure>
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
@@ -868,30 +879,72 @@ const signupGate = 1797634799;
     data-variable-event-gate={eventGate}
     data-variable-signup-gate={signupGate}
     data-variable-form-name={formName}
+    data-variable-side-video-mp4={sideVideoMp4}
   >
-    const renderTime = new Date().getTime() / 1000;
+    {
+      const renderTime = new Date().getTime() / 1000;
 
-    const variables = document.querySelector('[data-target="variables"]');
-    const eventIsPast = renderTime > Number(variables.dataset.variableEventGate);
-    const signupIsClosed = renderTime > Number(variables.dataset.variableSignupGate);
+      const variables = document.querySelector('[data-target="variables"]');
+      const eventIsPast = renderTime > Number(variables.dataset.variableEventGate);
+      const signupIsClosed = renderTime > Number(variables.dataset.variableSignupGate);
 
-    if (eventIsPast) {
-      document.querySelectorAll('[data-target="tense"]').forEach((node) => {
-        node.innerText = node.dataset.past;
-      });
-    }
+      if (eventIsPast) {
+        document.querySelectorAll('[data-target="tense"]').forEach((node) => {
+          node.innerText = node.dataset.past;
+        });
+      }
 
-    if (signupIsClosed) {
-      /** @type {HTMLTemplateElement} */
-      const formReplacementTemplate = document.querySelector(
-        'template[data-target="when-closed"]',
+      if (signupIsClosed) {
+        /** @type {HTMLTemplateElement} */
+        const formReplacementTemplate = document.querySelector(
+          'template[data-target="when-closed"]',
+        );
+        const formReplacement =
+          formReplacementTemplate.content.firstElementChild.cloneNode(true);
+
+        document
+          .querySelector(`form[name="${variables.dataset.variableFormName}"]`)
+          .replaceWith(formReplacement);
+      }
+
+      const sideElement = document.querySelector('[data-target="side"]');
+      const replacementVideo = document.createElement("video");
+
+      let replacementVideoLoaded = false;
+      let replacementVideoPlayed = false;
+
+      replacementVideo.setAttribute("transition:persist", "");
+      replacementVideo.autoplay = true;
+      replacementVideo.muted = true;
+      replacementVideo.loop = true;
+      replacementVideo.addEventListener(
+        "canplaythrough",
+        () => {
+          replacementVideo.setAttribute("class", sideElement.getAttribute("class"));
+          sideElement.replaceWith(replacementVideo);
+          replacementVideo
+            .play()
+            .then(() => {
+              replacementVideoPlayed = true;
+            })
+            .catch(() => {
+              replacementVideoLoaded = true;
+            });
+        },
+        { once: true },
       );
-      const formReplacement =
-        formReplacementTemplate.content.firstElementChild.cloneNode(true);
+      replacementVideo.src = variables.dataset.variableSideVideoMp4;
 
-      document
-        .querySelector(`form[name="${variables.dataset.variableFormName}"]`)
-        .replaceWith(formReplacement);
+      document.addEventListener(
+        "click",
+        () => {
+          if (replacementVideoLoaded && !replacementVideoPlayed) {
+            replacementVideo.play();
+            replacementVideoPlayed = true;
+          }
+        },
+        { once: true },
+      );
     }
   </script>
 </HtmlLayout>
