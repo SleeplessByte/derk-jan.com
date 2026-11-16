@@ -4,6 +4,7 @@ import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../assets/IMG_20240825_233805_104.jpg";
+import fruityXmasMp3 from "../../../assets/audio/2026-fruity-xmas.mp3";
 
 const formName = "events/2026-gay-cafe";
 const successPage = `/${formName}/success`;
@@ -13,7 +14,7 @@ const signupGate = 1797634799;
 
 <HtmlLayout title="RSVP to Gay Café 2026">
   <div class="relative">
-    <div class="lg:absolute lg:inset-0 lg:left-1/2">
+    <div class="lg:fixed lg:inset-0 lg:left-1/2">
       <Image
         src={backgroundImage}
         alt=""
@@ -50,13 +51,14 @@ const signupGate = 1797634799;
             </p>
           </header>
 
-          <figure>
+          <figure class="relative">
             <Image
               src={kitchenImage}
               alt="Tom making a coffee, whilst DJ is enjoying one"
               class="aspect-square rounded-xl shadow-md object-cover my-4"
               loading="eager"
             />
+            <audio controls src={fruityXmasMp3} class="absolute bottom-2 left-2" />
           </figure>
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
