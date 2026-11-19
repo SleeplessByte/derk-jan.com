@@ -54,7 +54,7 @@ Your output will be read by non-native practitioner-scholars: use simple syntax 
 The target is at least WCAG 2.1 AA. Pay special attention to:
 
 - Semantic elements first: buttons for actions, links for navigation, `fieldset` and `legend` for groups of controls, a `<label for>` for every input, and `aria-live="polite"` for result counts.
-- No `aria-label`, because many translation tools skip it. Use `aria-labelledby` that points to an element with a unique id and the class `sr-only`. Generate unique ids with the framework's helper (for example `wp_unique_id()` in PHP, `useInstanceId` in the block editor). Make sure the page loads the stylesheet that defines `.sr-only` (in a WordPress block: `"style": [ "don-core-base", "file:./view.css" ]`).
+- No `aria-label`, because many translation tools skip it. Use `aria-labelledby` that points to an element with a unique id and the class `sr-only`. Generate unique ids with the framework's helper (for example `wp_unique_id()` in PHP, `useInstanceId` in the WordPress block editor). Make sure the page loads the stylesheet that defines `.sr-only`.
 - A decorative SVG must have `aria-hidden="true"`, for example when it is next to visible text. An icon-only SVG must have `role="graphics-symbol"` and a translatable `<title>` as its first child.
 - Visible focus, targets of at least 24×24 px, and respect for `prefers-reduced-motion`. A smaller target is fine when the page offers an accessible alternative with the same function.
 - A pattern is a valid replacement for colour (WCAG 1.4.1), but each pattern needs at least 3:1 contrast against its own fill.
