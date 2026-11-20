@@ -1,8 +1,13 @@
 # Agent instructions
 
 When you touch a file, you are responsible for cleaning up the lint errors in it.
+If sensible linters are missing, suggest them.
 
 These rules also apply to sub-agents. When you brief a sub-agent, include the rules that apply to its task.
+
+The live site is https://derk-jan.com. You can use it, but be slightly conservative with bandwidth so no unnecessary visits. This project uses `pnpm` and astro.
+
+In your final outputs/plans, when you are referring to local files, link them (line number when applicable). In your final outputs/plans also link to the localhost path if it's a served page (e.g. http://localhost:4321/about for pages/about.astro).
 
 ## Writing for readers
 
@@ -63,3 +68,13 @@ The target is at least WCAG 2.1 AA. Pay special attention to:
 
 - List the exact URLs you tested, as links.
 - For a UI change, take screenshots before and after, in light and dark mode, and link every one. When the user has a live view, crop the screenshots to what changed. Take one viewport size, unless the layout changes in a fundamental way between sizes. Delete the screenshots when the stage is done.
+
+## File processing & other unavailable software
+
+- docker on WSL is available
+- first check what's already downloaded (images)
+- you can use that
+- you can add new images (plan for this)
+- do not reach into sub containers from other projects
+- always compose a container for the project for easy tracking what's using what (so `derk-jan-com`)
+- clean up after the project no longer requires it (plan for this)
