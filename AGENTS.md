@@ -5,7 +5,9 @@ If sensible linters are missing, suggest them.
 
 These rules also apply to sub-agents. When you brief a sub-agent, include the rules that apply to its task.
 
-The live site is https://derk-jan.com. You can use it, but be slightly conservative with bandwidth so no unnecessary visits. This project uses `pnpm` and astro.
+The live site is https://derk-jan.com. You can use it, but be slightly conservative with bandwidth so no unnecessary visits. No form spamming on prod.
+
+This project uses `pnpm` and astro.
 
 In your final outputs/plans, when you are referring to local files, link them (line number when applicable). In your final outputs/plans also link to the localhost path if it's a served page (e.g. http://localhost:4321/about for pages/about.astro).
 
