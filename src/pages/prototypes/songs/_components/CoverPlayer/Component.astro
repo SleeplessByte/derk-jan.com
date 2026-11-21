@@ -15,9 +15,21 @@ interface Props {
 
 const { cover, alt, src, captions, title, lyrics } = Astro.props;
 const progressId = `cover-player-${crypto.randomUUID()}-progress`;
+
+// Each spark leaves the tip at its own angle, distance and moment, so the stream looks random.
+const sparks = [
+  { rise: "-0.55rem", travel: "2.4rem", delay: "0s", twinkle: false },
+  { rise: "0.4rem", travel: "1.8rem", delay: "0.1s", twinkle: true },
+  { rise: "-0.2rem", travel: "3.2rem", delay: "0.2s", twinkle: false },
+  { rise: "0.6rem", travel: "2.2rem", delay: "0.3s", twinkle: false },
+  { rise: "-0.35rem", travel: "1.5rem", delay: "0.4s", twinkle: true },
+  { rise: "0.15rem", travel: "2.8rem", delay: "0.5s", twinkle: false },
+  { rise: "-0.6rem", travel: "2rem", delay: "0.6s", twinkle: true },
+  { rise: "0.3rem", travel: "3rem", delay: "0.7s", twinkle: false },
+];
 ---
 
-<!-- The page sets --lyrics-ring and --lyrics-scrim on an ancestor; the player uses them too. -->
+<!-- The page sets --lyrics-ring, --lyrics-scrim and --player-progress on an ancestor. -->
 <figure data-component="cover-player">
   <div class="stage">
     <Image
@@ -34,7 +46,14 @@ const progressId = `cover-player-${crypto.randomUUID()}-progress`;
         Loading “{title}”
       </label>
       <progress class="sr-only" id={progressId} max="1" value="0"></progress>
-      <span class="loaded" aria-hidden="true"></span>
+      <span class="loaded" aria-hidden="true">
+        {sparks.map(({ rise, travel, delay, twinkle }) => (
+          <span
+            class:list={["spark", { "--twinkle": twinkle }]}
+            style={{ "--rise": rise, "--travel": travel, "--delay": delay }}
+          />
+        ))}
+      </span>
     </div>
     <button type="button" class="control" hidden>
       <span class="sr-only label --play">Play “{title}”</span>
@@ -124,12 +143,21 @@ const progressId = `cover-player-${crypto.randomUUID()}-progress`;
 
     & .loading {
       --loaded: 0;
+      --progress-glow: color-mix(
+        in oklch,
+        var(--player-progress),
+        var(--player-glyph) 55%
+      );
+      --progress-tail: color-mix(
+        in oklch,
+        var(--player-progress),
+        var(--lyrics-scrim) 25%
+      );
 
       position: absolute;
       inset-inline: 1.25rem;
       inset-block-end: 1.25rem;
       block-size: 0.375rem;
-      overflow: hidden;
       border-radius: 999px;
       background: color-mix(in oklch, var(--lyrics-scrim) 60%, transparent);
       box-shadow: 0 0.125rem 0.5rem
@@ -137,10 +165,94 @@ const progressId = `cover-player-${crypto.randomUUID()}-progress`;
       pointer-events: none;
 
       & .loaded {
+        position: relative;
         display: block;
         block-size: 100%;
         inline-size: calc(var(--loaded) * 100%);
-        background: var(--player-glyph);
+        border-radius: inherit;
+        /* A comet: the tail fades away from the white-hot head. */
+        background: linear-gradient(
+          to right,
+          color-mix(in oklch, var(--progress-tail) 50%, transparent),
+          var(--progress-tail) calc(100% - 6rem),
+          var(--player-progress) calc(100% - 1.5rem),
+          var(--progress-glow)
+        );
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset-inline-end: 0;
+          inset-block-start: 50%;
+          inline-size: 4.5rem;
+          block-size: 1.125rem;
+          translate: 0 -50%;
+          transform-origin: right center;
+          background: radial-gradient(
+            ellipse farthest-side at 100% 50%,
+            color-mix(in oklch, var(--progress-glow) 85%, transparent),
+            color-mix(in oklch, var(--player-progress) 45%, transparent) 45%,
+            transparent
+          );
+        }
+
+        /* A soft flare, not a disc: a disc would look like a slider to drag. */
+        &::after {
+          content: "";
+          position: absolute;
+          inset-inline-end: -0.625rem;
+          inset-block-start: 50%;
+          inline-size: 1.25rem;
+          aspect-ratio: 1;
+          translate: 0 -50%;
+          border-radius: 50%;
+          background: radial-gradient(
+            circle,
+            var(--player-glyph) 0 15%,
+            var(--progress-glow) 30%,
+            color-mix(in oklch, var(--player-progress) 40%, transparent) 50%,
+            transparent 70%
+          );
+        }
+      }
+
+      & .spark {
+        display: none;
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-start: 50%;
+        inline-size: 0.625rem;
+        block-size: 0.1875rem;
+        border-radius: 999px;
+        background: var(--player-progress);
+        box-shadow: 0 0 0.25rem var(--player-progress);
+        opacity: 0;
+
+        &.--twinkle {
+          inline-size: 0.25rem;
+          block-size: 0.25rem;
+          background: var(--progress-glow);
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        & .loaded {
+          transition: inline-size 0.2s linear;
+
+          /* Two unequal rhythms make the head flicker like a flame. */
+          &::before {
+            animation: cover-player-flame 0.13s ease-in-out infinite alternate;
+          }
+
+          &::after {
+            animation: cover-player-flare 0.17s ease-in-out infinite alternate;
+          }
+        }
+
+        & .spark {
+          display: block;
+          animation: cover-player-spark 0.8s var(--delay) ease-out infinite;
+        }
       }
     }
 
@@ -289,6 +401,42 @@ const progressId = `cover-player-${crypto.randomUUID()}-progress`;
       &.--playing .disc {
         scale: 0.85;
       }
+    }
+  }
+
+  @keyframes cover-player-flame {
+    from {
+      opacity: 0.8;
+      scale: 1 1;
+    }
+    to {
+      opacity: 1;
+      scale: 1.25 0.75;
+    }
+  }
+
+  @keyframes cover-player-flare {
+    from {
+      scale: 0.9;
+    }
+    to {
+      scale: 1.1;
+    }
+  }
+
+  @keyframes cover-player-spark {
+    from {
+      opacity: 1;
+      translate: 0 -50%;
+      scale: 1;
+    }
+    60% {
+      opacity: 0.9;
+    }
+    to {
+      opacity: 0;
+      translate: calc(-1 * var(--travel)) calc(-50% + var(--rise));
+      scale: 0.4;
     }
   }
 </style>

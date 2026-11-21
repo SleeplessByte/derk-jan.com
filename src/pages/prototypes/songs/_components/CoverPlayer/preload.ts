@@ -1,12 +1,9 @@
-// Long enough to see the full bar before it goes.
 const FADE_DELAY_MS = 300;
 const FADE_MS = 400;
 
 /**
  * Downloads the whole song once the page has loaded, with the progress as a
- * bar over the cover. The `preload` attribute is not enough, because iOS loads
- * nothing before the first tap. A play before the download is done streams the
- * song as before, and stops the download.
+ * bar over the cover.
  */
 export function preloadSong(root: HTMLElement, song: HTMLAudioElement) {
   const loading = root.querySelector<HTMLElement>(".loading")!;
@@ -51,7 +48,6 @@ export function preloadSong(root: HTMLElement, song: HTMLAudioElement) {
   };
 
   const begin = () => {
-    // Without the download, the song still streams from its own address.
     start().catch(() => {
       loading.hidden = true;
     });
@@ -66,7 +62,6 @@ export function preloadSong(root: HTMLElement, song: HTMLAudioElement) {
     signal,
   });
 
-  // The cover comes first.
   if (document.readyState === "complete") {
     begin();
   } else {

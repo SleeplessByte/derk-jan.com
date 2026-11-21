@@ -15,10 +15,10 @@ Song pages live in `src/pages/prototypes/songs/`. They are shared by link only: 
 - `_components/CoverPlayer/`: the cover is one button, and its name is the action it performs (Play, Pause, Play again). There is no visible pause icon. Without JavaScript, the native controls remain. The class is `.control`, because the global CSS already has `.toggle`.
   - `problem-report.ts` shows a panel with the device details and a copy button when the song does not start: `play()` is refused, the audio element fails, or there is no sound 10 s after `play`. The native controls then come back as a second way to play. A slow start that recovers hides the panel again.
   - `preload.ts` downloads the whole song with `fetch()` after the page's `load` event, shows the progress as a bar over the cover, and then gives the audio element a `blob:` URL. The `preload` attribute is not enough: iOS loads nothing before the first tap.
-    - A play before the download is done cancels it, and the song streams as before. `play()` cannot wait for the download, because the user activation would be gone by then.
     - Every visit costs the whole file (4.3 MB for Rijndam Racers), also for people who never press play.
     - The blob keeps the response's `Content-Type`, so Safari can choose a decoder. The report says whether the song was `preloaded` or `streamed`.
-- A song's theme is a global style block on the body, `.song-page.--<song>`, which sets `--song-ground` and the lyrics colours.
+  - The loading bar is a comet, because the team goes fast. Without a picture of a bike, on purpose. Its tail, glow and sparks all derive from `--player-progress`. With reduced motion, the comet stands still and has no sparks.
+- A song's theme is a global style block on the body, `.song-page.--<song>`, which sets `--song-ground`, the lyrics colours and `--player-progress`.
 
 ## When the song does not play
 
