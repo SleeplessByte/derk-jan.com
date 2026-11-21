@@ -7,25 +7,37 @@ interface Props {
 
 const { name } = Astro.props;
 const icon = icons[name];
+const strike = "tick" in icon;
+const maskId = `form-icon-${crypto.randomUUID()}`;
+const slash = "M1.75 1.75 12.25 12.25";
 ---
 
 <svg
   data-component="form-icon"
   data-icon={name}
-  class="relative top-1 mr-1 size-6 shrink-0 md:size-4"
+  class:list={["relative top-1 mr-1 size-6 shrink-0 md:size-4", strike && "--strike"]}
   viewBox={icon.viewBox}
   fill="none"
   aria-hidden="true"
 >
-  {icon.parts.map((part) => (
-    <path
-      class:list={[part.tone, "motion" in part && `--${part.motion}`]}
-      d={part.d}
-      fill-rule={"evenOdd" in part && part.evenOdd ? "evenodd" : undefined}
-      clip-rule={"evenOdd" in part && part.evenOdd ? "evenodd" : undefined}
-      style={"origin" in part ? `transform-origin: ${part.origin}` : undefined}
-    />
-  ))}
+  {strike && (
+    <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="14" height="14">
+      <rect width="14" height="14" fill="white" />
+      <path class="gap" d={slash} pathLength="1" stroke="black" />
+    </mask>
+  )}
+  <g mask={strike ? `url(#${maskId})` : undefined}>
+    {icon.parts.map((part) => (
+      <path
+        class:list={[part.tone, "motion" in part && `--${part.motion}`]}
+        d={part.d}
+        fill-rule={"evenOdd" in part && part.evenOdd ? "evenodd" : undefined}
+        clip-rule={"evenOdd" in part && part.evenOdd ? "evenodd" : undefined}
+        style={"origin" in part ? `transform-origin: ${part.origin}` : undefined}
+      />
+    ))}
+  </g>
+  {strike && <path class="strike" d={slash} pathLength="1" />}
 </svg>
 
 <style>
@@ -43,6 +55,12 @@ const icon = icons[name];
     --icon-ginger-skin: oklch(66% 0.11 75);
     --icon-mint: oklch(62% 0.15 150);
     --icon-wine: oklch(45% 0.16 15);
+
+    --icon-no: var(--color-pink-600);
+
+    @media (prefers-color-scheme: dark) {
+      --icon-no: var(--color-orange-500);
+    }
 
     & .light {
       fill: var(--icon-light);
@@ -120,10 +138,64 @@ const icon = icons[name];
       stroke: var(--icon-mint);
       stroke-width: 0.55;
     }
+
+    & .strike,
+    & .gap {
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+
+    & .strike {
+      stroke: var(--icon-no);
+      stroke-width: 1.5;
+    }
+
+    & .gap {
+      stroke-width: 3.25;
+    }
+  }
+
+  :global(input:checked + label) [data-component="form-icon"],
+  [data-component="form-icon"].--struck {
+    & .strike,
+    & .gap {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
+    [data-component="form-icon"] {
+      & .strike,
+      & .gap {
+        transition:
+          stroke-dashoffset 0.3s ease-in,
+          opacity 0s linear 0.3s;
+      }
+    }
+
     :global(input:checked + label) [data-component="form-icon"] {
+      & .strike,
+      & .gap {
+        transition:
+          stroke-dashoffset 0.35s ease-out,
+          opacity 0s;
+      }
+
+      &.--strike {
+        animation: form-icon-shake 0.5s ease-in-out;
+      }
+
+      & .--grow {
+        animation: form-icon-grow 0.7s ease-out;
+      }
+
+      & .--nudge {
+        animation: form-icon-nudge 0.9s ease-in-out;
+      }
+
       & .--rise {
         animation: form-icon-rise 1.4s ease-out;
       }
@@ -205,6 +277,37 @@ const icon = icons[name];
   @keyframes form-icon-spin {
     from {
       rotate: -180deg;
+    }
+  }
+
+  @keyframes form-icon-shake {
+    25% {
+      rotate: -10deg;
+    }
+    50% {
+      rotate: 8deg;
+    }
+    75% {
+      rotate: -4deg;
+    }
+  }
+
+  @keyframes form-icon-grow {
+    from {
+      scale: 0.3;
+    }
+    60% {
+      scale: 1.08;
+    }
+  }
+
+  @keyframes form-icon-nudge {
+    25%,
+    75% {
+      translate: 1.5px 0;
+    }
+    50% {
+      translate: 0 0;
     }
   }
 

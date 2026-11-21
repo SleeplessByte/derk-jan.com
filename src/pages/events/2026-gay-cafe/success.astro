@@ -1,8 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
+import AddToCalendar from "./_components/AddToCalendar/Component.astro";
+import Countdown from "./_components/Countdown/Component.astro";
 import LyricsOverlay from "./_components/Lyrics/Overlay.astro";
 import LyricsTranscript from "./_components/Lyrics/Transcript.astro";
+import OrderTicket from "./_components/OrderTicket/Component.astro";
 
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import successVideoAv1 from "../../../assets/video/coffee-magic-20261115.webm";
@@ -86,6 +89,13 @@ import sideVideoMp4 from "../../../assets/video/coffee-snow-20261116.mp4";
             day, from{" "}
             <strong class="text-orange-700 dark:text-pink-300">12:00 to 17:28</strong>.
           </p>
+          <Countdown />
+
+          <AddToCalendar />
+
+          <div class="mt-10">
+            <OrderTicket source="saved" />
+          </div>
 
           <div class="mt-10 flex justify-between items-start border-t border-zinc-900/10 pt-8 dark:border-white/10 gap-2">
             <p class="dark:text-zinc-300">

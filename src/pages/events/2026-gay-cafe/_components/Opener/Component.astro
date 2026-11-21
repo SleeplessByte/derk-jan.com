@@ -5,7 +5,6 @@ import cardImage from "../../../../../assets/gay-cafe-2026-invite.jpg";
 import { dashedArrow } from "./arrow";
 import { writing } from "./handwriting";
 
-// paint.ts studies this small copy; scaling the full card down costs weak devices too much.
 const studyCopy = await getImage({ src: cardImage, width: 128, height: 128 });
 
 const arrows = {
@@ -176,7 +175,6 @@ const star =
     z-index: 50;
 
     @media (prefers-color-scheme: dark) {
-      /* The same dusk, deep into the night. */
       --opener-sky-top: color-mix(in oklch, var(--opener-dusk-top) 30%, black);
       --opener-sky-bottom: color-mix(in oklch, var(--opener-dusk-bottom) 30%, black);
     }
@@ -421,7 +419,7 @@ const star =
     }
 
     @media (hover: none) {
-      & .pill {
+      &[data-painted] .pill {
         --pill-blur: 0px;
         --pill-shift: 0px;
         opacity: 1;
@@ -438,9 +436,7 @@ const star =
       }
     }
 
-    /*
-     * Below the card, but not in .lift, so it neither floats nor tilts.
-     */
+    /* Below the card, but not in .lift, so it neither floats nor tilts. */
     & .progress {
       grid-area: 1 / 1;
       width: calc(var(--card-size) * 0.6);
@@ -659,8 +655,8 @@ const star =
       }
 
       @media (hover: none) {
-        & .text {
-          animation: invite-opener-shimmer 1.6s ease-out 0.6s both;
+        &[data-painted] .text {
+          animation: invite-opener-shimmer 1.6s ease-out 0.15s both;
         }
       }
 

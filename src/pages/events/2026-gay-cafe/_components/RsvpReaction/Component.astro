@@ -1,0 +1,72 @@
+<div data-component="rsvp-reaction">
+  <ul class="messages" hidden>
+    <li data-value="0">Aww, we'll miss you! We'll keep a cup warm for next time.</li>
+    <li data-value="-0">Understood. We won't invite you again.</li>
+    <li data-value="1">Yay! A table for one, with the best seat in the house.</li>
+    <li data-value="2">Yay! A table for two.</li>
+    <li data-value="3">Yay! A table for three. We'll fetch an extra chair.</li>
+    <li data-value="4">A party of four! We'll bake extra.</li>
+  </ul>
+  <p class="line" aria-live="polite"></p>
+</div>
+
+<script>
+  import { setupRsvpReaction } from "./reaction";
+
+  setupRsvpReaction();
+  document.addEventListener("astro:after-swap", setupRsvpReaction);
+</script>
+
+<style>
+  [data-component="rsvp-reaction"] {
+    --reaction-ink: var(--color-orange-700);
+    --reaction-pink: var(--color-pink-500);
+    --reaction-orange: var(--color-orange-400);
+    --reaction-gold: oklch(86% 0.11 85);
+    --reaction-blue: #8fbffa;
+
+    @media (prefers-color-scheme: dark) {
+      --reaction-ink: var(--color-pink-300);
+    }
+
+    position: relative;
+
+    /* Keeps the form below from jumping when the first answer appears. */
+    & .line {
+      min-block-size: 1.5rem;
+      margin-block-start: 0.75rem;
+      font-weight: 600;
+      color: var(--reaction-ink);
+    }
+
+    & :global(.piece) {
+      position: absolute;
+      inline-size: 0.375rem;
+      block-size: 0.75rem;
+      border-radius: 1px;
+      pointer-events: none;
+
+      &:global(.--dot) {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+      }
+
+      &:global(.--pink) {
+        background: var(--reaction-pink);
+      }
+
+      &:global(.--orange) {
+        background: var(--reaction-orange);
+      }
+
+      &:global(.--gold) {
+        background: var(--reaction-gold);
+      }
+
+      &:global(.--blue) {
+        background: var(--reaction-blue);
+      }
+    }
+  }
+</style>

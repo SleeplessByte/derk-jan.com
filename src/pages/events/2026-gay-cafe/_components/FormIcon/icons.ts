@@ -16,9 +16,17 @@ export type Tone =
   | "string"
   | "stem";
 
-/** A short animation that plays when the drink is ticked. */
+/** A short animation that plays when the box is ticked. */
 export type Motion =
-  "rise" | "pop" | "drop" | "wobble" | "sway" | "spin" | "tilt";
+  | "rise"
+  | "pop"
+  | "drop"
+  | "wobble"
+  | "sway"
+  | "spin"
+  | "tilt"
+  | "grow"
+  | "nudge";
 
 interface Part {
   tone: Tone;
@@ -31,16 +39,19 @@ interface Part {
 interface Icon {
   viewBox: string;
   parts: Part[];
+  tick?: "strike";
 }
 
 /**
  * The icons of the form.
  *
- * The allergen icons are two-tone; the drink icons add the colours of the drink itself.
+ * The allergen icons are two-tone
+ * The drink icons add the colours of the drink itself.
  */
 export const icons = {
   milk: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -61,6 +72,7 @@ export const icons = {
   },
   lactose: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -76,6 +88,7 @@ export const icons = {
   },
   eggs: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -91,6 +104,7 @@ export const icons = {
   },
   peanuts: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -106,6 +120,7 @@ export const icons = {
   },
   nuts: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -121,6 +136,7 @@ export const icons = {
   },
   sesame: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -131,6 +147,7 @@ export const icons = {
   },
   gluten: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -146,6 +163,7 @@ export const icons = {
   },
   soy: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
@@ -161,17 +179,13 @@ export const icons = {
   },
   alcohol: {
     viewBox: "0 0 14 14",
+    tick: "strike",
     parts: [
       {
         tone: "light",
-        d: "M2.5072 1.5a.75.75 0 0 1-1.3313.691A1.49 1.49 0 0 1 1 1.4889C1 .6666 1.6666 0 2.4889 0h9.0222C12.3334 0 13 .6666 13 1.4889a1.49 1.49 0 0 1-.3306.9355l-.572-.462.572.462L8.142 8.0298a.747.747 0 0 1-.392.254V12.5h1.5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1 0-1.5h2V6.25L3.5 3.5h6.3725l1.6153-2zm9.004 0h-.0001z",
-        evenOdd: false,
+        d: "M1.75.75h10.5a.75.75 0 0 1 .56 1.25L7.75 7.66v4.84h2a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1 0-1.5h2V7.66L1.19 2A.75.75 0 0 1 1.75.75z",
       },
-      {
-        tone: "dark",
-        d: "M.2197.2197a.75.75 0 0 1 1.0606 0l12.5 12.5a.75.75 0 0 1 0 1.0606.75.75 0 0 1-1.0606 0l-12.5-12.5a.75.75 0 0 1 0-1.0606",
-        evenOdd: false,
-      },
+      { tone: "dark", d: "M3.2 3h7.6L7 7.15z" },
     ],
   },
   vegan: {
@@ -181,11 +195,15 @@ export const icons = {
         tone: "light",
         d: "M23.1972 5.7068c-2.6632-2.6632-6.0419-3.884-9.1472-4.39-3.1055-.5058-6.0058-.3086-7.8055-.0771C4.663 1.443 3.443 2.663 3.2397 4.2445c-.2315 1.7997-.4287 4.7.0772 7.8055.5059 3.1053 1.7267 6.484 4.39 9.1472 4.6442 4.6442 11.9282 5.1648 16.2802.8467-.3608 2.7095.4053 5.4565 2.4098 7.461 3.642 3.642 9.7352 3.1959 13.6007-.6696 2.2896-2.2895 3.2921-5.2097 3.6833-7.8446.3914-2.6361.1831-5.0632-.016-6.4688-.169-1.1931-1.0918-2.116-2.285-2.285-1.4055-.1991-3.8326-.4073-6.4687-.0159-2.635.3912-5.5551 1.3937-7.8447 3.6833a11 11 0 0 0-.1573.1605c.4625-3.5819-.8317-7.4777-3.712-10.358",
         evenOdd: false,
+        motion: "grow",
+        origin: "24px 46px",
       },
       {
         tone: "dark",
         d: "M22.902 35.7209v-9.0927c0-3.6041-.947-6.0643-2.3443-8.0276-1.4498-2.0371-3.4397-3.6298-5.7793-5.435-.8746-.6748-1.0365-1.9307-.3618-2.8052s1.9307-1.0365 2.8052-.3617c2.2901 1.7669 4.7511 3.6921 6.5948 6.2825 1.5515 2.1799 2.6296 4.7699 2.9704 8.053 1.7225-2.0811 3.8223-3.7208 5.7951-5.2429.8745-.6748 2.1304-.5128 2.8052.3617.6747.8745.5128 2.1305-.3617 2.8052-2.3397 1.8052-4.3296 3.398-5.7794 5.4351-1.3973 1.9632-2.3442 4.4234-2.3442 8.0276l-.0001.0033v10.276c0 1.1045-.8954 2-2 2s-2-.8955-2-2z",
         evenOdd: false,
+        motion: "grow",
+        origin: "24px 46px",
       },
     ],
   },
@@ -199,6 +217,7 @@ export const icons = {
       },
       {
         tone: "dark",
+        motion: "nudge",
         d: "M7.2148 3.0303a.5.5 0 0 1 .545.1084L10.037 5.416a.5.5 0 0 1 0 .707L7.7598 8.4005a.501.501 0 0 1-.545.1084.501.501 0 0 1-.3086-.462V6.5196H4.5665a.75.75 0 1 1 0-1.5h2.3399V3.4922c0-.202.122-.3844.3085-.462",
         evenOdd: false,
       },

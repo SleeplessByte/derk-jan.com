@@ -1,0 +1,97 @@
+---
+import { ORDER_KEY } from "../OrderTicket/order";
+import { eventFor, googleCalendarUrl } from "./event";
+
+const generalGoogleUrl = googleCalendarUrl(eventFor(null));
+const labelId = `add-to-calendar-${crypto.randomUUID()}`;
+const linkClass =
+  "inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-zinc-900/15 dark:ring-white/20 text-zinc-900 dark:text-white no-underline transition hover:bg-zinc-900/5 dark:hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 dark:focus-visible:outline-orange-600";
+---
+
+<div data-component="add-to-calendar" class="mt-6">
+  <p id={labelId} class="font-semibold text-zinc-900 dark:text-white">
+    Coming? Put it in your calendar:
+  </p>
+  <ul class="mt-2 flex flex-wrap gap-2" aria-labelledby={labelId}>
+    <li>
+      <a
+        href="/events/2026-gay-cafe/calendar.ics"
+        class={linkClass}
+        data-target="ics"
+        data-astro-reload
+      >
+        <svg class="size-4 shrink-0" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            class="light"
+            d="M1 3.5A1.5 1.5 0 0 1 2.5 2h9A1.5 1.5 0 0 1 13 3.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 1 11.5z"
+          ></path>
+          <path
+            class="dark"
+            d="M1 3.5A1.5 1.5 0 0 1 2.5 2h9A1.5 1.5 0 0 1 13 3.5V5H1z"
+          ></path>
+          <path
+            class="dark"
+            d="M4 .75a.75.75 0 0 1 1.5 0v2.5a.75.75 0 0 1-1.5 0zm4.5 0a.75.75 0 0 1 1.5 0v2.5a.75.75 0 0 1-1.5 0zM4 8h2v2H4zm4 0h2v2H8z"
+          ></path>
+        </svg>
+        Apple, Outlook and others
+      </a>
+    </li>
+    <li>
+      <a
+        href={generalGoogleUrl}
+        class={linkClass}
+        data-target="google"
+        target="_blank"
+        rel="noopener"
+      >
+        Google Calendar
+        <span class="sr-only">(opens in a new tab)</span>
+        <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            class="dark"
+            d="M8 1.75A.75.75 0 0 1 8.75 1h3.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0V3.56L7.78 7.28a.75.75 0 0 1-1.06-1.06l3.72-3.72H8.75A.75.75 0 0 1 8 1.75"
+          ></path>
+          <path
+            class="light"
+            d="M2.5 4A1.5 1.5 0 0 1 4 2.5h1.5a.75.75 0 0 1 0 1.5H4v6.5h6.5V9a.75.75 0 0 1 1.5 0v1.5a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 10.5z"
+          ></path>
+        </svg>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<script is:inline data-astro-rerun define:vars={{ orderKey: ORDER_KEY }}>
+  try {
+    const order = JSON.parse(sessionStorage.getItem(orderKey) ?? "null");
+
+    if (order && order.rsvp !== null && Number(order.rsvp) <= 0) {
+      document.querySelector('[data-component="add-to-calendar"]').hidden = true;
+    }
+  } catch {
+    // Allow general links if storage failed
+  }
+</script>
+
+<script>
+  import { setupCalendar } from "./calendar";
+
+  setupCalendar();
+  document.addEventListener("astro:after-swap", setupCalendar);
+</script>
+
+<style>
+  [data-component="add-to-calendar"] {
+    --calendar-light: #8fbffa;
+    --calendar-dark: #2859c5;
+
+    & .light {
+      fill: var(--calendar-light);
+    }
+
+    & .dark {
+      fill: var(--calendar-dark);
+    }
+  }
+</style>

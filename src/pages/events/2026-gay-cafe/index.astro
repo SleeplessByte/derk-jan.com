@@ -2,10 +2,13 @@
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 
+import Countdown from "./_components/Countdown/Component.astro";
 import FormIcon from "./_components/FormIcon/Component.astro";
 import LyricsOverlay from "./_components/Lyrics/Overlay.astro";
 import LyricsTranscript from "./_components/Lyrics/Transcript.astro";
 import Opener from "./_components/Opener/Component.astro";
+import OrderTicket from "./_components/OrderTicket/Component.astro";
+import RsvpReaction from "./_components/RsvpReaction/Component.astro";
 
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../assets/IMG_20240825_233805_104.jpg";
@@ -154,6 +157,7 @@ const signupGate = 1797634799;
             day, from{" "}
             <strong class="text-orange-700 dark:text-pink-300">12:00 to 17:28</strong>.
           </p>
+          <Countdown />
 
           <template data-target="when-closed">
             <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
@@ -344,6 +348,8 @@ const signupGate = 1797634799;
                     <label for="rsvp-4">Yes, me +3</label>
                   </div>
                 </div>
+
+                <RsvpReaction />
               </fieldset>
 
               <fieldset class="sm:col-span-2 mt-2">
@@ -404,7 +410,9 @@ const signupGate = 1797634799;
                         <option value="90">About 1.5 hours</option>
                         <option value="120">About 2 hours</option>
                         <option value="150">About 2.5 hours</option>
-                        <option value="180">Until you kick me out</option>
+                        <option value="180" data-until-closing>
+                          Until you kick me out
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -756,6 +764,8 @@ const signupGate = 1797634799;
                   ></textarea>
                 </div>
               </div>
+
+              <OrderTicket />
             </div>
 
             <div class="mt-4" data-netlify-recaptcha="true"></div>

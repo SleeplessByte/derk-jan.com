@@ -1,0 +1,19 @@
+<p
+  data-component="countdown"
+  class="mt-1 text-lg font-semibold text-orange-700 dark:text-pink-300"
+  hidden
+>
+  <span class="soon">
+    The café opens <span class="when"></span>.
+  </span>
+  <span class="now" hidden>
+    The café is open right now!
+  </span>
+</p>
+
+<script>
+  import { setupCountdown } from "./countdown";
+
+  setupCountdown();
+  document.addEventListener("astro:after-swap", setupCountdown);
+</script>
