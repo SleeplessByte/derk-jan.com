@@ -18,6 +18,7 @@ Song pages live in `src/pages/prototypes/songs/`. They are shared by link only: 
     - Every visit costs the whole file (4.3 MB for Rijndam Racers), also for people who never press play.
     - The blob keeps the response's `Content-Type`, so Safari can choose a decoder. The report says whether the song was `preloaded` or `streamed`.
   - The loading bar is a comet, because the team goes fast. Without a picture of a bike, on purpose. Its tail, glow and sparks all derive from `--player-progress`. With reduced motion, the comet stands still and has no sparks.
+    - The comet must stay inside the card and appear only with progress. `.loading` covers the card with `overflow: hidden`, the flame is never longer than the bar, and the comet fades in over the first 4%. Do not clip `.stage` instead: that would cut off the focus outline of the play button.
 - A song's theme is a global style block on the body, `.song-page.--<song>`, which sets `--song-ground`, the lyrics colours and `--player-progress`.
 
 ## When the song does not play
