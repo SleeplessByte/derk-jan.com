@@ -115,7 +115,9 @@ export function setupTicket() {
           printing.play();
         }
       },
-      { threshold: 1 },
+      // Starts once the stub is well above the bottom edge. A threshold of 1
+      // never fires at some zoom levels: the visible ratio stops at 0.999.
+      { rootMargin: "0px 0px -96px 0px" },
     );
 
     observer.observe(root.querySelector(".paper")!);

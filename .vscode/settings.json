@@ -21,6 +21,12 @@
     "pescetarian",
     "rasterises"
   ],
+  "cSpell.overrides": [
+    {
+      "filename": "**/_i18n/nl.json",
+      "language": "en,nl"
+    }
+  ],
   "astro.content-intellisense": true,
   "mdx.validate.validateDuplicateLinkDefinitions": "hint",
   "mdx.validate.validateFileLinks": "warning",

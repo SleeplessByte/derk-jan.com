@@ -25,6 +25,28 @@
   status = 301
   force = true
 
+# Netlify doesn't support 307, and for a page load both behave the same.
+[[redirects]]
+  from = "/events/2026-gay-cafe/"
+  to = "/events/2026-gay-cafe/nl/"
+  status = 302
+  conditions = {Language = ["nl"]}
+
+[[redirects]]
+  from = "/events/2026-gay-cafe/"
+  to = "/events/2026-gay-cafe/en/"
+  status = 302
+
+[[redirects]]
+  from = "/cafe"
+  to = "/events/2026-gay-cafe/"
+  status = 302
+
+[[redirects]]
+  from = "/events/2026-gay-cafe/success"
+  to = "/events/2026-gay-cafe/en/success"
+  status = 301
+
 [[redirects]]
   from = "/sitemap.xml"
   to = "/sitemap-index.xml"

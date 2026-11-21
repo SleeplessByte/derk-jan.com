@@ -1,0 +1,588 @@
+---
+import { Image } from "astro:assets";
+import HtmlLayout from "../../../../layouts/HtmlLayout.astro";
+
+import Countdown from "../_components/Countdown/Component.astro";
+import FormIcon from "../_components/FormIcon/Component.astro";
+import type { IconName } from "../_components/FormIcon/icons";
+import Handover from "../_components/Handover/Component.astro";
+import LyricsOverlay from "../_components/Lyrics/Overlay.astro";
+import LyricsTranscript from "../_components/Lyrics/Transcript.astro";
+import Opener from "../_components/Opener/Component.astro";
+import OrderTicket from "../_components/OrderTicket/Component.astro";
+import RsvpReaction from "../_components/RsvpReaction/Component.astro";
+import { localeList, localeOf, locales, pageUrl, type Messages } from "../_i18n";
+
+import backgroundImage from "../../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
+import kitchenImage from "../../../../assets/IMG_20240825_233805_104.jpg";
+import fruityXmasMp3 from "../../../../assets/audio/2026-fruity-xmas.mp3";
+import introVideoMp4 from "../../../../assets/video/coffee-swirl-20261120-web.mp4";
+import loopVideoMp4 from "../../../../assets/video/coffee-snow-20261116.mp4";
+
+export function getStaticPaths() {
+  return localeList.map((lang) => ({ params: { lang } }));
+}
+
+const lang = localeOf(Astro.params.lang);
+const t = locales[lang];
+const otherLocales = localeList.filter((other) => other !== lang);
+
+// Astro only types WAI-ARIA 1.2 roles; graphics-symbol comes from the Graphics ARIA module.
+const iconRole: Record<string, string> = { role: "graphics-symbol" };
+
+const sideVideoClass =
+  "absolute inset-0 size-full object-cover object-[center_80%] md:object-[center_75%] lg:object-center opacity-0";
+
+const formName = "events/2026-gay-cafe";
+const successPage = pageUrl(lang, "success");
+const eventGate = 1798369200;
+const signupGate = 1797634799;
+
+const rsvpOptions = [
+  { id: "rsvp-no", value: "0", required: true },
+  { id: "rsvp-never", value: "-0", required: true },
+  { id: "rsvp-1", value: "1", required: false },
+  { id: "rsvp-2", value: "2", required: false },
+  { id: "rsvp-3", value: "3", required: false },
+  { id: "rsvp-4", value: "4", required: false },
+] as const satisfies {
+  id: string;
+  value: keyof Messages["form"]["rsvp"];
+  required: boolean;
+}[];
+
+const arrivalTimes = ["12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+
+// The longest stay means "until closing"; the ticket and calendar say so.
+const durations = [
+  "45",
+  "60",
+  "90",
+  "120",
+  "150",
+  "180",
+] as const satisfies (keyof Messages["form"]["duration"])[];
+const untilClosing = "180";
+
+const allergens = [
+  "milk",
+  "lactose",
+  "eggs",
+  "peanuts",
+  "nuts",
+  "sesame",
+  "gluten",
+  "soy",
+  "alcohol",
+  "vegan",
+  "other",
+] as const satisfies (keyof Messages["allergens"] & IconName)[];
+
+const drinks = [
+  { id: "espresso", value: "espresso", icon: "espresso" },
+  { id: "cappuccino", value: "cappuccino", icon: "cappuccino" },
+  { id: "filtered", value: "filtered", icon: "filtered" },
+  { id: "chocolate", value: "chocolate", icon: "chocolate" },
+  { id: "herbal-tea", value: "tea", icon: "herbal-tea" },
+  { id: "ginger-tea", value: "ginger-tea", icon: "ginger-tea" },
+  { id: "mint-tea", value: "mint-tea", icon: "mint-tea" },
+  { id: "alcohol", value: "alcohol", icon: "wine" },
+] as const satisfies { id: string; value: keyof Messages["drinks"]; icon: IconName }[];
+---
+
+<HtmlLayout title={t.meta.title} description={t.meta.description} lang={lang}>
+  <Fragment slot="head">
+    {localeList.map((alternate) => (
+      <link
+        rel="alternate"
+        hreflang={alternate}
+        href={new URL(pageUrl(alternate), Astro.site)}
+      />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(pageUrl(), Astro.site)} />
+  </Fragment>
+
+  <Opener />
+  <div class="relative" data-target="content">
+    <div
+      class="relative lg:fixed lg:inset-0 lg:left-1/2 shadow-xl dark:shadow-2xl"
+      transition:name="side"
+    >
+      <Image
+        src={backgroundImage}
+        alt=""
+        class="h-64 w-full bg-zinc-50 object-[center_80%] md:object-[center_75%] lg:object-center object-cover sm:h-80 lg:absolute lg:h-full dark:bg-zinc-800"
+        loading="eager"
+      />
+      <video
+        class={sideVideoClass}
+        data-target="side-loop"
+        data-src={loopVideoMp4}
+        preload="auto"
+        muted
+        loop
+        playsinline
+        aria-hidden="true"
+      ></video>
+      <video
+        class={`${sideVideoClass} transition-opacity duration-1000 motion-reduce:transition-none`}
+        data-target="side-intro"
+        data-src={introVideoMp4}
+        preload="auto"
+        muted
+        playsinline
+        aria-hidden="true"
+      ></video>
+      <button
+        type="button"
+        class="absolute right-3 bottom-3 grid size-11 place-items-center rounded-full bg-zinc-950/70 text-white shadow-md transition hover:bg-zinc-950/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        data-target="side-toggle"
+        hidden
+      >
+        <svg
+          {...iconRole}
+          data-icon="pause"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="size-5"
+        >
+          <title>{t.media.pause}</title>
+          <path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z"></path>
+        </svg>
+        <svg
+          {...iconRole}
+          data-icon="play"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="hidden size-5"
+        >
+          <title>{t.media.play}</title>
+          <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
+      <div class="px-6 lg:px-8">
+        <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
+          <header>
+            <div class="mb-6 flex flex-col gap-2">
+              <p class="text-sm font-semibold">
+                {otherLocales.map((other) => (
+                  <a href={pageUrl(other)} hreflang={other} lang={other} data-skip-opener>
+                    {locales[other].meta.languageName}
+                  </a>
+                ))}
+              </p>
+              <Handover placement="header" />
+            </div>
+            <h2
+              class="text-4xl font-semibold tracking-tight text-pretty text-zinc-900 sm:text-5xl dark:text-white focus:outline-none"
+              tabindex="-1"
+              data-target="heading"
+            >
+              {t.intro.heading}
+            </h2>
+            <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300">
+              <span data-tense="future" set:html={t.intro.invited.future} />
+              <span data-tense="past" hidden set:html={t.intro.invited.past} />
+            </p>
+            <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300">
+              <span data-tense="future">{t.intro.price.future}</span>
+              <span data-tense="past" hidden>
+                {t.intro.price.past}
+              </span>
+            </p>
+          </header>
+
+          <figure class="relative">
+            <div class="relative">
+              <Image
+                src={kitchenImage}
+                alt={t.intro.photoAlt}
+                class="aspect-square rounded-xl shadow-md object-cover my-4"
+                loading="eager"
+              />
+              <LyricsOverlay />
+            </div>
+            <audio
+              controls
+              src={fruityXmasMp3}
+              class="absolute bottom-2 left-2"
+              data-target="song"
+              transition:name="audio"
+              transition:persist
+            />
+          </figure>
+          <LyricsTranscript />
+
+          <p class="mt-2 text-lg text-orange-600 dark:text-pink-400 [&_strong]:text-orange-700 dark:[&_strong]:text-pink-300">
+            <span data-tense="future" set:html={t.hours.future} />
+            <span data-tense="past" hidden set:html={t.hours.past} />
+          </p>
+          <Countdown />
+
+          <template data-target="when-closed">
+            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+              <div class="sm:col-span-2">
+                <p class="mt-8 text-lg">{t.form.closed}</p>
+              </div>
+            </div>
+          </template>
+
+          <form
+            action={successPage}
+            name={formName}
+            method="POST"
+            data-netlify="true"
+            data-netlify-recaptcha="true"
+            class="mt-16"
+          >
+            <!-- Tells the host which language to reply in. -->
+            <input type="hidden" name="language" value={lang} />
+
+            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+              <div>
+                <label for="first-name" class="block text-sm/6 font-semibold form-label">
+                  {t.form.firstName}{" "}
+                  <span aria-hidden="true" class="text-pink-600 dark:text-orange-600">
+                    *
+                  </span>
+                  <span class="sr-only">{t.form.required}</span>
+                </label>
+                <div class="mt-2.5">
+                  <input
+                    id="first-name"
+                    type="text"
+                    name="first-name"
+                    autocomplete="given-name"
+                    class="w-full rounded-md form-input"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="last-name" class="block text-sm/6 font-semibold form-label">
+                  {t.form.lastName}
+                </label>
+                <div class="mt-2.5">
+                  <input
+                    id="last-name"
+                    type="text"
+                    name="last-name"
+                    autocomplete="family-name"
+                    class="w-full rounded-md form-input"
+                  />
+                </div>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="flex justify-between text-sm/6">
+                  <label for="email" class="block text-sm/6 font-semibold form-label">
+                    {t.form.email}
+                  </label>
+                  <p id="email-description" class="text-zinc-400 dark:text-zinc-500">
+                    {t.form.optional}
+                  </p>
+                </div>
+                <div class="mt-2.5">
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    class="w-full rounded-md form-input"
+                    aria-describedby="email-description"
+                  />
+                </div>
+
+                <p class="mt-2 text-zinc-700 dark:text-zinc-300 text-sm">
+                  {t.form.whyContact}
+                </p>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="flex justify-between text-sm/6">
+                  <label for="phone" class="block font-semibold form-label">
+                    {t.form.phone}
+                  </label>
+                  <p id="phone-description" class="text-zinc-400 dark:text-zinc-500">
+                    {t.form.optional}
+                  </p>
+                </div>
+                <div class="mt-2.5">
+                  <input
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    autocomplete="tel"
+                    aria-describedby="phone-description"
+                    class="w-full rounded-md form-input"
+                  />
+                </div>
+
+                <p class="mt-2 text-zinc-700 dark:text-zinc-300 text-sm">
+                  {t.form.whyContact}
+                </p>
+              </div>
+
+              <fieldset class="sm:col-span-2 mt-8">
+                <legend
+                  class="block text-xl font-semibold form-label [&_strong]:font-semibold [&_strong>:first-child]:text-orange-700 [&_strong>:last-child]:text-orange-600 dark:[&_strong>:first-child]:text-pink-300 dark:[&_strong>:last-child]:text-pink-400"
+                  set:html={t.form.rsvpLegend}
+                />
+
+                <label class="sr-only" aria-hidden="true">
+                  {t.form.rsvpShort}
+                  <input
+                    type="radio"
+                    name="rsvp"
+                    value=""
+                    class="sr-only"
+                    tabindex="-1"
+                    disabled
+                  />
+                </label>
+
+                <div class="mt-4 space-y-2 text-base/8 md:text-sm/6 tabular-nums dark:text-zinc-300">
+                  {rsvpOptions.map((option) => (
+                    <div class="flex gap-x-2.5">
+                      <input
+                        id={option.id}
+                        type="radio"
+                        name="rsvp"
+                        value={option.value}
+                        required={option.required}
+                        class="relative mt-1 size-6 md:size-4 form-radio"
+                      />
+                      <label for={option.id}>{t.form.rsvp[option.value]}</label>
+                    </div>
+                  ))}
+                </div>
+
+                <RsvpReaction />
+              </fieldset>
+
+              <fieldset class="sm:col-span-2 mt-2">
+                <legend class="block text-xl font-semibold form-label">
+                  {t.form.arrivalLegend}
+                </legend>
+
+                <p class="mt-1 text-lg dark:text-zinc-300">{t.form.arrivalDescription}</p>
+
+                <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-4">
+                  <div>
+                    <label
+                      for="time-arrival"
+                      class="block text-sm/6 font-semibold form-label"
+                    >
+                      {t.form.arrivalLabel}
+                    </label>
+                    <div class="mt-2.5">
+                      <select
+                        id="time-arrival"
+                        name="time[start]"
+                        class="w-full rounded-md form-select"
+                      >
+                        <option disabled selected>
+                          {t.form.choose}
+                        </option>
+                        {arrivalTimes.map((time) => (
+                          <option value={time}>
+                            {t.form.around.replace("{time}", time)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      for="time-duration"
+                      class="block text-sm/6 font-semibold form-label"
+                    >
+                      {t.form.durationLabel}
+                    </label>
+                    <div class="mt-2.5">
+                      <select
+                        id="time-duration"
+                        name="time[duration]"
+                        class="w-full rounded-md form-select"
+                      >
+                        <option disabled selected>
+                          {t.form.choose}
+                        </option>
+                        {durations.map((duration) => (
+                          <option
+                            value={duration}
+                            data-until-closing={
+                              duration === untilClosing ? "" : undefined
+                            }
+                          >
+                            {t.form.duration[duration]}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="sm:col-span-2 mt-2">
+                <legend class="block text-xl font-semibold form-label">
+                  {t.form.allergiesLegend}
+                </legend>
+
+                <p class="mt-1 text-lg dark:text-zinc-300">
+                  {t.form.allergiesDescription}
+                </p>
+
+                <label class="sr-only" aria-hidden="true">
+                  {t.form.allergiesLegend}
+                  <input
+                    type="checkbox"
+                    name="allergens[]"
+                    value=""
+                    class="sr-only"
+                    tabindex="-1"
+                    disabled
+                  />
+                </label>
+
+                <div class="mt-4 space-y-2 text-base/8 md:text-sm/6 tabular-nums dark:text-zinc-300">
+                  {allergens.map((allergen) => (
+                    <div class="flex gap-x-2.5">
+                      <input
+                        id={`allergen-${allergen}`}
+                        type="checkbox"
+                        name="allergens[]"
+                        value={allergen}
+                        class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
+                      />
+                      <label
+                        for={`allergen-${allergen}`}
+                        class="form-label flex items-start"
+                      >
+                        <FormIcon name={allergen} />
+                        <span set:html={t.allergens[allergen]} />
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset class="sm:col-span-2 mt-2">
+                <legend class="block text-xl font-semibold form-label">
+                  {t.form.drinksLegend}
+                </legend>
+
+                <p class="mt-1 text-lg dark:text-zinc-300">{t.form.drinksDescription}</p>
+
+                <label class="sr-only" aria-hidden="true">
+                  {t.form.drinksLegend}
+                  <input
+                    type="checkbox"
+                    name="preferences[drinks][]"
+                    value=""
+                    class="sr-only"
+                    tabindex="-1"
+                    disabled
+                  />
+                </label>
+
+                <div class="mt-4 space-y-2 text-base/8 md:text-sm/6 tabular-nums dark:text-zinc-300">
+                  {drinks.map((drink) => (
+                    <div class="flex gap-x-2.5">
+                      <input
+                        id={`preferences-${drink.id}`}
+                        type="checkbox"
+                        name="preferences[drinks][]"
+                        value={drink.value}
+                        class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
+                      />
+                      <label
+                        for={`preferences-${drink.id}`}
+                        class="form-label flex items-start"
+                      >
+                        <FormIcon name={drink.icon} />
+                        <span>{t.drinks[drink.value]}</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div class="sm:col-span-2">
+                <div class="flex justify-between text-sm/6">
+                  <label for="message" class="block text-sm/6 font-semibold form-label">
+                    {t.form.comments}
+                  </label>
+                  <p id="message-description" class="text-zinc-400 dark:text-zinc-500">
+                    {t.form.commentsLimit}
+                  </p>
+                </div>
+                <div class="mt-2.5">
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="4"
+                    aria-describedby="message-description"
+                    class="w-full rounded-md form-input field-sizing-content min-h-24"
+                    maxlength="500"
+                  ></textarea>
+                </div>
+              </div>
+
+              <OrderTicket />
+            </div>
+
+            <div class="mt-4" data-netlify-recaptcha="true"></div>
+
+            <div class="mt-10 flex justify-between items-start border-t border-zinc-900/10 pt-8 dark:border-white/10 gap-2">
+              <p class="dark:text-zinc-300">{t.form.addressNote}</p>
+
+              <button
+                type="submit"
+                class="transition shrink-0 rounded-md pointer bg-pink-600 dark:bg-orange-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:shadow-md active:shadow-none dark:shadow-lg dark:hover:shadow-xl dark:active:shadow-sm hover:bg-pink-500 dark:hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 dark:focus-visible:outline-orange-600 active:bg-pink-700 dark:active:bg-orange-800 hover:-translate-y-px active:translate-y-px"
+              >
+                {t.form.submit}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script
+    data-astro-rerun
+    data-target="variables"
+    data-variable-event-gate={eventGate}
+    data-variable-signup-gate={signupGate}
+    data-variable-form-name={formName}
+  >
+    {
+      const renderTime = new Date().getTime() / 1000;
+
+      const variables = document.querySelector('[data-target="variables"]');
+      const eventIsPast = renderTime > Number(variables.dataset.variableEventGate);
+      const signupIsClosed = renderTime > Number(variables.dataset.variableSignupGate);
+
+      // Whole sentences, because word order differs between languages.
+      if (eventIsPast) {
+        document.querySelectorAll("[data-tense]").forEach((node) => {
+          node.hidden = node.dataset.tense !== "past";
+        });
+      }
+
+      if (signupIsClosed) {
+        /** @type {HTMLTemplateElement} */
+        const formReplacementTemplate = document.querySelector(
+          'template[data-target="when-closed"]',
+        );
+        const formReplacement =
+          formReplacementTemplate.content.firstElementChild.cloneNode(true);
+
+        document
+          .querySelector(`form[name="${variables.dataset.variableFormName}"]`)
+          .replaceWith(formReplacement);
+      }
+    }
+  </script>
+</HtmlLayout>

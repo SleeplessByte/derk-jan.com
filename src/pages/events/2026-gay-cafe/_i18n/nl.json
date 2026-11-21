@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "languageName": "Nederlands",
+    "title": "RSVP voor Gay Café 2026",
+    "description": "Kom langs voor een feestelijke koffie met gebak, op derde kerstdag, 27 december."
+  },
+  "opener": {
+    "open": "Open je uitnodiging",
+    "loading": "Je uitnodiging wordt geladen",
+    "hint": "klik om te openen",
+    "cardDescription": "Op de uitnodiging staat: “<span lang=\"en\">Let them eat cake! Gay café</span>”."
+  },
+  "media": {
+    "pause": "Video pauzeren",
+    "play": "Video afspelen"
+  },
+  "intro": {
+    "heading": "Kom langs voor een feestelijke koffie met gebak",
+    "invited": {
+      "future": "Je bent uitgenodigd om te vieren dat we wéér een jaar hebben overleefd <em>(in dit klimaat?)</em>. We serveren koffie <em>(ook met plantaardige melk)</em>, thee <em>(zonder microplastics)</em>, cake, taart en gebakjes.",
+      "past": "Je was uitgenodigd om te vieren dat we wéér een jaar hebben overleefd <em>(in dit klimaat?)</em>. We serveerden koffie <em>(ook met plantaardige melk)</em>, thee <em>(zonder microplastics)</em>, cake, taart en gebakjes."
+    },
+    "price": {
+      "future": "Het enige wat het je kost is je aanwezigheid (het is gratis), maar een donatie is welkom.",
+      "past": "Het enige wat het je kostte was je aanwezigheid (het was gratis), maar een donatie was welkom."
+    },
+    "photoAlt": "Tom maakt koffie, terwijl DJ van een kopje geniet"
+  },
+  "hours": {
+    "future": "Het café is open in de middag van <strong title=\"zondag 27 december\">derde kerstdag</strong>, van <strong>12:00 tot 17:28</strong>.",
+    "past": "Het café was open in de middag van <strong title=\"zondag 27 december\">derde kerstdag</strong>, van <strong>12:00 tot 17:28</strong>."
+  },
+  "transcript": {
+    "summary": "Lees de songtekst van “<span lang=\"en\">Fruity Xmas</span>”",
+    "hint": "Kies een regel om het nummer vanaf daar af te spelen."
+  },
+  "countdown": {
+    "opens": "Het café gaat {when} open.",
+    "now": "Het café is nu open!"
+  },
+  "handover": {
+    "lead": "Leuk op je telefoon, extra bijzonder op een groot scherm.",
+    "send": "Stuur jezelf de link",
+    "type": "of typ {url} op je computer",
+    "subject": "Gay Café 2026",
+    "shareText": "Open de uitnodiging voor het Gay Café op je computer: op een groot scherm is hij extra bijzonder."
+  },
+  "form": {
+    "closed": "Je kunt je niet meer aanmelden voor dit evenement. Tot de volgende keer!",
+    "firstName": "Voornaam",
+    "required": "(verplicht)",
+    "lastName": "Achternaam",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "optional": "Optioneel",
+    "whyContact": "We vragen dit zodat we je op de hoogte kunnen houden als er iets verandert.",
+    "rsvpLegend": "Je RSVP: zien we je op <strong><span>zondag</span> <span>27 december</span></strong>?",
+    "rsvpShort": "Je RSVP",
+    "rsvp": {
+      "0": "Helaas niet, maar nodig me de volgende keer weer uit",
+      "-0": "Nee, en nodig me niet meer uit",
+      "1": "Ja, alleen",
+      "2": "Ja, ik +1",
+      "3": "Ja, ik +2",
+      "4": "Ja, ik +3"
+    },
+    "arrivalLegend": "Verwachte aankomst",
+    "arrivalDescription": "Zodat we kunnen inschatten of de gemeente ons vriendenfeestje komt stilleggen: laat weten hoe laat je wilt komen. We houden je er niet aan, maar het helpt bij de planning!",
+    "arrivalLabel": "Aankomsttijd",
+    "around": "Rond {time}",
+    "durationLabel": "Hoe lang wil je blijven?",
+    "duration": {
+      "45": "45 minuten of korter",
+      "60": "Ongeveer een uur",
+      "90": "Ongeveer anderhalf uur",
+      "120": "Ongeveer 2 uur",
+      "150": "Ongeveer 2,5 uur",
+      "180": "Tot jullie me eruit gooien"
+    },
+    "choose": "(kies een optie)",
+    "allergiesLegend": "Allergieën & intoleranties",
+    "allergiesDescription": "We willen echt niet dat je bezoek eindigt met een onverwacht ritje naar het ziekenhuis, of met uren op de wc. Geef je allergieën en intoleranties aan.",
+    "drinksLegend": "Favoriete drankje(s)",
+    "drinksDescription": "Laat weten wat je in ons pop-upcafé wilt drinken. Zo kunnen we vooruit plannen.",
+    "comments": "Opmerkingen",
+    "commentsLimit": "Max. 500 tekens",
+    "addressNote": "Heb je ja gezegd? Dan sturen we vlak voor kerst ons adres en de verdere details.",
+    "submit": "RSVP versturen"
+  },
+  "allergens": {
+    "milk": "Melk (alle zuivel of melkeiwit)",
+    "lactose": "Lactose",
+    "eggs": "Eieren",
+    "peanuts": "Pinda's (heel, olie, enz.)",
+    "nuts": "Andere noten (heel, olie, enz.)",
+    "sesame": "Sesamzaad",
+    "gluten": "Tarwe / gluten",
+    "soy": "Soja",
+    "alcohol": "Alcohol (ook verwerkt, gekookt of als ingrediënt)",
+    "vegan": "Alles wat niet veganistisch is (kies dit als je veganist bent, <em>niet</em> vegetariër)",
+    "other": "Anders (gebruik het <a href=\"#message\">opmerkingenveld</a>)"
+  },
+  "drinks": {
+    "espresso": "Espresso (medium branding)",
+    "cappuccino": "Cappuccino / latte",
+    "filtered": "Filterkoffie (lichte branding)",
+    "chocolate": "Warme chocolademelk",
+    "tea": "Gedroogde kruidenthee",
+    "ginger-tea": "Verse gemberthee",
+    "mint-tea": "Verse muntthee",
+    "alcohol": "Alcoholisch drankje"
+  },
+  "reaction": {
+    "0": "Ah, we gaan je missen! We houden een kopje warm voor de volgende keer.",
+    "-0": "Begrepen. We nodigen je niet meer uit.",
+    "1": "Joepie! Een tafel voor één, met de beste plek van het huis.",
+    "2": "Joepie! Een tafel voor twee.",
+    "3": "Joepie! Een tafel voor drie. We pakken er een stoel bij.",
+    "4": "Een gezelschap van vier! We bakken extra."
+  },
+  "ticket": {
+    "heading": "Je cafébon",
+    "date": "zo 27 dec 2026 · 12:00–17:28",
+    "orderFor": "Bestelling voor",
+    "guests": "Gasten",
+    "arrival": "Aankomst",
+    "stay": "Verblijf",
+    "drinks": "Drankjes",
+    "noDrinks": "Nog geen drankjes aangevinkt",
+    "kitchenNote": "Notitie voor de keuken",
+    "noAllergies": "Geen bijzonderheden",
+    "total": "Totaal",
+    "price": "€ 0,00",
+    "thanks": "Donaties welkom. Knuffels zijn gratis.",
+    "stamp": {
+      "0": "Volgende keer!",
+      "-0": "Genoteerd"
+    }
+  },
+  "calendar": {
+    "heading": "Kom je? Zet het in je agenda:",
+    "ics": "Apple, Outlook en andere",
+    "google": "Google Agenda",
+    "newTab": "(opent in een nieuw tabblad)",
+    "about": "Ons pop-upcafé is open van 12:00 tot 17:28. We sturen het adres vlak voor kerst. Neem alsjeblieft geen eten mee: een paar van onze vrienden hebben een ernstige (anafylactische) allergie.",
+    "yourRsvp": "Je RSVP:",
+    "name": "Naam",
+    "guests": "Gasten",
+    "arrival": "Aankomst",
+    "stay": "Verblijf",
+    "untilClosing": "Tot sluitingstijd (17:28)",
+    "drinks": "Drankjes",
+    "allergies": "Allergieën",
+    "changeOrCancel": "Wil je je RSVP wijzigen of annuleren? Mail naar {contact}."
+  },
+  "success": {
+    "heading": "Bedankt voor je RSVP!",
+    "reminder": "Vergeet niet: het enige wat het je kost is je aanwezigheid (het is gratis), maar een donatie is welkom. Neem alsjeblieft <strong>geen</strong> eten mee, om onze vrienden met een ernstige allergie te beschermen.",
+    "change": "Je RSVP wijzigen"
+  }
+}

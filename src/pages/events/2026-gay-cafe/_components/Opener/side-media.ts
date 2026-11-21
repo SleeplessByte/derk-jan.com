@@ -151,12 +151,22 @@ export function createSideMedia(
       await once(intro, "ended", signal);
     }
 
+    await startLoop(loopReady!);
+    intro.classList.add("opacity-0");
+  }
+
+  /** After a language switch: the guest has seen the intro, so the loop starts at once. */
+  function resume() {
+    return startLoop(load(loop));
+  }
+
+  async function startLoop(ready: Promise<boolean>) {
     const reducedMotion = matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
     if (
       !reducedMotion &&
-      (await loopReady) &&
+      (await ready) &&
       (await start(loop, { sound: false }))
     ) {
       loop.classList.remove("opacity-0");
@@ -164,12 +174,11 @@ export function createSideMedia(
     } else {
       setCurrent(undefined);
     }
-    intro.classList.add("opacity-0");
 
     cueSong();
   }
 
-  return { preload, unlock, play };
+  return { preload, unlock, play, resume };
 }
 
 /** Starts playback, falling back to muted when the browser blocks sound. */
@@ -203,8 +212,8 @@ async function fetchObjectUrl(
   }
 
   const total = Number(response.headers.get("Content-Length")) || undefined;
-  // A successful GET always has a body.
-  const reader = response.body!.getReader();
+  // @ts-expect-error A successful GET always has a body.
+  const reader = response.body.getReader();
   const chunks: Uint8Array<ArrayBuffer>[] = [];
   let received = 0;
 
@@ -223,8 +232,8 @@ async function fetchObjectUrl(
 }
 
 /**
- * Raises the volume from silence; squared, because loudness is not linear.
- * Timers keep running in a background tab, where animation frames stop.
+ * Raises the volume from silence, squared, because loudness is not linear.
+ *
  * iOS ignores `volume`, so there the song starts at full volume.
  */
 function fadeIn(media: HTMLMediaElement, duration: number) {

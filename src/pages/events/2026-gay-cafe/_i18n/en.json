@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "languageName": "English",
+    "title": "RSVP to Gay Café 2026",
+    "description": "Join us for a festive coffee and pastry on the third Christmas day, 27 December."
+  },
+  "opener": {
+    "open": "Open your invitation",
+    "loading": "Loading your invitation",
+    "hint": "click to continue",
+    "cardDescription": "The invitation card reads: “Let them eat cake! Gay café”."
+  },
+  "media": {
+    "pause": "Pause video",
+    "play": "Play video"
+  },
+  "intro": {
+    "heading": "Join us for a festive coffee and pastry",
+    "invited": {
+      "future": "You are invited to enjoy and celebrate surviving another year <em>(in this climate?)</em>. We will serve coffee <em>(including milk alternatives)</em>, tea <em>(without microplastics)</em>, cake, pie, and pastries.",
+      "past": "You were invited to enjoy and celebrate surviving another year <em>(in this climate?)</em>. We served coffee <em>(including milk alternatives)</em>, tea <em>(without microplastics)</em>, cake, pie, and pastries."
+    },
+    "price": {
+      "future": "The price is merely your attendance (it's free), monetary donations are welcome.",
+      "past": "The price was merely your attendance (it's free), monetary donations are welcome."
+    },
+    "photoAlt": "Tom making a coffee, whilst DJ is enjoying one"
+  },
+  "hours": {
+    "future": "The café will be open during the afternoon on the <strong title=\"Sunday, 27 December\">third Christmas</strong> day, from <strong>12:00 to 17:28</strong>.",
+    "past": "The café was open during the afternoon on the <strong title=\"Sunday, 27 December\">third Christmas</strong> day, from <strong>12:00 to 17:28</strong>."
+  },
+  "transcript": {
+    "summary": "Read the lyrics of “Fruity Xmas”",
+    "hint": "Choose a line to play the song from there."
+  },
+  "countdown": {
+    "opens": "The café opens {when}.",
+    "now": "The café is open right now!"
+  },
+  "handover": {
+    "lead": "Lovely on your phone, extra special on a big screen.",
+    "send": "Send yourself the link",
+    "type": "or type {url} on your computer",
+    "subject": "Gay Café 2026",
+    "shareText": "Open the Gay Café invitation on your computer: it's extra special on a big screen."
+  },
+  "form": {
+    "closed": "You can no longer RSVP to this event. See you again next time!",
+    "firstName": "First name",
+    "required": "(required)",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "optional": "Optional",
+    "whyContact": "We're asking so we can update you if there are changes to this event.",
+    "rsvpLegend": "Your RSVP: are we seeing you on <strong><span>Sunday,</span> <span>27 December</span></strong>?",
+    "rsvpShort": "Your RSVP",
+    "rsvp": {
+      "0": "Unfortunately no, but please invite me again next time",
+      "-0": "No, and do not invite me again",
+      "1": "Yes, by myself",
+      "2": "Yes, me +1",
+      "3": "Yes, me +2",
+      "4": "Yes, me +3"
+    },
+    "arrivalLegend": "Expected arrival",
+    "arrivalDescription": "In order to assess if the city government is going to shut down our friends-gathering, please indicate the time you would like to come. We won't hold you to this, but it helps with planning!",
+    "arrivalLabel": "Time of arrival",
+    "around": "Around {time}",
+    "durationLabel": "Desired duration of stay",
+    "duration": {
+      "45": "45 minutes or less",
+      "60": "About an hour",
+      "90": "About 1.5 hours",
+      "120": "About 2 hours",
+      "150": "About 2.5 hours",
+      "180": "Until you kick me out"
+    },
+    "choose": "(select an option)",
+    "allergiesLegend": "Allergies & intolerances",
+    "allergiesDescription": "It's very important to us that your visit does not result in an unexpected trip to the hospital, or hours on the toilet. Please indicate your allergies and intolerances.",
+    "drinksLegend": "Preferred drink(s)",
+    "drinksDescription": "Indicate what you'd like to consume at our pop-up cafe. This helps us plan ahead.",
+    "comments": "Additional comments",
+    "commentsLimit": "Max 500 characters",
+    "addressNote": "If you RSVPed yes, we will send our address and further details just before Christmas.",
+    "submit": "Send RSVP"
+  },
+  "allergens": {
+    "milk": "Milk (any dairy or milk protein)",
+    "lactose": "Lactose",
+    "eggs": "Eggs",
+    "peanuts": "Peanuts (whole, oil, etc.)",
+    "nuts": "Other nuts (whole, oil, etc.)",
+    "sesame": "Sesame seeds",
+    "gluten": "Wheat / Gluten",
+    "soy": "Soy",
+    "alcohol": "Alcohol (including when processed, cooked, or as ingredient)",
+    "vegan": "Anything non-vegan (select if you are vegan, <em>not</em> vegetarian)",
+    "other": "Other (use <a href=\"#message\">comment field</a>)"
+  },
+  "drinks": {
+    "espresso": "Espresso (medium roast)",
+    "cappuccino": "Cappuccino / Latte",
+    "filtered": "Filtered coffee (light roast)",
+    "chocolate": "Hot chocolate",
+    "tea": "Dried herbal tea",
+    "ginger-tea": "Fresh ginger tea",
+    "mint-tea": "Fresh mint tea",
+    "alcohol": "Alcoholic beverage"
+  },
+  "reaction": {
+    "0": "Aww, we'll miss you! We'll keep a cup warm for next time.",
+    "-0": "Understood. We won't invite you again.",
+    "1": "Yay! A table for one, with the best seat in the house.",
+    "2": "Yay! A table for two.",
+    "3": "Yay! A table for three. We'll fetch an extra chair.",
+    "4": "A party of four! We'll bake extra."
+  },
+  "ticket": {
+    "heading": "Your café ticket",
+    "date": "Sun 27 Dec 2026 · 12:00–17:28",
+    "orderFor": "Order for",
+    "guests": "Guests",
+    "arrival": "Arrival",
+    "stay": "Stay",
+    "drinks": "Drinks",
+    "noDrinks": "No drinks ticked yet",
+    "kitchenNote": "Kitchen note",
+    "noAllergies": "Nothing to note",
+    "total": "Total",
+    "price": "€0.00",
+    "thanks": "Donations welcome. Hugs are free.",
+    "stamp": {
+      "0": "Next time!",
+      "-0": "Noted"
+    }
+  },
+  "calendar": {
+    "heading": "Coming? Put it in your calendar:",
+    "ics": "Apple, Outlook and others",
+    "google": "Google Calendar",
+    "newTab": "(opens in a new tab)",
+    "about": "Our pop-up café is open from 12:00 to 17:28. We will send the address just before Christmas. Please do not bring food: some of our friends are anaphylactic.",
+    "yourRsvp": "Your RSVP:",
+    "name": "Name",
+    "guests": "Guests",
+    "arrival": "Arrival",
+    "stay": "Stay",
+    "untilClosing": "Until closing time (17:28)",
+    "drinks": "Drinks",
+    "allergies": "Allergies",
+    "changeOrCancel": "To change or cancel your RSVP, email {contact}."
+  },
+  "success": {
+    "heading": "Thank you for your RSVP!",
+    "reminder": "Don't forget: the price is merely your attendance (it's free), monetary donations are welcome. Please do <strong>not</strong> bring food to protect our anaphylactic friends.",
+    "change": "Change your RSVP"
+  }
+}

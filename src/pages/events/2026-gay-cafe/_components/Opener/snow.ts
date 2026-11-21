@@ -20,6 +20,11 @@ interface Flake {
   crystal?: Crystal;
 }
 
+interface SnowLayers {
+  back: HTMLCanvasElement;
+  front: HTMLCanvasElement;
+}
+
 interface SnowOptions {
   signal: AbortSignal;
   still: boolean;
@@ -33,6 +38,11 @@ const CRYSTAL_DEPTH = 0.92;
 const CRYSTAL_DESIGNS = 3;
 const DOT_SPRITE = 32;
 const CRYSTAL_SPRITE = 64;
+const FRONT_DEPTH = 0.9;
+const SHADOW_SPRITE = 32;
+const SHADOW_SCALE = 1.8;
+const SHADOW_ALPHA = 0.15;
+const SHADOW_OFFSET = 6;
 const SLOW_FRAME_MS = 24;
 const SLOW_FOR_MS = 500;
 const PAUSE_MS = 1000;
@@ -40,31 +50,36 @@ const GRACE_MS = 1000;
 const APPEAR_S = 1.6;
 const FADE_S = 0.9;
 
+// The front layer goes before the flakes do: it costs a second full-screen canvas.
 const LEVELS = [
-  { ratio: 2, share: 1, moving: true },
-  { ratio: 1, share: 1, moving: true },
-  { ratio: 1, share: 0.5, moving: false },
+  { ratio: 2, share: 1, moving: true, front: true },
+  { ratio: 1, share: 1, moving: true, front: true },
+  { ratio: 1, share: 1, moving: true, front: false },
+  { ratio: 1, share: 0.5, moving: false, front: false },
 ] as const;
 
 /**
- * Lets snow fall on the canvas until the signal aborts.
+ * Lets snow fall on the canvases until the signal aborts.
  *
  * Soft dots far away and crystals close by, all carried by a slow, gusty wind.
  * When frames remain slow, the snow lowers its quality step by step until it
  * finally stands still.
  */
 export function startSnow(
-  canvas: HTMLCanvasElement,
+  { back, front }: SnowLayers,
   { signal, still, lowPower, onSlow }: SnowOptions,
 ) {
-  const context = canvas.getContext("2d")!;
-  const color = getComputedStyle(canvas).getPropertyValue("--opener-snow");
+  const backContext = back.getContext("2d")!;
+  const frontContext = front.getContext("2d")!;
+  const color = getComputedStyle(back).getPropertyValue("--opener-snow");
   const dot = createDot(color);
+  const shadow = createShadow(getComputedStyle(front).color);
   const crystals = Array.from({ length: CRYSTAL_DESIGNS }, () =>
     createCrystal(color),
   );
 
-  let level = lowPower ? 1 : 0;
+  // A weak device starts without the front layer.
+  let level = lowPower ? 2 : 0;
   let flakes: Flake[] = [];
   let width = 0;
   let height = 0;
@@ -112,10 +127,15 @@ export function startSnow(
   function resize() {
     const settings = LEVELS[Math.min(level, LEVELS.length - 1)];
     ratio = Math.min(devicePixelRatio, settings.ratio);
-    width = canvas.clientWidth;
-    height = canvas.clientHeight;
-    canvas.width = Math.round(width * ratio);
-    canvas.height = Math.round(height * ratio);
+    width = back.clientWidth;
+    height = back.clientHeight;
+
+    front.hidden = still || !settings.front;
+
+    for (const canvas of [back, front]) {
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+    }
 
     const count = Math.round(
       Math.min(MAX_FLAKES, (width * height) / AREA_PER_FLAKE) * settings.share,
@@ -132,8 +152,13 @@ export function startSnow(
   }
 
   function draw(seconds: number) {
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    const layered = !front.hidden;
+    for (const context of layered
+      ? [backContext, frontContext]
+      : [backContext]) {
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(0, 0, back.width, back.height);
+    }
 
     for (const flake of flakes) {
       const shown = smoothstep((seconds - flake.appear) / FADE_S);
@@ -144,6 +169,23 @@ export function startSnow(
       const size = flake.size * (0.6 + 0.4 * shown);
       const x =
         flake.x + Math.sin(seconds * flake.swayRate + flake.phase) * flake.sway;
+      const inFront = layered && flake.depth > FRONT_DEPTH;
+      const context = inFront ? frontContext : backContext;
+
+      if (inFront) {
+        const spread = size * SHADOW_SCALE;
+        const offset = SHADOW_OFFSET * flake.depth;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        context.globalAlpha = SHADOW_ALPHA * shown;
+        context.drawImage(
+          shadow,
+          x + offset - spread / 2,
+          flake.y + offset - spread / 2,
+          spread,
+          spread,
+        );
+      }
+
       context.globalAlpha = flake.alpha * shown;
 
       if (flake.crystal) {
@@ -273,6 +315,33 @@ function createDot(color: string) {
     Math.PI * 2,
   );
   context.fill();
+
+  return sprite;
+}
+
+/**
+ * A round, very soft shadow, drawn once and stamped under every flake in
+ * front of the card. On the dark sky it disappears, so it needs no clipping.
+ */
+function createShadow(color: string) {
+  const sprite = document.createElement("canvas");
+  sprite.width = SHADOW_SPRITE;
+  sprite.height = SHADOW_SPRITE;
+
+  const context = sprite.getContext("2d")!;
+  const middle = SHADOW_SPRITE / 2;
+  const gradient = context.createRadialGradient(
+    middle,
+    middle,
+    0,
+    middle,
+    middle,
+    middle,
+  );
+  gradient.addColorStop(0, color);
+  gradient.addColorStop(1, "transparent");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, SHADOW_SPRITE, SHADOW_SPRITE);
 
   return sprite;
 }

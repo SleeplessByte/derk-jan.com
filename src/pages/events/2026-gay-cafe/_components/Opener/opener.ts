@@ -1,3 +1,5 @@
+import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
+
 import { paintCard } from "./paint";
 import { createSideMedia } from "./side-media";
 import { startSnow } from "./snow";
@@ -33,9 +35,10 @@ export function setupOpener() {
   const card = find<HTMLButtonElement>(".card", root);
   const progress = find<HTMLElement>(".progress", root);
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   // Few cores means a weak device
-  root.dataset.quality = navigator.hardwareConcurrency <= 4 ? "low" : "high";
-  const lowPower = root.dataset.quality === "low";
+  const lowPower = navigator.hardwareConcurrency <= 4;
+  root.dataset.quality = lowPower ? "low" : "high";
 
   const media = createSideMedia(
     {
@@ -60,9 +63,20 @@ export function setupOpener() {
     },
   );
 
+  if ("skipped" in root.dataset) {
+    root.remove();
+    void media.resume();
+    heading.focus({ preventScroll: true });
+    return;
+  }
+
   content.inert = true;
 
-  startSnow(find<HTMLCanvasElement>(".snow", root), {
+  const snow = {
+    back: find<HTMLCanvasElement>(".snow.--back", root),
+    front: find<HTMLCanvasElement>(".snow.--front", root),
+  };
+  startSnow(snow, {
     signal,
     still: reducedMotion,
     lowPower,
@@ -145,6 +159,21 @@ export function setupOpener() {
   }
 
   root.dataset.ready = "";
+}
+
+/**
+ * A language link leads to the same invitation, which the guest has already
+ * opened.
+ */
+export function skipOpenerAfterLanguageSwitch(
+  event: TransitionBeforeSwapEvent,
+) {
+  if (!event.sourceElement?.hasAttribute("data-skip-opener")) {
+    return;
+  }
+  event.newDocument.querySelector<HTMLElement>(
+    '[data-component="invite-opener"]',
+  )!.dataset.skipped = "";
 }
 
 /**

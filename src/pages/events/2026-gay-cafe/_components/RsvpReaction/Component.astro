@@ -1,11 +1,14 @@
+---
+import { messagesFor } from "../../_i18n";
+
+const reactions = messagesFor(Astro.params.lang).reaction;
+---
+
 <div data-component="rsvp-reaction">
   <ul class="messages" hidden>
-    <li data-value="0">Aww, we'll miss you! We'll keep a cup warm for next time.</li>
-    <li data-value="-0">Understood. We won't invite you again.</li>
-    <li data-value="1">Yay! A table for one, with the best seat in the house.</li>
-    <li data-value="2">Yay! A table for two.</li>
-    <li data-value="3">Yay! A table for three. We'll fetch an extra chair.</li>
-    <li data-value="4">A party of four! We'll bake extra.</li>
+    {Object.entries(reactions).map(([value, reaction]) => (
+      <li data-value={value}>{reaction}</li>
+    ))}
   </ul>
   <p class="line" aria-live="polite"></p>
 </div>

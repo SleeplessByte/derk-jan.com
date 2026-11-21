@@ -2,10 +2,14 @@
 import { getImage, Image } from "astro:assets";
 
 import cardImage from "../../../../../assets/gay-cafe-2026-invite.jpg";
+import { handwriting } from "../../../../../components/Handwriting/handwriting";
+import { messagesFor } from "../../_i18n";
+import Handover from "../Handover/Component.astro";
 import { dashedArrow } from "./arrow";
-import { writing } from "./handwriting";
 
+const t = messagesFor(Astro.params.lang).opener;
 const studyCopy = await getImage({ src: cardImage, width: 128, height: 128 });
+const writing = handwriting(t.hint);
 
 const arrows = {
   above: dashedArrow([95, 5], [15, 8], [18, 76]),
@@ -24,7 +28,7 @@ const star =
 
 <div data-component="invite-opener">
   <div class="veil">
-    <canvas class="snow" aria-hidden="true"></canvas>
+    <canvas class="snow --back" aria-hidden="true"></canvas>
 
     <div class="scene">
       <span class="cast" aria-hidden="true"></span>
@@ -44,7 +48,7 @@ const star =
             <span class="sheen" aria-hidden="true"></span>
             <span class="label">
               <span class="pill">
-                <span class="text">Open your invitation</span>
+                <span class="text">{t.open}</span>
                 {["one", "two", "three"].map((name) => (
                   <svg class={`sparkle --${name}`} viewBox="0 0 24 24" aria-hidden="true">
                     <path d={star} />
@@ -65,7 +69,7 @@ const star =
         hidden
       >
         <span id={progressLabelId} class="sr-only">
-          Loading your invitation
+          {t.loading}
         </span>
         <span class="track">
           <span class="bar"></span>
@@ -76,7 +80,7 @@ const star =
       </div>
 
       <p class="hint">
-        <span class="sr-only">Click to continue</span>
+        <span class="sr-only">{t.hint}</span>
         <svg class="writing" viewBox={writing.viewBox} aria-hidden="true">
           {writing.glyphs.map((d, index) => (
             <path d={d} pathLength="1" style={`--i: ${index}`} />
@@ -97,39 +101,48 @@ const star =
         ))}
       </p>
     </div>
+
+    <canvas class="snow --front" aria-hidden="true"></canvas>
+
+    <div class="handover">
+      <Handover placement="opener" />
+    </div>
   </div>
 
   <span class="halo" aria-hidden="true"></span>
 
-  <p id={descriptionId} class="sr-only">
-    The invitation card reads: “Let them eat cake! Gay café”.
-  </p>
+  <p id={descriptionId} class="sr-only" set:html={t.cardDescription} />
 </div>
 
 <script is:inline data-astro-rerun>
   {
     // Detect early clicks so early clicks can be forwarded once the script is loaded.
     const opener = document.querySelector('[data-component="invite-opener"]');
-    opener.querySelector(".card").addEventListener(
-      "click",
-      () => {
-        if ("ready" in opener.dataset) {
-          return;
-        }
-        opener.dataset.queued = "";
-        opener.classList.add("--opening");
-      },
-      { once: true },
-    );
+
+    // After a language switch, opener.ts has already removed the skipped opener.
+    if (opener) {
+      opener.querySelector(".card").addEventListener(
+        "click",
+        () => {
+          if ("ready" in opener.dataset) {
+            return;
+          }
+          opener.dataset.queued = "";
+          opener.classList.add("--opening");
+        },
+        { once: true },
+      );
+    }
   }
 </script>
 
 <script>
-  import { setupOpener } from "./opener";
+  import { setupOpener, skipOpenerAfterLanguageSwitch } from "./opener";
 
   // Not astro:page-load on the first visit or it will waits for every image on the page.
   setupOpener();
 
+  document.addEventListener("astro:before-swap", skipOpenerAfterLanguageSwitch);
   document.addEventListener("astro:after-swap", setupOpener);
 </script>
 
@@ -183,6 +196,10 @@ const star =
       display: none;
     }
 
+    &[data-skipped] {
+      display: none;
+    }
+
     & .veil {
       position: absolute;
       inset: 0;
@@ -200,6 +217,11 @@ const star =
       inset: 0;
       width: 100%;
       height: 100%;
+
+      &.--front {
+        color: var(--opener-ink);
+        pointer-events: none;
+      }
     }
 
     & .scene {
@@ -581,13 +603,45 @@ const star =
       }
     }
 
-    &:not([data-painted]) .hint {
+    & .handover {
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      padding: 1rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+      transition: opacity 0.3s ease-out;
+
+      @media (hover: hover) {
+        display: none;
+      }
+    }
+
+    @media (min-aspect-ratio: 5/4) {
+      & .handover {
+        inset-inline-start: calc(50% + var(--card-size) / 2 + 1.5rem);
+        top: 50%;
+        bottom: auto;
+        padding: 0 calc(1rem + env(safe-area-inset-right, 0px)) 0 0;
+        translate: 0 -50%;
+      }
+    }
+
+    &:not([data-painted]) .hint,
+    &:not([data-painted]) .handover {
       visibility: hidden;
     }
 
-    &.--opening .hint {
+    &[data-painted] .handover {
+      animation: invite-opener-fade-in 0.6s ease-out 1.2s both;
+    }
+
+    &.--opening .hint,
+    &.--opening .handover {
       opacity: 0;
       animation: none;
+    }
+
+    &.--opening .handover {
+      pointer-events: none;
     }
 
     & .halo {
@@ -718,7 +772,7 @@ const star =
   }
 
   @media (scripting: enabled) {
-    :global(html:has([data-component="invite-opener"])) {
+    :global(html:has([data-component="invite-opener"]:not([data-skipped]))) {
       overflow: hidden;
     }
   }

@@ -5,6 +5,7 @@ import "../styles/global.css";
 interface Props {
   title?: string;
   description?: string;
+  lang?: string;
   "theme-color"?: string;
   "disable-client-router"?: boolean;
   class?: string;
@@ -12,6 +13,7 @@ interface Props {
 const {
   title,
   description,
+  lang = "en",
   "theme-color": themeColor = "#252A34",
   "disable-client-router": disableClientRouter = false,
   class: className = "",
@@ -19,7 +21,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en" transition:animate="fade" transition:name="root">
+<html lang={lang} transition:animate="fade" transition:name="root">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -39,6 +41,7 @@ const {
     <link rel="apple-touch-icon" href="/icons/apple-icon-180x180.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <slot name="head" />
 
     {disableClientRouter ? null : <ClientRouter />}
   </head>

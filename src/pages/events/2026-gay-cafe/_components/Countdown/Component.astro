@@ -1,13 +1,20 @@
+---
+import { messagesFor } from "../../_i18n";
+
+const t = messagesFor(Astro.params.lang).countdown;
+const [beforeWhen, afterWhen] = t.opens.split("{when}");
+---
+
 <p
   data-component="countdown"
   class="mt-1 text-lg font-semibold text-orange-700 dark:text-pink-300"
   hidden
 >
-  <span class="soon">
-    The café opens <span class="when"></span>.
-  </span>
+  <!-- A line break inside would put a space before the full stop. -->
+  <!-- prettier-ignore -->
+  <span class="soon">{beforeWhen}<span class="when"></span>{afterWhen}</span>
   <span class="now" hidden>
-    The café is open right now!
+    {t.now}
   </span>
 </p>
 

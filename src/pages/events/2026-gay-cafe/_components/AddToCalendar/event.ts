@@ -1,3 +1,4 @@
+import type { Messages } from "../../_i18n";
 import type { Order } from "../OrderTicket/order";
 
 // Hardcoded data for now
@@ -17,9 +18,6 @@ export const CLOSES_AT = new Date(
   Date.UTC(2026, 11, 27, 0, CLOSES - UTC_OFFSET),
 );
 
-const ABOUT =
-  "Our pop-up café is open from 12:00 to 17:28. We will send the address just before Christmas. Please do not bring food: some of our friends are anaphylactic.";
-
 export interface CalendarEvent {
   start: string;
   end: string;
@@ -38,7 +36,10 @@ function minutesOf(time: string) {
   return hours * 60 + minutes;
 }
 
-export function eventFor(order: Order | null): CalendarEvent {
+export function eventFor(
+  order: Order | null,
+  text: Messages["calendar"],
+): CalendarEvent {
   const start = order?.arrival ? minutesOf(order.arrival.value) : OPENS;
   const stay = order?.stay;
   const end =
@@ -46,29 +47,32 @@ export function eventFor(order: Order | null): CalendarEvent {
       ? Math.min(start + Number(stay.value), CLOSES)
       : CLOSES;
 
-  const lines = [ABOUT];
+  const lines = [text.about];
 
   if (order) {
     const name = [order.firstName, order.lastName].filter(Boolean).join(" ");
     const answers = [
-      ["Name", name],
-      ["Guests", order.rsvp],
-      ["Arrival", order.arrival?.text],
-      ["Stay", stay?.untilClosing ? "Until closing time (17:28)" : stay?.text],
-      ["Drinks", order.drinks.map((drink) => drink.text).join(", ")],
-      ["Allergies", order.allergies.map((allergy) => allergy.text).join(", ")],
+      [text.name, name],
+      [text.guests, order.rsvp],
+      [text.arrival, order.arrival?.text],
+      [text.stay, stay?.untilClosing ? text.untilClosing : stay?.text],
+      [text.drinks, order.drinks.map((drink) => drink.text).join(", ")],
+      [
+        text.allergies,
+        order.allergies.map((allergy) => allergy.text).join(", "),
+      ],
     ].filter(([, answer]) => answer);
 
     lines.push(
       "",
-      "Your RSVP:",
+      text.yourRsvp,
       ...answers.map(([question, answer]) => `${question}: ${answer}`),
     );
   }
 
   lines.push(
     "",
-    `To change or cancel your RSVP, email ${CONTACT}.`,
+    text.changeOrCancel.replace("{contact}", CONTACT),
     "",
     PAGE_URL,
   );
@@ -138,7 +142,7 @@ export function toIcs(event: CalendarEvent, stamp: string) {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    // One UID for every version, so a calendar updates the event instead of adding it twice.
+    // Ensures a calendar updates the event instead of adding it twice.
     `UID:${UID}`,
     `DTSTAMP:${stamp}`,
     `DTSTART:${event.start}`,

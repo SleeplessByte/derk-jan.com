@@ -1,3 +1,4 @@
+import type { Messages } from "../../_i18n";
 import { recallOrder } from "../OrderTicket/order";
 import { eventFor, googleCalendarUrl, toIcs, utcStamp } from "./event";
 
@@ -15,7 +16,8 @@ export function setupCalendar() {
     return;
   }
 
-  const event = eventFor(order);
+  const text: Messages["calendar"] = JSON.parse(root.dataset.messages!);
+  const event = eventFor(order, text);
   const ics = root.querySelector<HTMLAnchorElement>('[data-target="ics"]')!;
   const google = root.querySelector<HTMLAnchorElement>(
     '[data-target="google"]',

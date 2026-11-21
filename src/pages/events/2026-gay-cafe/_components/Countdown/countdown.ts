@@ -4,7 +4,6 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const cafeDate = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Europe/Amsterdam",
 });
-const relativeDate = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
 export function setupCountdown() {
   // Absent on pages without a countdown.
@@ -34,6 +33,12 @@ export function setupCountdown() {
         Date.parse(cafeDate.format(now))) /
         DAY_MS,
     );
+
+    const relativeDate = new Intl.RelativeTimeFormat(
+      document.documentElement.lang,
+      { numeric: "auto" },
+    );
+
     root.querySelector(".when")!.textContent = relativeDate.format(days, "day");
   }
 }

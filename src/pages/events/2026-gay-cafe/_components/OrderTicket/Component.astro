@@ -1,12 +1,14 @@
 ---
 import FormIcon from "../FormIcon/Component.astro";
 import { icons, type IconName } from "../FormIcon/icons";
+import { messagesFor } from "../../_i18n";
 
 interface Props {
   source?: "form" | "saved";
 }
 
 const { source = "form" } = Astro.props;
+const t = messagesFor(Astro.params.lang).ticket;
 const iconNames = Object.keys(icons) as IconName[];
 const headingId = `order-ticket-${crypto.randomUUID()}`;
 
@@ -46,57 +48,57 @@ const tornEdges = `polygon(${[...top, ...bottom].join(", ")})`;
   hidden
 >
   <h3 id={headingId} class="heading">
-    Your café ticket
+    {t.heading}
   </h3>
   <div class="paper">
     <div class="sheet" style={`--ticket-tear: ${tornEdges}`}>
       <p class="brand">
         Gay Café
-        <span class="date">Sun 27 Dec 2026 · 12:00–17:28</span>
+        <span class="date">{t.date}</span>
       </p>
 
       <dl class="details">
         <div class="row">
-          <dt>Order for</dt>
+          <dt>{t.orderFor}</dt>
           <dd data-slot="name"></dd>
         </div>
         <div class="row">
-          <dt>Guests</dt>
+          <dt>{t.guests}</dt>
           <dd data-slot="guests"></dd>
         </div>
         <div class="row">
-          <dt>Arrival</dt>
+          <dt>{t.arrival}</dt>
           <dd data-slot="arrival"></dd>
         </div>
         <div class="row">
-          <dt>Stay</dt>
+          <dt>{t.stay}</dt>
           <dd data-slot="stay"></dd>
         </div>
       </dl>
 
-      <p class="label">Drinks</p>
+      <p class="label">{t.drinks}</p>
       <ul class="list" data-slot="drinks"></ul>
       <p class="empty" data-slot="no-drinks">
-        No drinks ticked yet
+        {t.noDrinks}
       </p>
 
-      <p class="label">Kitchen note</p>
+      <p class="label">{t.kitchenNote}</p>
       <ul class="list" data-slot="allergies"></ul>
       <p class="empty" data-slot="no-allergies">
-        No allergies ticked
+        {t.noAllergies}
       </p>
 
       <p class="total">
-        <span>Total</span>
-        <span>€0.00</span>
+        <span>{t.total}</span>
+        <span>{t.price}</span>
       </p>
-      <p class="thanks">Donations welcome. Hugs are free.</p>
+      <p class="thanks">{t.thanks}</p>
 
       <p class="stamp" data-rsvp="0" hidden>
-        Next time!
+        {t.stamp["0"]}
       </p>
       <p class="stamp" data-rsvp="-0" hidden>
-        Noted
+        {t.stamp["-0"]}
       </p>
     </div>
   </div>

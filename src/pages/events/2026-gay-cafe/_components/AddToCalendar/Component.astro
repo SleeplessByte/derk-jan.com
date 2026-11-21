@@ -1,21 +1,24 @@
 ---
+import { localeOf, locales, pageUrl } from "../../_i18n";
 import { ORDER_KEY } from "../OrderTicket/order";
 import { eventFor, googleCalendarUrl } from "./event";
 
-const generalGoogleUrl = googleCalendarUrl(eventFor(null));
+const lang = localeOf(Astro.params.lang);
+const t = locales[lang].calendar;
+const generalGoogleUrl = googleCalendarUrl(eventFor(null, t));
 const labelId = `add-to-calendar-${crypto.randomUUID()}`;
 const linkClass =
   "inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset ring-zinc-900/15 dark:ring-white/20 text-zinc-900 dark:text-white no-underline transition hover:bg-zinc-900/5 dark:hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 dark:focus-visible:outline-orange-600";
 ---
 
-<div data-component="add-to-calendar" class="mt-6">
+<div data-component="add-to-calendar" data-messages={JSON.stringify(t)} class="mt-6">
   <p id={labelId} class="font-semibold text-zinc-900 dark:text-white">
-    Coming? Put it in your calendar:
+    {t.heading}
   </p>
   <ul class="mt-2 flex flex-wrap gap-2" aria-labelledby={labelId}>
     <li>
       <a
-        href="/events/2026-gay-cafe/calendar.ics"
+        href={pageUrl(lang, "calendar.ics")}
         class={linkClass}
         data-target="ics"
         data-astro-reload
@@ -34,7 +37,7 @@ const linkClass =
             d="M4 .75a.75.75 0 0 1 1.5 0v2.5a.75.75 0 0 1-1.5 0zm4.5 0a.75.75 0 0 1 1.5 0v2.5a.75.75 0 0 1-1.5 0zM4 8h2v2H4zm4 0h2v2H8z"
           ></path>
         </svg>
-        Apple, Outlook and others
+        {t.ics}
       </a>
     </li>
     <li>
@@ -45,8 +48,8 @@ const linkClass =
         target="_blank"
         rel="noopener"
       >
-        Google Calendar
-        <span class="sr-only">(opens in a new tab)</span>
+        {t.google}
+        <span class="sr-only">{t.newTab}</span>
         <svg class="size-3.5 shrink-0" viewBox="0 0 14 14" fill="none" aria-hidden="true">
           <path
             class="dark"
