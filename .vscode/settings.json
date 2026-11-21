@@ -3,6 +3,8 @@
     "bounceb",
     "bouncel",
     "Codepen",
+    "colour",
+    "colours",
     "Derk",
     "exercism",
     "figcaption",
@@ -14,7 +16,9 @@
     "Monkeypatch",
     "noreferrer",
     "nums",
-    "pescetarian"
+    "oklch",
+    "pescetarian",
+    "rasterises"
   ],
   "astro.content-intellisense": true,
   "mdx.validate.validateDuplicateLinkDefinitions": "hint",

@@ -24,6 +24,8 @@ Your output will be read by non-native practitioner-scholars: use simple syntax 
 - Copying code once is fine; make an abstraction at the third copy.
 - Optimise for maintainability: concise, but not vague or overly compact.
 - Format every edited file that Prettier supports (CSS, HTML, JavaScript, TypeScript, Markdown, …) with the project's format script. Prettier skips git-ignored files, so pass `--ignore-path .prettierignore` for those. Lint templates with the project's template linter.
+- After you write code, run the type checker (`pnpm check`) and fix every error in the files you touched. Editor diagnostics are not enough, because they only cover open files.
+- Always put the body of an `if` in braces on its own line, even when Prettier accepts one line. Do not use `&&`, `||`, a ternary, or a logical assignment with a call (`??=`, `||=`) as a statement in place of an `if`.
 
 ## CSS
 

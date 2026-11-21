@@ -2,10 +2,19 @@
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 
+import Opener from "./_components/Opener.astro";
+
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../assets/IMG_20240825_233805_104.jpg";
 import fruityXmasMp3 from "../../../assets/audio/2026-fruity-xmas.mp3";
-import sideVideoMp4 from "../../../assets/video/coffee-snow-20261116.mp4";
+import introVideoMp4 from "../../../assets/video/coffee-swirl-20261120-web.mp4";
+import loopVideoMp4 from "../../../assets/video/coffee-snow-20261116.mp4";
+
+// Astro only types WAI-ARIA 1.2 roles; graphics-symbol comes from the Graphics ARIA module.
+const iconRole: Record<string, string> = { role: "graphics-symbol" };
+
+const sideVideoClass =
+  "absolute inset-0 size-full object-cover object-[center_80%] md:object-[center_75%] lg:object-center opacity-0";
 
 const formName = "events/2026-gay-cafe";
 const successPage = `/${formName}/success`;
@@ -14,9 +23,10 @@ const signupGate = 1797634799;
 ---
 
 <HtmlLayout title="RSVP to Gay Café 2026">
-  <div class="relative">
+  <Opener />
+  <div class="relative" data-target="content">
     <div
-      class="lg:fixed lg:inset-0 lg:left-1/2 shadow-xl dark:shadow-2xl"
+      class="relative lg:fixed lg:inset-0 lg:left-1/2 shadow-xl dark:shadow-2xl"
       transition:name="side"
     >
       <Image
@@ -24,14 +34,63 @@ const signupGate = 1797634799;
         alt=""
         class="h-64 w-full bg-zinc-50 object-[center_80%] md:object-[center_75%] lg:object-center object-cover sm:h-80 lg:absolute lg:h-full dark:bg-zinc-800"
         loading="eager"
-        data-target="side"
       />
+      <video
+        class={sideVideoClass}
+        data-target="side-loop"
+        data-src={loopVideoMp4}
+        preload="auto"
+        muted
+        loop
+        playsinline
+        aria-hidden="true"
+      ></video>
+      <video
+        class={`${sideVideoClass} transition-opacity duration-1000 motion-reduce:transition-none`}
+        data-target="side-intro"
+        data-src={introVideoMp4}
+        preload="auto"
+        muted
+        playsinline
+        aria-hidden="true"
+      ></video>
+      <button
+        type="button"
+        class="absolute right-3 bottom-3 grid size-11 place-items-center rounded-full bg-zinc-950/70 text-white shadow-md transition hover:bg-zinc-950/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        data-target="side-toggle"
+        hidden
+      >
+        <svg
+          {...iconRole}
+          data-icon="pause"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="size-5"
+        >
+          <title>Pause video</title>
+          <path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z"></path>
+        </svg>
+        <svg
+          {...iconRole}
+          data-icon="play"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="hidden size-5"
+        >
+          <title>Play video</title>
+          <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5"></path>
+        </svg>
+      </button>
     </div>
     <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
       <div class="px-6 lg:px-8">
         <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
           <header>
-            <h2 class="text-4xl font-semibold tracking-tight text-pretty text-zinc-900 sm:text-5xl dark:text-white">
+            <h2
+              class="text-4xl font-semibold tracking-tight text-pretty text-zinc-900 sm:text-5xl dark:text-white focus:outline-none"
+              tabindex="-1"
+              data-target="heading"
+            >
               Join us for a festive coffee and pastry
             </h2>
             <p class="mt-2 text-lg/8 text-zinc-600 dark:text-zinc-300">
@@ -67,6 +126,7 @@ const signupGate = 1797634799;
               controls
               src={fruityXmasMp3}
               class="absolute bottom-2 left-2"
+              data-target="song"
               transition:name="audio"
               transition:persist
             />
@@ -879,7 +939,6 @@ const signupGate = 1797634799;
     data-variable-event-gate={eventGate}
     data-variable-signup-gate={signupGate}
     data-variable-form-name={formName}
-    data-variable-side-video-mp4={sideVideoMp4}
   >
     {
       const renderTime = new Date().getTime() / 1000;
@@ -906,45 +965,6 @@ const signupGate = 1797634799;
           .querySelector(`form[name="${variables.dataset.variableFormName}"]`)
           .replaceWith(formReplacement);
       }
-
-      const sideElement = document.querySelector('[data-target="side"]');
-      const replacementVideo = document.createElement("video");
-
-      let replacementVideoLoaded = false;
-      let replacementVideoPlayed = false;
-
-      replacementVideo.setAttribute("transition:persist", "");
-      replacementVideo.autoplay = true;
-      replacementVideo.muted = true;
-      replacementVideo.loop = true;
-      replacementVideo.addEventListener(
-        "canplaythrough",
-        () => {
-          replacementVideo.setAttribute("class", sideElement.getAttribute("class"));
-          sideElement.replaceWith(replacementVideo);
-          replacementVideo
-            .play()
-            .then(() => {
-              replacementVideoPlayed = true;
-            })
-            .catch(() => {
-              replacementVideoLoaded = true;
-            });
-        },
-        { once: true },
-      );
-      replacementVideo.src = variables.dataset.variableSideVideoMp4;
-
-      document.addEventListener(
-        "click",
-        () => {
-          if (replacementVideoLoaded && !replacementVideoPlayed) {
-            replacementVideo.play();
-            replacementVideoPlayed = true;
-          }
-        },
-        { once: true },
-      );
     }
   </script>
 </HtmlLayout>
