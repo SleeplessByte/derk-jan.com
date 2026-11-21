@@ -1,7 +1,7 @@
 ---
 import { getImage, Image } from "astro:assets";
 
-import cardImage from "../../../../assets/gay-cafe-2026-invite.jpg";
+import cardImage from "../../../../../assets/gay-cafe-2026-invite.jpg";
 import { dashedArrow } from "./arrow";
 import { writing } from "./handwriting";
 
@@ -280,7 +280,7 @@ const star =
       object-fit: cover;
     }
 
-    /* Bare paper until paint.ts paints on it; it hides the image while that loads. */
+    /* Bare paper until paint.ts paints on it and it hides the image while that loads. */
     & .paint {
       background: var(--opener-paper);
       transition: opacity 0.9s ease-in-out;
@@ -529,7 +529,7 @@ const star =
       }
     }
 
-    /* The glow repaints with every drawn stroke; weak devices skip it. */
+    /* The glow repaints with every drawn stroke. This makes weak devices skip it. */
     &[data-quality="low"] .hint svg {
       filter: none;
     }

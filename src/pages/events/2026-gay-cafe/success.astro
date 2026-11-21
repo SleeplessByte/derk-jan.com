@@ -1,6 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
+import LyricsOverlay from "./_components/Lyrics/Overlay.astro";
+import LyricsTranscript from "./_components/Lyrics/Transcript.astro";
 
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import successVideoAv1 from "../../../assets/video/coffee-magic-20261115.webm";
@@ -42,18 +44,21 @@ import sideVideoMp4 from "../../../assets/video/coffee-snow-20261116.mp4";
           </header>
 
           <figure class="relative pb-16 -ml-2 pl-2">
-            <video
-              class="aspect-square rounded-xl shadow-md object-cover my-4"
-              autoplay
-              controls
-              controlslist="nodownload nofullscreen noremoteplayback"
-              disablepictureinpicture
-              disableRemotePlayback
-              playsinline
-            >
-              <source type="video/webm" src={successVideoAv1} />
-              <source type="video/mp4" src={successVideoMp4} />
-            </video>
+            <div class="relative">
+              <video
+                class="aspect-square rounded-xl shadow-md object-cover my-4"
+                autoplay
+                controls
+                controlslist="nodownload nofullscreen noremoteplayback"
+                disablepictureinpicture
+                disableRemotePlayback
+                playsinline
+              >
+                <source type="video/webm" src={successVideoAv1} />
+                <source type="video/mp4" src={successVideoMp4} />
+              </video>
+              <LyricsOverlay />
+            </div>
 
             <audio
               controls
@@ -64,6 +69,7 @@ import sideVideoMp4 from "../../../assets/video/coffee-snow-20261116.mp4";
               transition:persist
             />
           </figure>
+          <LyricsTranscript />
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
             The café{" "}

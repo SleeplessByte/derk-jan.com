@@ -6,7 +6,7 @@ const LABEL_EXIT_MS = 300;
 const REVEAL_MS = 1200;
 const FADE_MS = 400;
 const TILT_DEG = 8;
-/** Must match `--reveal-feather` in Opener.astro. */
+/** Must match `--reveal-feather` in Component.astro. */
 const FEATHER_PX = 48;
 
 export function setupOpener() {
@@ -33,7 +33,7 @@ export function setupOpener() {
   const card = find<HTMLButtonElement>(".card", root);
   const progress = find<HTMLElement>(".progress", root);
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  // Few cores means a weak device; the snow can also lower this when frames are slow.
+  // Few cores means a weak device
   root.dataset.quality = navigator.hardwareConcurrency <= 4 ? "low" : "high";
   const lowPower = root.dataset.quality === "low";
 

@@ -2,7 +2,6 @@ interface Crystal {
   design: number;
   angle: number;
   spin: number;
-  /** Turns the flake around its own axis, so it shows its edge now and then. */
   tumble: number;
   tumbleRate: number;
 }
@@ -10,7 +9,6 @@ interface Crystal {
 interface Flake {
   x: number;
   y: number;
-  /** From 0, far away, to 1, close by. */
   depth: number;
   size: number;
   speed: number;
@@ -18,43 +16,30 @@ interface Flake {
   swayRate: number;
   phase: number;
   alpha: number;
-  /** When the flake starts to fade in, in seconds on the animation clock. */
   appear: number;
   crystal?: Crystal;
 }
 
 interface SnowOptions {
   signal: AbortSignal;
-  /** Draws one frame and stops, for visitors who prefer reduced motion. */
   still: boolean;
-  /** Starts at a lower quality level, for weak devices. */
   lowPower: boolean;
-  /** Called each time slow frames lower the quality. */
   onSlow: () => void;
 }
 
 const AREA_PER_FLAKE = 11_000;
 const MAX_FLAKES = 170;
-/** The nearest flakes are crystals; the rest are soft dots. */
 const CRYSTAL_DEPTH = 0.92;
 const CRYSTAL_DESIGNS = 3;
 const DOT_SPRITE = 32;
 const CRYSTAL_SPRITE = 64;
-/** Frames slower than this lower the quality one level once they add up to `SLOW_FOR_MS`. */
 const SLOW_FRAME_MS = 24;
 const SLOW_FOR_MS = 500;
-/** A longer gap is a pause, such as a hidden tab, not a slow device. */
 const PAUSE_MS = 1000;
-/** Loading is often slow; it should not count against the device. */
 const GRACE_MS = 1000;
-/**
- * The first flakes fade in one by one over this time, so a hiccup while the
- * page loads goes unnoticed and the snow builds up instead of popping in.
- */
 const APPEAR_S = 1.6;
 const FADE_S = 0.9;
 
-/** From best to cheapest; below the last level, the snow stands still. */
 const LEVELS = [
   { ratio: 2, share: 1, moving: true },
   { ratio: 1, share: 1, moving: true },
@@ -62,9 +47,11 @@ const LEVELS = [
 ] as const;
 
 /**
- * Lets snow fall on the canvas until the signal aborts: soft dots far away
- * and crystals close by, all carried by a slow, gusty wind. When frames stay
- * slow, the snow lowers its quality step by step and finally stands still.
+ * Lets snow fall on the canvas until the signal aborts.
+ *
+ * Soft dots far away and crystals close by, all carried by a slow, gusty wind.
+ * When frames remain slow, the snow lowers its quality step by step until it
+ * finally stands still.
  */
 export function startSnow(
   canvas: HTMLCanvasElement,
@@ -105,7 +92,6 @@ export function startSnow(
       sway: 4 + depth * 16,
       swayRate: 0.5 + Math.random() * 0.6,
       phase: Math.random() * Math.PI * 2,
-      // Far flakes are dim, as if seen through falling snow.
       alpha: crystal ? 0.9 : 0.25 + depth * 0.6,
       appear:
         anywhere && !still
@@ -162,7 +148,6 @@ export function startSnow(
 
       if (flake.crystal) {
         const { angle, tumble, design } = flake.crystal;
-        // A turned crystal shows its edge, but never disappears.
         const turned = Math.max(0.25, Math.abs(Math.cos(tumble)));
         const cos = Math.cos(angle) * ratio;
         const sin = Math.sin(angle) * ratio;
@@ -324,6 +309,7 @@ function createCrystal(color: string) {
     for (const branch of branches) {
       const y = -reach * branch.at;
       const length = reach * branch.length;
+
       // Side branches grow outward at 60 degrees, like real ice.
       for (const side of [-1, 1]) {
         context.moveTo(0, y);

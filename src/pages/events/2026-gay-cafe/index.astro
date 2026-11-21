@@ -2,7 +2,9 @@
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 
-import Opener from "./_components/Opener.astro";
+import LyricsOverlay from "./_components/Lyrics/Overlay.astro";
+import LyricsTranscript from "./_components/Lyrics/Transcript.astro";
+import Opener from "./_components/Opener/Component.astro";
 
 import backgroundImage from "../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../assets/IMG_20240825_233805_104.jpg";
@@ -116,12 +118,15 @@ const signupGate = 1797634799;
           </header>
 
           <figure class="relative">
-            <Image
-              src={kitchenImage}
-              alt="Tom making a coffee, whilst DJ is enjoying one"
-              class="aspect-square rounded-xl shadow-md object-cover my-4"
-              loading="eager"
-            />
+            <div class="relative">
+              <Image
+                src={kitchenImage}
+                alt="Tom making a coffee, whilst DJ is enjoying one"
+                class="aspect-square rounded-xl shadow-md object-cover my-4"
+                loading="eager"
+              />
+              <LyricsOverlay />
+            </div>
             <audio
               controls
               src={fruityXmasMp3}
@@ -131,6 +136,7 @@ const signupGate = 1797634799;
               transition:persist
             />
           </figure>
+          <LyricsTranscript />
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400">
             The café{" "}

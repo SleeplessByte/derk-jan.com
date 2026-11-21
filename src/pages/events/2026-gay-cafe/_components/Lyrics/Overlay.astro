@@ -1,0 +1,185 @@
+---
+import { LINGER_S, PAUSE_S } from "./karaoke";
+import lyrics from "../../../../../assets/audio/2026-fruity-xmas.lyrics.json";
+
+type Line = (typeof lyrics.stanzas)[number][number];
+type Row = { pause: true; start: number } | ({ pause: false } & Line);
+
+// A long gap between lines gets a row of its own, with dots, as in music apps.
+const rows: Row[] = [];
+let previousEnd = 0;
+for (const line of lyrics.stanzas.flat()) {
+  if (line.start - previousEnd > PAUSE_S) {
+    rows.push({ pause: true, start: previousEnd === 0 ? 0 : previousEnd + LINGER_S });
+  }
+  rows.push({ pause: false, ...line });
+  previousEnd = line.end;
+}
+---
+
+<!-- A visual copy of the lyrics; Transcript.astro holds the text for everyone. -->
+<div data-component="lyrics" aria-hidden="true">
+  <div class="window">
+    <ol class="rows">
+      {rows.map((row) =>
+        row.pause ? (
+          <li class="pause" data-start={row.start}>
+            <span />
+            <span />
+            <span />
+          </li>
+        ) : (
+          <li class="line" data-start={row.start}>
+            {row.words.map(([word, start]) => (
+              <>
+                <span class="word" data-start={start}>
+                  {word}
+                </span>{" "}
+              </>
+            ))}
+          </li>
+        ),
+      )}
+    </ol>
+  </div>
+</div>
+
+<script>
+  import { setupLyrics } from "./karaoke";
+
+  setupLyrics();
+  document.addEventListener("astro:after-swap", setupLyrics);
+</script>
+
+<style>
+  [data-component="lyrics"] {
+    --lyrics-ink: white;
+    --lyrics-scrim: oklch(17% 0.02 40);
+
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    pointer-events: none;
+    /* Protection for the text; dim rows keep 4.5:1 even over a white photo. */
+    background: color-mix(in oklch, var(--lyrics-scrim) 90%, transparent);
+    color: var(--lyrics-ink);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+
+    &.--playing {
+      opacity: 1;
+    }
+
+    & .window {
+      position: absolute;
+      inset: 0;
+      mask-image: linear-gradient(transparent 20%, black 32%, black 64%, transparent 76%);
+    }
+
+    & .rows {
+      --offset: 0px;
+
+      position: absolute;
+      inset-inline: 0;
+      top: 48%;
+      margin: 0;
+      padding: 0 1.25rem;
+      list-style: none;
+      text-align: center;
+      translate: 0 calc(-1 * var(--offset));
+      transition: translate 0.5s cubic-bezier(0.3, 0, 0.2, 1);
+    }
+
+    & .line {
+      padding-block: 0.35em;
+      font-size: clamp(1rem, 0.85rem + 1.2vw, 1.4rem);
+      font-weight: 650;
+      line-height: 1.3;
+      text-wrap: balance;
+      opacity: 0;
+      scale: 0.92;
+      transition:
+        opacity 0.35s ease,
+        scale 0.35s ease;
+
+      &.--previous,
+      &.--next {
+        opacity: 0.5;
+      }
+
+      &.--current {
+        opacity: 1;
+        scale: 1;
+      }
+    }
+
+    & .line.--current .word {
+      opacity: 0.52;
+      transition: opacity 0.15s ease;
+
+      &.--sung {
+        opacity: 1;
+      }
+    }
+
+    & .pause {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding-block: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+
+      & span {
+        width: 0.5rem;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--lyrics-ink);
+      }
+
+      &.--previous,
+      &.--next {
+        opacity: 0.35;
+      }
+
+      &.--current {
+        opacity: 0.9;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      & .pause.--current span {
+        animation: lyrics-pause 1.4s ease-in-out infinite;
+
+        &:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      & .rows,
+      & .line,
+      & .pause {
+        transition: none;
+      }
+    }
+  }
+
+  @keyframes lyrics-pause {
+    0%,
+    100% {
+      opacity: 0.35;
+      scale: 0.8;
+    }
+    50% {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>

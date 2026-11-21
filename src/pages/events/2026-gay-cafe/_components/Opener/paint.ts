@@ -70,7 +70,7 @@ export async function paintCard(
   canvas: HTMLCanvasElement,
   { signal, still, lowPower, onSlow }: PaintOptions,
 ) {
-  // Opener.astro puts a small copy of the card on the canvas, for the study.
+  // Component.astro puts a small copy of the card on the canvas, for the study.
   const studyCopy = new Image();
   studyCopy.src = canvas.dataset.study!;
   await Promise.all([image.decode(), studyCopy.decode()]);
