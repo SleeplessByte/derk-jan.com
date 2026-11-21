@@ -1,17 +1,21 @@
 ---
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../../layouts/HtmlLayout.astro";
+import LyricsOverlay from "../../../../components/Lyrics/Overlay.astro";
+import LyricsTranscript from "../../../../components/Lyrics/Transcript.astro";
 import AddToCalendar from "../_components/AddToCalendar/Component.astro";
 import Countdown from "../_components/Countdown/Component.astro";
-import LyricsOverlay from "../_components/Lyrics/Overlay.astro";
-import LyricsTranscript from "../_components/Lyrics/Transcript.astro";
 import OrderTicket from "../_components/OrderTicket/Component.astro";
 import { localeList, localeOf, locales } from "../_i18n";
 
 import backgroundImage from "../../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import successVideoAv1 from "../../../../assets/video/coffee-magic-20261115.webm";
 import successVideoMp4 from "../../../../assets/video/coffee-magic-20261115.mp4";
+import successCaptionsEn from "../../../../assets/video/coffee-magic-20261115.en.vtt?url";
+import successCaptionsNl from "../../../../assets/video/coffee-magic-20261115.nl.vtt?url";
 import fruityXmasMp3 from "../../../../assets/audio/2026-fruity-xmas.mp3";
+import fruityXmasLyrics from "../../../../assets/audio/2026-fruity-xmas.lyrics.json";
+import fruityXmasVtt from "../../../../assets/audio/2026-fruity-xmas.vtt?url";
 import sideVideoMp4 from "../../../../assets/video/coffee-snow-20261116.mp4";
 
 export function getStaticPaths() {
@@ -20,6 +24,10 @@ export function getStaticPaths() {
 
 const lang = localeOf(Astro.params.lang);
 const t = locales[lang];
+const successCaptions: Record<typeof lang, string> = {
+  en: successCaptionsEn,
+  nl: successCaptionsNl,
+};
 ---
 
 <HtmlLayout title={t.meta.title} description={t.meta.description} lang={lang}>
@@ -38,7 +46,7 @@ const t = locales[lang];
     </div>
     <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
       <div class="px-6 lg:px-8">
-        <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
+        <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg [--lyrics-accent:var(--color-orange-700)] [--lyrics-ring:var(--color-pink-600)] dark:[--lyrics-accent:var(--color-pink-300)] dark:[--lyrics-ring:var(--color-orange-600)] [--lyrics-scrim:oklch(17%_0.02_40)]">
           <header>
             <h2 class="text-4xl font-semibold tracking-tight text-pretty text-zinc-900 sm:text-4xl dark:text-white">
               {t.success.heading}
@@ -63,8 +71,14 @@ const t = locales[lang];
               >
                 <source type="video/webm" src={successVideoAv1} />
                 <source type="video/mp4" src={successVideoMp4} />
+                <track
+                  kind="captions"
+                  src={successCaptions[lang]}
+                  srclang={lang}
+                  label={t.meta.languageName}
+                />
               </video>
-              <LyricsOverlay />
+              <LyricsOverlay lyrics={fruityXmasLyrics} />
             </div>
 
             <audio
@@ -74,9 +88,20 @@ const t = locales[lang];
               data-target="song"
               transition:name="audio"
               transition:persist
-            />
+            >
+              <track
+                kind="captions"
+                src={fruityXmasVtt}
+                srclang="en"
+                label="Fruity Xmas"
+              />
+            </audio>
           </figure>
-          <LyricsTranscript />
+          <LyricsTranscript
+            lyrics={fruityXmasLyrics}
+            summary={t.transcript.summary}
+            hint={t.transcript.hint}
+          />
 
           <p
             class="mt-2 text-lg text-orange-600 dark:text-pink-400 [&_strong]:text-orange-700 dark:[&_strong]:text-pink-300"

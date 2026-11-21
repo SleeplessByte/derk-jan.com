@@ -1,4 +1,5 @@
-const LEAD_S = 0.15;
+// A row changes a little early, so the eye is there when the line starts.
+const ROW_LEAD_S = 0.15;
 export const PAUSE_S = 3;
 export const LINGER_S = 0.5;
 
@@ -11,7 +12,7 @@ interface Row {
 /**
  * Shows the lyrics over a poster, audio, or video while the song plays.
  *
-  Follows the song across pages when its player persists.
+ * Follows the song across pages when its player persists.
  */
 export function setupLyrics() {
   const root = document.querySelector<HTMLElement>('[data-component="lyrics"]');
@@ -53,11 +54,11 @@ export function setupLyrics() {
   };
 
   const update = () => {
-    const time = song.currentTime + LEAD_S;
+    const time = song.currentTime;
     // The first row starts at 0, so there is always a current row.
     let index = 0;
     for (const [position, row] of rows.entries()) {
-      if (row.start > time) {
+      if (row.start > time + ROW_LEAD_S) {
         break;
       }
       index = position;

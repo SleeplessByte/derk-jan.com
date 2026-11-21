@@ -30,13 +30,8 @@ The RSVP invitation lives in `src/pages/events/2026-gay-cafe/`.
   - Under load, the quality steps lower the pixel ratio first, then drop the front layer, then halve the flakes.
   - Weak devices (4 cores or fewer) and reduced motion get no front layer.
 - **Handover** (`_components/Handover/`): shown only on devices without hover. It is a `mailto:` link that opens the share sheet instead when `navigator.share` exists.
-- **Lyrics** (`_components/Lyrics/`): the song's lyrics and word timings are in `src/assets/audio/2026-fruity-xmas.lyrics.json` and `.vtt`. They were made with the scripts in [`src/tools/lyrics/`](../src/tools/lyrics/), in a scratch folder:
-  1. Cut the first verse out of the song: `ffmpeg -ss 8 -to 32 -i src/assets/audio/2026-fruity-xmas.mp3 intro.wav`.
-  2. Transcribe both with Whisper `large-v3` on the GPU. The run used the existing `don-whisper` Docker image, which has faster-whisper; the mounted Hugging Face cache keeps the model between runs:
-     `docker run --rm --gpus all -v ~/.cache/huggingface:/models -v <scratch>:/work -v <repo>/src/tools/lyrics:/tools:ro -v <repo>/src/assets/audio:/audio:ro don-whisper python3 /tools/transcribe.py /audio/2026-fruity-xmas.mp3 /work/song.json large-v3`.
-     For the intro, transcribe `/work/intro.wav` to `/work/intro.json`, with the written first verse as the fourth argument (the prompt): without it, Whisper missed that verse.
-  3. `node src/tools/lyrics/build-lyrics.mjs <scratch>/intro.json <scratch>/song.json src/assets/audio/2026-fruity-xmas.lyrics.json`, then format the file with Prettier. The written lines and the time range of each line are in this script; correct them there.
-  4. `node src/tools/lyrics/build-vtt.mjs src/assets/audio/2026-fruity-xmas.lyrics.json src/assets/audio/2026-fruity-xmas.vtt`.
+- **Lyrics**: the shared components in `src/components/Lyrics/`, with `src/assets/audio/2026-fruity-xmas.lyrics.json`. The colours are set on the column wrapper of both pages. How the lyrics were made is in [Songs](songs.md).
+- **Success video** (`coffee-magic-20261115`): it has a magic sound effect, so it has a caption track per language, next to the video (`.en.vtt`, `.nl.vtt`).
 - **Order ticket** (`_components/OrderTicket/`):
   - It reads its labels from the form, so it follows the page's language.
   - On the success page it prints when it scrolls into view, using a `rootMargin` rather than `threshold: 1` (see [Astro and CSS](astro-and-css.md)).

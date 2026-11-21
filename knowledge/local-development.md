@@ -6,12 +6,20 @@
 - Astro 7 refuses a second `astro dev` in the same project ("Another astro dev server is already running"). For an extra check, build instead (see below).
 - The Netlify adapter loads Netlify's local emulation into `astro dev`: blobs, redirects, headers and more. It reads `netlify.toml` only when it starts, so after a change to the redirects the dev server needs a restart.
 - `src/middleware.ts` uses Netlify Blobs on every route that is not prerendered, `/_image` included. When the emulation is broken, for example after `node_modules` was re-linked, those routes fail with `MissingBlobsEnvironmentError`. A restart of the dev server fixes it.
+- An edit of `astro.config.mjs` makes Astro restart the dev server by itself. After such a restart, `/_image` failed with `MissingBlobsEnvironmentError`, so ask the user to restart the server.
 
 ## Building
 
 - `pnpm build` runs `astro check && astro build`, so a type error stops the deploy.
 - On Windows the build ends with `EPERM: operation not permitted, symlink … sharp …` in the Netlify adapter's `astro:build:done` hook, because Windows needs extra rights to create that symlink. The pages in `dist/` are written before this step, and Netlify's Linux build does not have the problem.
 - To check built pages without the dev server, serve `dist/` with a small static Node server on another port.
+
+## Formatting and linting
+
+- `pnpm format <files>` runs Prettier on those files; `pnpm format .` formats the whole repo.
+- `pnpm lint <files>` runs ESLint on them; `pnpm lint` alone lints the whole repo. [`eslint.config.js`](../eslint.config.js) lints the Astro templates, with the recommended rules of `eslint-plugin-astro` and its jsx-a11y rules, and forbids `aria-label` (see AGENTS.md).
+- `eslint-plugin-astro` 3 needs ESLint 10, and `eslint-plugin-jsx-a11y` only supports ESLint up to 9, so the project uses the fork `eslint-plugin-jsx-a11y-x`. The Astro plugin finds either one by itself.
+- `pnpm add` re-links `node_modules`; after that, `/_image` in the running dev server failed with `MissingBlobsEnvironmentError` until the server was restarted.
 
 ## Comparing with an earlier version
 

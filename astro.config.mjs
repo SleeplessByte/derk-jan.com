@@ -45,5 +45,11 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  integrations: [react(), mdx({ syntaxHighlight: "shiki" }), sitemap()],
+  integrations: [
+    react(),
+    mdx({ syntaxHighlight: "shiki" }),
+    sitemap({
+      filter: (page) => !new URL(page).pathname.startsWith("/prototypes/"),
+    }),
+  ],
 });

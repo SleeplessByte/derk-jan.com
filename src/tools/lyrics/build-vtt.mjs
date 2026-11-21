@@ -1,7 +1,8 @@
 // Writes a WebVTT file from lyrics.json: one cue per line, with inline word timestamps.
+// Usage: node build-vtt.mjs <lyrics.json> <lyrics.vtt> <title>
 import { readFileSync, writeFileSync } from "node:fs";
 
-const [source, out] = process.argv.slice(2);
+const [source, out, title] = process.argv.slice(2);
 const lyrics = JSON.parse(readFileSync(source, "utf8"));
 
 const stamp = (seconds) => {
@@ -15,9 +16,9 @@ const stamp = (seconds) => {
 const cues = lyrics.stanzas.flat().map((line, index) => {
   let previous = line.start;
   const text = line.words
-    .map(([word, start], position) => {
-      // Inline timestamps must increase; a word sung at the same moment gets none.
-      if (position === 0 || start <= previous) {
+    .map(([word, start]) => {
+      // Inline timestamps must increase after the cue start; a word sung at the same moment gets none.
+      if (start <= previous) {
         return word;
       }
       previous = start;
@@ -29,7 +30,7 @@ const cues = lyrics.stanzas.flat().map((line, index) => {
 
 const vtt = [
   "WEBVTT",
-  "NOTE\nFruity Xmas: lyrics with word timings. Transcribed with Whisper large-v3\nand corrected by hand. Generated from\nsrc/assets/audio/2026-fruity-xmas.lyrics.json.",
+  `NOTE\n${title}: lyrics with word timings. Transcribed with Whisper large-v3\nand corrected by hand. Generated from\n${source}.`,
   ...cues,
 ].join("\n\n");
 

@@ -1,8 +1,14 @@
 ---
 import { LINGER_S, PAUSE_S } from "./karaoke";
-import lyrics from "../../../../../assets/audio/2026-fruity-xmas.lyrics.json";
+import type { Lyrics } from "./types";
 
-type Line = (typeof lyrics.stanzas)[number][number];
+interface Props {
+  lyrics: Lyrics;
+}
+
+const { lyrics } = Astro.props;
+
+type Line = Lyrics["stanzas"][number][number];
 type Row = { pause: true; start: number } | ({ pause: false } & Line);
 
 // A long gap between lines gets a row of its own, with dots, as in music apps.
@@ -51,9 +57,9 @@ for (const line of lyrics.stanzas.flat()) {
 </script>
 
 <style>
+  /* The page sets --lyrics-scrim on an ancestor, in its own colour. */
   [data-component="lyrics"] {
     --lyrics-ink: white;
-    --lyrics-scrim: oklch(17% 0.02 40);
 
     position: absolute;
     inset: 0;

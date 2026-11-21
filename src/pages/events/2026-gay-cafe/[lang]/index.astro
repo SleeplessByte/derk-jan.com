@@ -1,13 +1,13 @@
 ---
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../../layouts/HtmlLayout.astro";
+import LyricsOverlay from "../../../../components/Lyrics/Overlay.astro";
+import LyricsTranscript from "../../../../components/Lyrics/Transcript.astro";
 
 import Countdown from "../_components/Countdown/Component.astro";
 import FormIcon from "../_components/FormIcon/Component.astro";
 import type { IconName } from "../_components/FormIcon/icons";
 import Handover from "../_components/Handover/Component.astro";
-import LyricsOverlay from "../_components/Lyrics/Overlay.astro";
-import LyricsTranscript from "../_components/Lyrics/Transcript.astro";
 import Opener from "../_components/Opener/Component.astro";
 import OrderTicket from "../_components/OrderTicket/Component.astro";
 import RsvpReaction from "../_components/RsvpReaction/Component.astro";
@@ -16,6 +16,8 @@ import { localeList, localeOf, locales, pageUrl, type Messages } from "../_i18n"
 import backgroundImage from "../../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../../assets/IMG_20240825_233805_104.jpg";
 import fruityXmasMp3 from "../../../../assets/audio/2026-fruity-xmas.mp3";
+import fruityXmasLyrics from "../../../../assets/audio/2026-fruity-xmas.lyrics.json";
+import fruityXmasVtt from "../../../../assets/audio/2026-fruity-xmas.vtt?url";
 import introVideoMp4 from "../../../../assets/video/coffee-swirl-20261120-web.mp4";
 import loopVideoMp4 from "../../../../assets/video/coffee-snow-20261116.mp4";
 
@@ -163,7 +165,7 @@ const drinks = [
     </div>
     <div class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32">
       <div class="px-6 lg:px-8">
-        <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
+        <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg [--lyrics-accent:var(--color-orange-700)] [--lyrics-ring:var(--color-pink-600)] dark:[--lyrics-accent:var(--color-pink-300)] dark:[--lyrics-ring:var(--color-orange-600)] [--lyrics-scrim:oklch(17%_0.02_40)]">
           <header>
             <div class="mb-6 flex flex-col gap-2">
               <p class="text-sm font-semibold">
@@ -202,7 +204,7 @@ const drinks = [
                 class="aspect-square rounded-xl shadow-md object-cover my-4"
                 loading="eager"
               />
-              <LyricsOverlay />
+              <LyricsOverlay lyrics={fruityXmasLyrics} />
             </div>
             <audio
               controls
@@ -211,9 +213,20 @@ const drinks = [
               data-target="song"
               transition:name="audio"
               transition:persist
-            />
+            >
+              <track
+                kind="captions"
+                src={fruityXmasVtt}
+                srclang="en"
+                label="Fruity Xmas"
+              />
+            </audio>
           </figure>
-          <LyricsTranscript />
+          <LyricsTranscript
+            lyrics={fruityXmasLyrics}
+            summary={t.transcript.summary}
+            hint={t.transcript.hint}
+          />
 
           <p class="mt-2 text-lg text-orange-600 dark:text-pink-400 [&_strong]:text-orange-700 dark:[&_strong]:text-pink-300">
             <span data-tense="future" set:html={t.hours.future} />

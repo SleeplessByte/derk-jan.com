@@ -1,6 +1,8 @@
 // Builds the lyrics of 2026-fruity-xmas.mp3: the written lines, timed with Whisper's word timestamps.
-// Usage: node build-lyrics.mjs <intro.json> <song.json> <lyrics.json>
+// Usage: node build-fruity-xmas.mjs <intro.json> <song.json> <lyrics.json>
 import { readFileSync, writeFileSync } from "node:fs";
+
+import { summary, timeStanzas } from "./align.mjs";
 
 const [introPath, songPath, out] = process.argv.slice(2);
 const intro = JSON.parse(readFileSync(introPath, "utf8"));
@@ -70,35 +72,6 @@ const stanzas = [
   ],
 ];
 
-const round = (n) => Math.round(n * 100) / 100;
-
-const result = {
-  stanzas: stanzas.map((lines) =>
-    lines.map(([text, from, to]) => {
-      const heard = words.filter(
-        (word) => word.start >= from && word.start < to,
-      );
-      if (heard.length === 0) {
-        throw new Error(`No words for "${text}"`);
-      }
-      const written = text.split(" ");
-      // Spread the written words over the heard words, so corrections keep the rhythm.
-      const timed = written.map((word, index) => {
-        const source =
-          heard[
-            Math.round(
-              (index * (heard.length - 1)) / Math.max(1, written.length - 1),
-            )
-          ];
-        return [word, round(source.start)];
-      });
-      return { start: timed[0][1], end: round(heard.at(-1).end), words: timed };
-    }),
-  ),
-};
-
+const result = timeStanzas(words, stanzas);
 writeFileSync(out, JSON.stringify(result));
-const lines = result.stanzas.flat();
-console.log(
-  `${result.stanzas.length} stanzas, ${lines.length} lines, first at ${lines[0].start} s, last ends at ${lines.at(-1).end} s`,
-);
+console.log(summary(result));

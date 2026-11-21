@@ -1,0 +1,36 @@
+# Run from WSL in this folder, with a scratch folder for the intermediate files:
+#   LYRICS_WORK=/mnt/c/…/scratch docker compose run --rm <service> python3 /tools/<script> …
+# The model caches live in the Windows user folder, so that the next song reuses them.
+name: derk-jan-com
+
+x-gpu: &gpu
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+
+services:
+  whisper:
+    <<: *gpu
+    image: don-whisper
+    volumes:
+      - /mnt/c/Users/Derk-Jan/.cache/huggingface:/models
+      - ${LYRICS_WORK:?Set LYRICS_WORK to a scratch folder}:/work
+      - .:/tools:ro
+      - ../../assets/audio:/audio:ro
+
+  align:
+    <<: *gpu
+    build:
+      dockerfile: align.Dockerfile
+    image: derk-jan-com-align
+    environment:
+      TORCH_HOME: /models/torch
+    volumes:
+      - /mnt/c/Users/Derk-Jan/.cache/torch:/models/torch
+      - ${LYRICS_WORK:?Set LYRICS_WORK to a scratch folder}:/work
+      - .:/tools:ro
+      - ../../assets/audio:/audio

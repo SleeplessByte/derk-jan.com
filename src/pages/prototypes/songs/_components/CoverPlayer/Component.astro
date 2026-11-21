@@ -1,0 +1,191 @@
+---
+import { Image } from "astro:assets";
+import LyricsOverlay from "../../../../../components/Lyrics/Overlay.astro";
+import type { Lyrics } from "../../../../../components/Lyrics/types";
+
+interface Props {
+  cover: ImageMetadata;
+  alt: string;
+  src: string;
+  /** The lyrics as WebVTT. */
+  captions: string;
+  title: string;
+  lyrics: Lyrics;
+}
+
+const { cover, alt, src, captions, title, lyrics } = Astro.props;
+---
+
+<!-- The page sets --lyrics-ring and --lyrics-scrim on an ancestor; the player uses them too. -->
+<figure data-component="cover-player">
+  <div class="stage">
+    <Image
+      src={cover}
+      alt={alt}
+      class="artwork"
+      widths={[480, 960, 1440]}
+      sizes="(min-width: 30rem) 28rem, 100vw"
+      loading="eager"
+    />
+    <LyricsOverlay lyrics={lyrics} />
+    <button type="button" class="control" hidden>
+      <span class="sr-only label --play">Play “{title}”</span>
+      <span class="sr-only label --pause">Pause</span>
+      <span class="sr-only label --replay">Play “{title}” again</span>
+      <span class="disc">
+        <svg
+          class="icon --play"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5"></path>
+        </svg>
+        <svg
+          class="icon --replay"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3.5 12A8.5 8.5 0 1 0 6 6L3.5 8.5"></path>
+          <path d="M3.5 4v4.5H8"></path>
+        </svg>
+      </span>
+    </button>
+  </div>
+  <audio src={src} controls preload="metadata" data-target="song">
+    <track kind="captions" src={captions} srclang="en" label={title} />
+  </audio>
+</figure>
+
+<script>
+  import { setupCoverPlayer } from "./cover-player";
+
+  setupCoverPlayer();
+  document.addEventListener("astro:after-swap", setupCoverPlayer);
+</script>
+
+<style>
+  [data-component="cover-player"] {
+    --player-glyph: white;
+
+    margin: 0;
+
+    & .stage {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 0.75rem;
+      box-shadow: 0 0.5rem 1.5rem
+        color-mix(in oklch, var(--lyrics-scrim) 25%, transparent);
+    }
+
+    & .artwork {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
+    }
+
+    & .control {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      border-radius: inherit;
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 3px solid var(--lyrics-ring);
+        outline-offset: 3px;
+      }
+    }
+
+    & .disc {
+      display: grid;
+      place-items: center;
+      width: 5rem;
+      aspect-ratio: 1;
+      border: 2px solid color-mix(in oklch, var(--player-glyph) 85%, transparent);
+      border-radius: 50%;
+      background: color-mix(in oklch, var(--lyrics-scrim) 82%, transparent);
+      color: var(--player-glyph);
+      box-shadow: 0 0.25rem 1rem color-mix(in oklch, var(--lyrics-scrim) 40%, transparent);
+      transition:
+        opacity 0.3s ease,
+        scale 0.3s ease;
+    }
+
+    & .icon {
+      width: 2.25rem;
+
+      &.--replay {
+        display: none;
+      }
+    }
+
+    & .label {
+      &.--pause,
+      &.--replay {
+        display: none;
+      }
+    }
+
+    & audio {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    &.--playing {
+      & .disc {
+        opacity: 0;
+      }
+
+      & .label {
+        &.--play {
+          display: none;
+        }
+
+        &.--pause {
+          display: inline;
+        }
+      }
+    }
+
+    &.--ended {
+      & .icon {
+        &.--play {
+          display: none;
+        }
+
+        &.--replay {
+          display: block;
+        }
+      }
+
+      & .label {
+        &.--play {
+          display: none;
+        }
+
+        &.--replay {
+          display: inline;
+        }
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      & .control:hover .disc {
+        scale: 1.08;
+      }
+
+      &.--playing .disc {
+        scale: 0.85;
+      }
+    }
+  }
+</style>
