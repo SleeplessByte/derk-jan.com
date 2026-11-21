@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 
+import FormIcon from "./_components/FormIcon/Component.astro";
 import LyricsOverlay from "./_components/Lyrics/Overlay.astro";
 import LyricsTranscript from "./_components/Lyrics/Transcript.astro";
 import Opener from "./_components/Opener/Component.astro";
@@ -443,29 +444,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-milk" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          fill-rule="evenodd"
-                          d="M4 3h-.5078l-.1886.4715-1 2.5A.75.75 0 0 0 2.25 6.25v6c0 .9665.7835 1.75 1.75 1.75h6c.9665 0 1.75-.7835 1.75-1.75v-6a.75.75 0 0 0-.0536-.2785l-1-2.5L10.5078 3z"
-                          clip-rule="evenodd"
-                        />
-                        <path
-                          fill="#2859c5"
-                          fill-rule="evenodd"
-                          d="M10.2271 6.3372C7.4558 6.3433 5.2332 7.787 3.75 9.0668V12.25a.25.25 0 0 0 .25.25h6a.25.25 0 0 0 .25-.25V6.3944z"
-                          clip-rule="evenodd"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M3.5 1v2h7V1c0-.5523-.4477-1-1-1h-5c-.5523 0-1 .4477-1 1"
-                        />
-                      </svg>
+                      <FormIcon name="milk" />
                       <span>Milk (any dairy or milk protein)</span>
                     </label>
                   </div>
@@ -478,21 +457,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-lactose" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="m11.4795 5.5703.0654.1153V11.5c-.0002 1.3805-1.1194 2.5-2.5 2.5H4.9541c-1.3804-.0002-2.4998-1.1196-2.5-2.5V5.6856l.0654-.1153 1.4766-2.5947c.266.2402.6173.3877 1.0039.3877h4c.386 0 .7361-.148 1.002-.3877z"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M9 0c.8284 0 1.5.6716 1.5 1.5v.3633c0 .8284-.6716 1.5-1.5 1.5H5c-.8284 0-1.5-.6716-1.5-1.5V1.5C3.5.6716 4.1716 0 5 0z"
-                        />
-                      </svg>
+                      <FormIcon name="lactose" />
                       <span>Lactose</span>
                     </label>
                   </div>
@@ -505,21 +470,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-eggs" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M7 0C5.2737 0 3.7658 1.119 2.7156 2.6168 1.6593 4.1234 1 6.0978 1 8c0 1.918.6718 3.4317 1.7852 4.463C3.8926 13.4887 5.396 14 7 14s3.1074-.5113 4.2148-1.537C12.3282 11.4317 13 9.918 13 8c0-1.9021-.6593-3.8766-1.7156-5.3832C10.2342 1.1189 8.7263 0 7 0"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M7 11c1.6569 0 3-1.3431 3-3S8.6569 5 7 5 4 6.3431 4 8s1.3432 3 3 3m0-4.625a.625.625 0 1 0 0 1.25.375.375 0 0 1 .375.375.625.625 0 1 0 1.25 0c0-.8975-.7275-1.625-1.625-1.625"
-                        />
-                      </svg>
+                      <FormIcon name="eggs" />
                       <span>Eggs</span>
                     </label>
                   </div>
@@ -532,21 +483,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-peanuts" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M9.5 0C7.4366 0 5.7 1.3927 5.1679 3.281c-.1108.3932-.4718.7146-.8622.7723C1.9331 4.404 0 6.4764 0 9c0 2.7614 2.2386 5 5 5 2.5236 0 4.596-1.9331 4.9467-4.3057.0577-.3904.3791-.7514.7723-.8622C12.6073 8.3001 14 6.5634 14 4.5 14 2.0147 11.9853 0 9.5 0"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M10.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5m-3 3a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M5.5 8.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m-.75 3.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5"
-                        />
-                      </svg>
+                      <FormIcon name="peanuts" />
                       <span>Peanuts (whole, oil, etc.)</span>
                     </label>
                   </div>
@@ -559,21 +496,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-nuts" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M4.1036 3.3965a.5.5 0 0 0-.7071 0L1.818 4.9749A4.5 4.5 0 0 0 .5 8.1569V12c0 .8284.6716 1.5 1.5 1.5h3.8432a4.5 4.5 0 0 0 3.182-1.318l1.5784-1.5784a.5.5 0 0 0 0-.7071z"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M13.2803 1.7803A.75.75 0 0 0 12.2197.7197L10.8223 2.117C8.6573.0434 5.2212.0717 3.0909 2.202c-.4407.4407-.4407 1.1552 0 1.596l7.1111 7.1111c.4408.4407 1.1553.4407 1.596 0 2.1303-2.1303 2.1586-5.5665.085-7.7314z"
-                        />
-                      </svg>
+                      <FormIcon name="nuts" />
                       <span>Other nuts (whole, oil, etc.)</span>
                     </label>
                   </div>
@@ -586,19 +509,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-sesame" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          fill-rule="evenodd"
-                          d="M11.7373.5468a.5.5 0 0 1 .6645.2419l.0006.0012.0009.002.0027.006.0091.0202a4 4 0 0 1 .0312.0717c.026.061.0617.1483.1024.2567.0813.2162.184.5202.2699.8726.1671.686.2913 1.638-.0166 2.484-.3778 1.038-1.5255 1.5731-2.5634 1.1954-1.038-.3778-1.5732-1.5255-1.1954-2.5635.308-.846 1.0151-1.4954 1.584-1.9135a7.7 7.7 0 0 1 .7676-.495 7 7 0 0 1 .2434-.1308 4 4 0 0 1 .07-.035l.02-.0095.006-.0029.0019-.0009zM2.1465 8.1465a.5.5 0 0 1 .707 0l.001.001.0015.0014.0047.0047.0155.0159q.0196.0202.0538.0567a7 7 0 0 1 .184.2062c.1503.1754.3508.426.552.7278.3916.5874.834 1.4395.834 2.3398 0 1.1046-.8954 2-2 2s-2-.8954-2-2c0-.9003.4424-1.7524.834-2.3399a7.7 7.7 0 0 1 .552-.7277 7 7 0 0 1 .184-.2062 4 4 0 0 1 .0539-.0567l.0154-.0159.0047-.0047.0015-.0015zm3.5031-2.854a.5.5 0 0 0-.6045.3667l-.0003.0013-.0005.0021-.0016.0064-.005.0216a4 4 0 0 0-.0166.0764 7 7 0 0 0-.0503.2718 7.7 7.7 0 0 0-.0945.9085c-.0301.7053.0337 1.6633.5007 2.433.573.9444 1.803 1.2455 2.7473.6725s1.2455-1.803.6725-2.7473c-.467-.7697-1.2872-1.2688-1.9267-1.5679a7.7 7.7 0 0 0-.8495-.3358 7 7 0 0 0-.2642-.0808 4 4 0 0 0-.0755-.0206l-.0215-.0055-.0064-.0017-.002-.0005zm7.1271 3.2018a.5.5 0 0 1 .5931.385l.0003.0013.0005.0021.0013.0065.0043.0217a4 4 0 0 1 .0143.077 6.5 6.5 0 0 1 .0421.273 7.7 7.7 0 0 1 .0669.911c.0087.7059-.0842 1.6616-.5743 2.4168-.6014.9265-1.8399 1.1901-2.7665.5888-.9265-.6014-1.1901-1.84-.5888-2.7665.4901-.7552 1.3251-1.2291 1.9734-1.5087a7.7 7.7 0 0 1 .8592-.3099 7 7 0 0 1 .2667-.0728q.0485-.012.076-.0182l.0216-.005.0065-.0013.0021-.0005zM5.8478 1.59l.0003-.0022v-.001a.5005.5005 0 0 0-.4393-.5546l-.001-.0001-.0022-.0003-.0065-.0007-.0221-.0023a4 4 0 0 0-.0779-.007 7 7 0 0 0-.2759-.0161 7.7 7.7 0 0 0-.9132.0192c-.7036.0578-1.6462.2403-2.3519.7993-.8658.686-1.0116 1.9439-.3257 2.8097s1.9439 1.0115 2.8097.3256c.7056-.559 1.0988-1.435 1.316-2.1067a7.7 7.7 0 0 0 .2277-.8846 7 7 0 0 0 .0473-.2723c.005-.0328.0086-.059.011-.0774l.0029-.022z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                      <FormIcon name="sesame" />
                       <span>Sesame seeds</span>
                     </label>
                   </div>
@@ -611,21 +522,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-gluten" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M7.8536.1464a.5.5 0 0 0-.7072 0L1.975 5.318c-1.7574 1.7574-1.7574 4.6066 0 6.364l.1695.1695.002.0021.1716.1715c1.7574 1.7574 4.6066 1.7574 6.364 0l5.1716-5.1715a.5.5 0 0 0 0-.7072l-.1716-.1715a4.5 4.5 0 0 0-1.1151-.8167c.263-.3.4637-.6696.5714-1.1004l.5238-2.0954c.2453-.981-.6434-1.8697-1.6245-1.6244L9.9423.8618c-.4308.1077-.8005.3084-1.1005.5714A4.5 4.5 0 0 0 8.0251.318z"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M13.1383 4.0578c-.1077.4308-.3084.8005-.5714 1.1004a4.5 4.5 0 0 0-2.1642-.5003L7.1514 7.9092c1.1647.037 2.3184.4999 3.2073 1.3889l.5252.5251-1.0607 1.0607-.5251-.5252c-1.2692-1.2692-3.327-1.2692-4.5962 0l-.0006.0006-.6662.6663-.0048.0047-2.75 2.75a.75.75 0 0 1-1.0606-1.0606l1.4164-1.4165 2.0051-2.0051.001-.001c1.2682-1.2692 1.268-3.3263-.001-4.5952l-.525-.5251L4.1767 3.116l.525.5251c.889.889 1.352 2.0427 1.389 3.2074L9.342 3.5972a4.5 4.5 0 0 0-.5003-2.164c.3-.263.6697-.4637 1.1005-.5714l.0102-.0025a5.75 5.75 0 0 1 .6397 2.5485 5.75 5.75 0 0 1 2.5486.6397z"
-                        />
-                      </svg>
+                      <FormIcon name="gluten" />
                       <span>Wheat / Gluten</span>
                     </label>
                   </div>
@@ -638,21 +535,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-soy" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M12.6638.1523c-.6214-.0882-1.6075-.1915-2.5806-.1372-.9403.0524-2.013.2578-2.6686.9134A3.984 3.984 0 0 0 6.304 3.0604c-1.6516.29-2.9539 1.5923-3.2436 3.244A3.984 3.984 0 0 0 .928 7.4152C.272 8.071.067 9.1436.0149 10.084c-.054.973.0497 1.9588.1382 2.58a1.388 1.388 0 0 0 1.1831 1.183c.6211.0885 1.607.1922 2.58.1382.9402-.0522 2.0128-.2573 2.6685-.913a3.984 3.984 0 0 0 1.1109-2.1324c1.6516-.2897 2.954-1.592 3.244-3.2435a3.984 3.984 0 0 0 2.1319-1.1108c.6556-.6557.861-1.7283.9134-2.6687.0543-.9731-.0491-1.9592-.1373-2.5806A1.389 1.389 0 0 0 12.6638.1523"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M12 3.75c0 .9665-.7835 1.75-1.75 1.75S8.5 4.7165 8.5 3.75 9.2835 2 10.25 2 12 2.7835 12 3.75M8.75 7c0 .9665-.7835 1.75-1.75 1.75S5.25 7.9665 5.25 7 6.0335 5.25 7 5.25 8.75 6.0335 8.75 7m-5 5c.9665 0 1.75-.7835 1.75-1.75S4.7165 8.5 3.75 8.5 2 9.2835 2 10.25 2.7835 12 3.75 12"
-                        />
-                      </svg>
+                      <FormIcon name="soy" />
                       <span>Soy</span>
                     </label>
                   </div>
@@ -665,21 +548,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-alcohol" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M2.5072 1.5a.75.75 0 0 1-1.3313.691A1.49 1.49 0 0 1 1 1.4889C1 .6666 1.6666 0 2.4889 0h9.0222C12.3334 0 13 .6666 13 1.4889a1.49 1.49 0 0 1-.3306.9355l-.572-.462.572.462L8.142 8.0298a.747.747 0 0 1-.392.254V12.5h1.5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1 0-1.5h2V6.25L3.5 3.5h6.3725l1.6153-2zm9.004 0h-.0001z"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M.2197.2197a.75.75 0 0 1 1.0606 0l12.5 12.5a.75.75 0 0 1 0 1.0606.75.75 0 0 1-1.0606 0l-12.5-12.5a.75.75 0 0 1 0-1.0606"
-                        />
-                      </svg>
+                      <FormIcon name="alcohol" />
                       <span>
                         Alcohol (including when processed, cooked, or as ingredient)
                       </span>
@@ -695,21 +564,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-vegan" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 48 48"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M23.1972 5.7068c-2.6632-2.6632-6.0419-3.884-9.1472-4.39-3.1055-.5058-6.0058-.3086-7.8055-.0771C4.663 1.443 3.443 2.663 3.2397 4.2445c-.2315 1.7997-.4287 4.7.0772 7.8055.5059 3.1053 1.7267 6.484 4.39 9.1472 4.6442 4.6442 11.9282 5.1648 16.2802.8467-.3608 2.7095.4053 5.4565 2.4098 7.461 3.642 3.642 9.7352 3.1959 13.6007-.6696 2.2896-2.2895 3.2921-5.2097 3.6833-7.8446.3914-2.6361.1831-5.0632-.016-6.4688-.169-1.1931-1.0918-2.116-2.285-2.285-1.4055-.1991-3.8326-.4073-6.4687-.0159-2.635.3912-5.5551 1.3937-7.8447 3.6833a11 11 0 0 0-.1573.1605c.4625-3.5819-.8317-7.4777-3.712-10.358"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M22.902 35.7209v-9.0927c0-3.6041-.947-6.0643-2.3443-8.0276-1.4498-2.0371-3.4397-3.6298-5.7793-5.435-.8746-.6748-1.0365-1.9307-.3618-2.8052s1.9307-1.0365 2.8052-.3617c2.2901 1.7669 4.7511 3.6921 6.5948 6.2825 1.5515 2.1799 2.6296 4.7699 2.9704 8.053 1.7225-2.0811 3.8223-3.7208 5.7951-5.2429.8745-.6748 2.1304-.5128 2.8052.3617.6747.8745.5128 2.1305-.3617 2.8052-2.3397 1.8052-4.3296 3.398-5.7794 5.4351-1.3973 1.9632-2.3442 4.4234-2.3442 8.0276l-.0001.0033v10.276c0 1.1045-.8954 2-2 2s-2-.8955-2-2z"
-                        />
-                      </svg>
+                      <FormIcon name="vegan" />
                       <span>
                         Anything non-vegan (select if you are vegan, <em>not</em>{" "}
                         vegetarian)
@@ -726,21 +581,7 @@ const signupGate = 1797634799;
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
                     <label for="allergen-other" class="form-label flex items-start">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        class="shrink-0 size-6 md:size-4 mr-1 top-1 relative"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          fill="#8fbffa"
-                          d="M12.5 0c.3978 0 .7792.1581 1.0605.4395S14 1.1022 14 1.5V10c0 .3978-.1581.7792-.4395 1.0605A1.5 1.5 0 0 1 12.5 11.5H6.7959l-2.9834 2.3906a.501.501 0 0 1-.5293.0606A.501.501 0 0 1 3 13.5v-2H1.5a1.5 1.5 0 0 1-1.0605-.4395A1.5 1.5 0 0 1 0 10V1.5C0 1.1022.1581.7208.4395.4395A1.5 1.5 0 0 1 1.5 0z"
-                        />
-                        <path
-                          fill="#2859c5"
-                          d="M7.2148 3.0303a.5.5 0 0 1 .545.1084L10.037 5.416a.5.5 0 0 1 0 .707L7.7598 8.4005a.501.501 0 0 1-.545.1084.501.501 0 0 1-.3086-.462V6.5196H4.5665a.75.75 0 1 1 0-1.5h2.3399V3.4922c0-.202.122-.3844.3085-.462"
-                        />
-                      </svg>
+                      <FormIcon name="other" />
                       <span>
                         Other (use{" "}
                         <a href="#message" class="link">
@@ -784,10 +625,8 @@ const signupGate = 1797634799;
                       value="espresso"
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
-                    <label
-                      for="preferences-espresso"
-                      class="form-label flex items-center"
-                    >
+                    <label for="preferences-espresso" class="form-label flex items-start">
+                      <FormIcon name="espresso" />
                       <span>Espresso (medium roast)</span>
                     </label>
                   </div>
@@ -801,8 +640,9 @@ const signupGate = 1797634799;
                     />
                     <label
                       for="preferences-cappuccino"
-                      class="form-label flex items-center"
+                      class="form-label flex items-start"
                     >
+                      <FormIcon name="cappuccino" />
                       <span>Cappuccino / Latte</span>
                     </label>
                   </div>
@@ -814,10 +654,8 @@ const signupGate = 1797634799;
                       value="filtered"
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
-                    <label
-                      for="preferences-filtered"
-                      class="form-label flex items-center"
-                    >
+                    <label for="preferences-filtered" class="form-label flex items-start">
+                      <FormIcon name="filtered" />
                       <span>Filtered coffee (light roast)</span>
                     </label>
                   </div>
@@ -831,8 +669,9 @@ const signupGate = 1797634799;
                     />
                     <label
                       for="preferences-chocolate"
-                      class="form-label flex items-center"
+                      class="form-label flex items-start"
                     >
+                      <FormIcon name="chocolate" />
                       <span>Hot chocolate</span>
                     </label>
                   </div>
@@ -846,8 +685,9 @@ const signupGate = 1797634799;
                     />
                     <label
                       for="preferences-herbal-tea"
-                      class="form-label flex items-center"
+                      class="form-label flex items-start"
                     >
+                      <FormIcon name="herbal-tea" />
                       <span>Dried herbal tea</span>
                     </label>
                   </div>
@@ -861,8 +701,9 @@ const signupGate = 1797634799;
                     />
                     <label
                       for="preferences-ginger-tea"
-                      class="form-label flex items-center"
+                      class="form-label flex items-start"
                     >
+                      <FormIcon name="ginger-tea" />
                       <span>Fresh ginger tea</span>
                     </label>
                   </div>
@@ -874,10 +715,8 @@ const signupGate = 1797634799;
                       value="mint-tea"
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
-                    <label
-                      for="preferences-mint-tea"
-                      class="form-label flex items-center"
-                    >
+                    <label for="preferences-mint-tea" class="form-label flex items-start">
+                      <FormIcon name="mint-tea" />
                       <span>Fresh mint tea</span>
                     </label>
                   </div>
@@ -889,7 +728,8 @@ const signupGate = 1797634799;
                       value="alcohol"
                       class="relative mt-1 size-6 md:size-4 form-checkbox rounded-sm"
                     />
-                    <label for="preferences-alcohol" class="form-label flex items-center">
+                    <label for="preferences-alcohol" class="form-label flex items-start">
+                      <FormIcon name="wine" />
                       <span>Alcoholic beverage</span>
                     </label>
                   </div>
