@@ -1,3 +1,6 @@
+import { playSong } from "../../../../../components/Lyrics/play";
+import { setupProblemReport } from "./problem-report";
+
 /**
  * Turns the cover into the song's play button: it plays, pauses, and plays
  * again after the end. Without JavaScript, the audio keeps its native controls.
@@ -27,12 +30,13 @@ export function setupCoverPlayer() {
   control.addEventListener("click", () => {
     // After the end, play() starts the song from the beginning.
     if (song.paused) {
-      void song.play();
+      playSong(song);
     } else {
       song.pause();
     }
   });
 
+  setupProblemReport(root, song);
   song.controls = false;
   control.hidden = false;
   sync();

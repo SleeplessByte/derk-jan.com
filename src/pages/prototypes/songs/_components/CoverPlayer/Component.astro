@@ -60,6 +60,29 @@ const { cover, alt, src, captions, title, lyrics } = Astro.props;
   <audio src={src} controls preload="metadata" data-target="song">
     <track kind="captions" src={captions} srclang="en" label={title} />
   </audio>
+  <div class="problem text-zinc-700 dark:text-zinc-300" hidden>
+    <div role="alert">
+      <p class="title">Sorry, the song does not start.</p>
+      <p>
+        You can try the player above. Please also send these details to Derk-Jan, so the
+        problem can be fixed.
+      </p>
+    </div>
+    <pre class="details"></pre>
+    <p class="actions">
+      <button type="button" class="copy">
+        Copy the details
+      </button>
+      <span aria-live="polite">
+        <span class="status --copied" hidden>
+          Copied.
+        </span>
+        <span class="status --failed" hidden>
+          Copying did not work. Please send a screenshot instead.
+        </span>
+      </span>
+    </p>
+  </div>
 </figure>
 
 <script>
@@ -138,6 +161,56 @@ const { cover, alt, src, captions, title, lyrics } = Astro.props;
     & audio {
       width: 100%;
       margin-top: 1rem;
+    }
+
+    & .problem {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-inline-start: 4px solid var(--lyrics-accent);
+      border-radius: 0.5rem;
+      background: color-mix(in oklch, var(--lyrics-accent) 8%, transparent);
+
+      & .title {
+        margin-bottom: 0.25rem;
+        color: var(--lyrics-accent);
+        font-weight: 650;
+      }
+    }
+
+    & .details {
+      margin-block: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      background: color-mix(in oklch, currentColor 8%, transparent);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    & .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    & .copy {
+      padding: 0.375rem 0.875rem;
+      border: 2px solid var(--lyrics-accent);
+      border-radius: 999px;
+      color: var(--lyrics-accent);
+      font-weight: 600;
+      cursor: pointer;
+
+      &:hover {
+        background: color-mix(in oklch, var(--lyrics-accent) 12%, transparent);
+      }
+
+      &:focus-visible {
+        outline: 3px solid var(--lyrics-ring);
+        outline-offset: 2px;
+      }
     }
 
     &.--playing {

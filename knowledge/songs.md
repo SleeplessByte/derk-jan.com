@@ -11,8 +11,21 @@ Song pages live in `src/pages/prototypes/songs/`. They are shared by link only: 
   - The page sets the colours: `--lyrics-accent`, `--lyrics-ring` and `--lyrics-scrim`. Keep the scrim at 17% lightness or darker, so the dim rows keep 4.5:1 over a white photo.
   - The `.vtt` file is the audio's `<track kind="captions">`. Browsers do not show it for audio, but it satisfies `media-has-caption`.
   - `types.ts`: the `Lyrics` type matches the type inferred from the JSON, so a page needs no cast.
+  - `play.ts`: call `playSong(song)`, not `song.play()`. Only the caller of `play()` sees a refusal, so `playSong` sends it on as the event `lyrics:play-refused`, together with `navigator.userActivation.isActive` at the moment of the call.
 - `_components/CoverPlayer/`: the cover is one button, and its name is the action it performs (Play, Pause, Play again). There is no visible pause icon. Without JavaScript, the native controls remain. The class is `.control`, because the global CSS already has `.toggle`.
+  - `problem-report.ts` shows a panel with the device details and a copy button when the song does not start: `play()` is refused, the audio element fails, or there is no sound 10 s after `play`. The native controls then come back as a second way to play. A slow start that recovers hides the panel again.
 - A song's theme is a global style block on the body, `.song-page.--<song>`, which sets `--song-ground` and the lyrics colours.
+
+## When the song does not play
+
+An iPhone user reported that the cover's play button did nothing (November 2026). The cause was not found; the problem report exists to find it. These are ruled out:
+
+- The server: Netlify (behind Cloudflare) answers `Range: bytes=0-1` on `/_astro/*.mp3` with `206` and `audio/mpeg`. iOS needs byte ranges for media.
+- The file: MP3, 48 kHz, stereo, ID3v2.4 with a small cover image. The Fruity Xmas song has the same format.
+- The captions: the `.vtt` is served as `text/vtt`. This matters because a browser that turns captions on (for example with the iOS caption setting) waits for the track before it plays.
+- The user activation: `play()` runs synchronously in the click handler. In Chrome, a touch tap starts the song under a strict autoplay policy.
+
+If the report never appears, the tap did not reach the button at all.
 
 ## Making the lyrics
 

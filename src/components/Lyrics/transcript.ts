@@ -1,3 +1,5 @@
+import { playSong } from "./play";
+
 const LEAD_IN_S = 0.3;
 
 /**
@@ -37,6 +39,6 @@ export function setupTranscript() {
       return;
     }
     song.currentTime = Math.max(0, Number(button.dataset.start) - LEAD_IN_S);
-    void song.play();
+    playSong(song);
   });
 }
