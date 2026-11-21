@@ -14,6 +14,7 @@ interface Props {
 }
 
 const { cover, alt, src, captions, title, lyrics } = Astro.props;
+const progressId = `cover-player-${crypto.randomUUID()}-progress`;
 ---
 
 <!-- The page sets --lyrics-ring and --lyrics-scrim on an ancestor; the player uses them too. -->
@@ -28,6 +29,13 @@ const { cover, alt, src, captions, title, lyrics } = Astro.props;
       loading="eager"
     />
     <LyricsOverlay lyrics={lyrics} />
+    <div class="loading" hidden>
+      <label class="sr-only" for={progressId}>
+        Loading “{title}”
+      </label>
+      <progress class="sr-only" id={progressId} max="1" value="0"></progress>
+      <span class="loaded" aria-hidden="true"></span>
+    </div>
     <button type="button" class="control" hidden>
       <span class="sr-only label --play">Play “{title}”</span>
       <span class="sr-only label --pause">Pause</span>
@@ -112,6 +120,28 @@ const { cover, alt, src, captions, title, lyrics } = Astro.props;
       height: 100%;
       border-radius: inherit;
       object-fit: cover;
+    }
+
+    & .loading {
+      --loaded: 0;
+
+      position: absolute;
+      inset-inline: 1.25rem;
+      inset-block-end: 1.25rem;
+      block-size: 0.375rem;
+      overflow: hidden;
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--lyrics-scrim) 60%, transparent);
+      box-shadow: 0 0.125rem 0.5rem
+        color-mix(in oklch, var(--lyrics-scrim) 40%, transparent);
+      pointer-events: none;
+
+      & .loaded {
+        display: block;
+        block-size: 100%;
+        inline-size: calc(var(--loaded) * 100%);
+        background: var(--player-glyph);
+      }
     }
 
     & .control {

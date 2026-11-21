@@ -100,6 +100,7 @@ function describe(song: HTMLAudioElement, problems: Problem[]) {
     `Languages: ${navigator.languages.join(", ")}`,
     `Page ever activated: ${everActivated}`,
     `Audio: ready state ${song.readyState}, network state ${song.networkState}, ${song.paused ? "paused" : "not paused"} at ${song.currentTime.toFixed(1)} s, loaded to ${loaded} s, MP3 support "${song.canPlayType("audio/mpeg")}"`,
+    `Source: ${song.currentSrc.startsWith("blob:") ? "preloaded" : "streamed"}`,
     `Media error: ${error ? `${error.code} ${error.message}` : "none"}`,
     `Captions: mode ${track.track.mode}, ready state ${track.readyState}`,
   ].join("\n");

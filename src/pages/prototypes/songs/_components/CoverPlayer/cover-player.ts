@@ -1,4 +1,5 @@
 import { playSong } from "../../../../../components/Lyrics/play";
+import { preloadSong } from "./preload";
 import { setupProblemReport } from "./problem-report";
 
 /**
@@ -37,6 +38,7 @@ export function setupCoverPlayer() {
   });
 
   setupProblemReport(root, song);
+  preloadSong(root, song);
   song.controls = false;
   control.hidden = false;
   sync();
