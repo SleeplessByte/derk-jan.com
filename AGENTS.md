@@ -9,6 +9,8 @@ The live site is https://derk-jan.com. You can use it, but be slightly conservat
 
 This project uses `pnpm` and astro.
 
+Learnings specific to this project live in [knowledge/](knowledge/README.md): the local setup, Netlify, Astro pitfalls, and why features are built the way they are. Read the matching file before you start, and add what you learn that the code and git history do not show.
+
 In your final outputs/plans, when you are referring to local files, link them (line number when applicable). In your final outputs/plans also link to the localhost path if it's a served page (e.g. http://localhost:4321/about for pages/about.astro).
 
 ## Writing for readers

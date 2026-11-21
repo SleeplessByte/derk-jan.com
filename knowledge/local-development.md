@@ -1,0 +1,31 @@
+# Local development
+
+## The dev server
+
+- The user usually runs `pnpm dev` themselves, on http://localhost:4321. Use that server, and do not stop or replace it without asking.
+- Astro 7 refuses a second `astro dev` in the same project ("Another astro dev server is already running"). For an extra check, build instead (see below).
+- The Netlify adapter loads Netlify's local emulation into `astro dev`: blobs, redirects, headers and more. It reads `netlify.toml` only when it starts, so after a change to the redirects the dev server needs a restart.
+- `src/middleware.ts` uses Netlify Blobs on every route that is not prerendered, `/_image` included. When the emulation is broken, for example after `node_modules` was re-linked, those routes fail with `MissingBlobsEnvironmentError`. A restart of the dev server fixes it.
+
+## Building
+
+- `pnpm build` runs `astro check && astro build`, so a type error stops the deploy.
+- On Windows the build ends with `EPERM: operation not permitted, symlink … sharp …` in the Netlify adapter's `astro:build:done` hook, because Windows needs extra rights to create that symlink. The pages in `dist/` are written before this step, and Netlify's Linux build does not have the problem.
+- To check built pages without the dev server, serve `dist/` with a small static Node server on another port.
+
+## Comparing with an earlier version
+
+- Never link a git worktree's `node_modules` to the main one. `pnpm exec` in the worktree re-links the shared packages through the worktree path, so removing the worktree breaks the main `node_modules`. The repair is `pnpm install --offline --frozen-lockfile`, followed by a restart of the dev server.
+- Give a worktree its own `pnpm install --offline`, or compare against the live site, sparingly.
+
+## Verifying in a browser
+
+[`src/tools/cdp.mjs`](../src/tools/cdp.mjs) drives headless Chrome through the DevTools Protocol: `launch()`, then `goto`, `eval`, `click`, `key`, `media` and `shot`, and `close()`. Write the scripts that use it and their screenshots in a scratch folder, not in the repo. Its browser profiles live in `%TEMP%/derk-jan-com-cdp/`; `close()` removes its own, and the next `launch()` removes what a crashed script left behind.
+
+These techniques proved useful:
+
+- `Emulation.setTouchEmulationEnabled` makes `(hover: none)` match, for UI that only phones and tablets see.
+- CSS `zoom` on the root element (0.9, 1.25) reproduces bugs that appear at the browser zoom levels many Windows users have.
+- A `Date` override through `Page.addScriptToEvaluateOnNewDocument` tests countdowns and past-tense text. Stub `Navigator.prototype.share` the same way to test the share sheet.
+- `Emulation.setCPUThrottlingRate` (6×, 12×) tests the quality steps of animations.
+- `Emulation.setEmulatedMedia` sets `prefers-color-scheme` and `prefers-reduced-motion`.
