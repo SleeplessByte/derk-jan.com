@@ -1,5 +1,9 @@
 // Builds the lyrics of 2027-rijndam-racers-theme.mp3: the written lines, timed with Whisper's word timestamps.
 // Usage: node build-rijndam-racers.mjs <intro.json> <song.json> <lyrics.json>
+// Whisper runs, each with a prompt:
+// - the whole song: "Rijndam Racers, here we go! Hands on the crank, whilst laying down, we take the long way
+//   through the town. Side by side, increasing the pace, big grins and wind across our face."
+// - the intro clip (0–22 s): "Rijndam Racers, here we go! Hands on the crank, whilst laying down."
 import { readFileSync, writeFileSync } from "node:fs";
 
 import { summary, timeStanzas } from "./align.mjs";

@@ -1,5 +1,6 @@
 // Builds the lyrics of 2026-fruity-xmas.mp3: the written lines, timed with Whisper's word timestamps.
 // Usage: node build-fruity-xmas.mjs <intro.json> <song.json> <lyrics.json>
+// Whisper runs: the whole song without a prompt; the intro clip (8–32 s) with the first verse as the prompt.
 import { readFileSync, writeFileSync } from "node:fs";
 
 import { summary, timeStanzas } from "./align.mjs";

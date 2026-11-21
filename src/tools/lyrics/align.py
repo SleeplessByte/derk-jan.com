@@ -22,11 +22,10 @@ from demucs.pretrained import get_model
 song_path, lyrics_path = sys.argv[1], sys.argv[2]
 vocals_path = sys.argv[3] if len(sys.argv) > 3 else None
 
-# Whisper's line start already includes the silence before the line, so the
-# window around a line needs little room before it.
+# The window around a line. Whisper's line start already includes the silence
+# before the line. A wider window lets the last word drift into the next line.
 BEFORE_S = 0.25
-AFTER_S = 0.5
-LAST_LINE_S = 2.0
+AFTER_S = 0.3
 # A word start counts as sung when the vocals are louder than this, relative
 # to the loud parts of the song, within VOICED_S after the start.
 VOICED_LEVEL = 0.1
@@ -122,8 +121,8 @@ with open(lyrics_path, encoding="utf-8") as file:
 lines = [line for stanza in lyrics["stanzas"] for line in stanza]
 windows = [
     (
-        max(0.0, line["start"] - BEFORE_S),
-        lines[position + 1]["start"] + AFTER_S if position + 1 < len(lines) else line["end"] + LAST_LINE_S,
+        max(lines[position - 1]["end"] if position else 0.0, line["start"] - BEFORE_S),
+        min(lines[position + 1]["start"], line["end"] + AFTER_S) if position + 1 < len(lines) else line["end"] + AFTER_S,
     )
     for position, line in enumerate(lines)
 ]

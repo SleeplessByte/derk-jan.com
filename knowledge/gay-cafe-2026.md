@@ -30,8 +30,8 @@ The RSVP invitation lives in `src/pages/events/2026-gay-cafe/`.
   - Under load, the quality steps lower the pixel ratio first, then drop the front layer, then halve the flakes.
   - Weak devices (4 cores or fewer) and reduced motion get no front layer.
 - **Handover** (`_components/Handover/`): shown only on devices without hover. It is a `mailto:` link that opens the share sheet instead when `navigator.share` exists.
-- **Lyrics**: the shared components in `src/components/Lyrics/`, with `src/assets/audio/2026-fruity-xmas.lyrics.json`. The colours are set on the column wrapper of both pages. How the lyrics were made is in [Songs](songs.md).
-- **Success video** (`coffee-magic-20261115`): it has a magic sound effect, so it has a caption track per language, next to the video (`.en.vtt`, `.nl.vtt`).
+- **Lyrics**: the shared `src/components/Lyrics/` (see [Songs](songs.md)). Both pages set its colours on the column wrapper.
+- **Success video**: it has a magic sound effect, so it has a caption track per language next to the video.
 - **Order ticket** (`_components/OrderTicket/`):
   - It reads its labels from the form, so it follows the page's language.
   - On the success page it prints when it scrolls into view, using a `rootMargin` rather than `threshold: 1` (see [Astro and CSS](astro-and-css.md)).

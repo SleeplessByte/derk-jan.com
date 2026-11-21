@@ -72,17 +72,17 @@ const preview = await getImage({
   .song-page {
     background: var(--song-ground);
 
+    /* "Deep": the jersey green in the cover, oklch(75% 0.17 148), made darker and deeper. */
     &.--rijndam-racers {
-      --song-ground: var(--color-green-50);
-      --lyrics-accent: var(--color-green-700);
-      --lyrics-ring: var(--color-green-600);
-      /* The team's green, as dark as the Gay Café scrim, so the overlay keeps its contrast. */
-      --lyrics-scrim: oklch(17% 0.03 152);
+      --song-ground: oklch(94% 0.04 150);
+      --lyrics-accent: oklch(44% 0.13 150);
+      --lyrics-ring: oklch(52% 0.15 150);
+      --lyrics-scrim: oklch(15% 0.04 150);
 
       @media (prefers-color-scheme: dark) {
-        --song-ground: var(--color-green-950);
-        --lyrics-accent: var(--color-green-300);
-        --lyrics-ring: var(--color-green-400);
+        --song-ground: oklch(19% 0.055 150);
+        --lyrics-accent: oklch(80% 0.17 150);
+        --lyrics-ring: oklch(75% 0.17 150);
       }
     }
   }
