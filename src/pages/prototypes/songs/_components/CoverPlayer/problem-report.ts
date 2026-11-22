@@ -1,6 +1,7 @@
 import { PLAY_REFUSED } from "../../../../../components/Lyrics/play";
+import { DOWNLOAD_PROGRESS } from "./download";
 
-// Long enough for a slow mobile connection to buffer the start of the song.
+// Long enough for a slow mobile connection to deliver the next part of the song.
 const STALL_MS = 10_000;
 
 interface Problem {
@@ -19,6 +20,8 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
   const copy = panel.querySelector<HTMLButtonElement>(".copy")!;
   const copied = panel.querySelector<HTMLElement>(".status.--copied")!;
   const failed = panel.querySelector<HTMLElement>(".status.--failed")!;
+  const download =
+    root.querySelector<HTMLProgressElement>(".loading progress")!;
 
   let problems: Problem[] = [];
   let report = "";
@@ -26,7 +29,7 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
 
   const add = (text: string, slow = false) => {
     problems.push({ text, slow });
-    report = describe(song, problems);
+    report = describe(song, download, problems);
     details.textContent = report;
     copied.hidden = true;
     failed.hidden = true;
@@ -46,12 +49,20 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
 
   song.addEventListener("error", () => add("the audio element failed"));
 
-  song.addEventListener("play", () => {
+  const watch = () => {
     window.clearTimeout(stall);
     stall = window.setTimeout(
-      () => add(`no sound ${STALL_MS / 1000} s after play`, true),
+      () => add(`no sound and no progress for ${STALL_MS / 1000} s`, true),
       STALL_MS,
     );
+  };
+
+  song.addEventListener("play", watch);
+  // A slow download is not a problem while it moves.
+  song.addEventListener(DOWNLOAD_PROGRESS, () => {
+    if (!song.paused) {
+      watch();
+    }
   });
 
   for (const type of ["playing", "pause", "error"]) {
@@ -80,7 +91,11 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
   });
 }
 
-function describe(song: HTMLAudioElement, problems: Problem[]) {
+function describe(
+  song: HTMLAudioElement,
+  download: HTMLProgressElement,
+  problems: Problem[],
+) {
   const track = song.querySelector("track")!;
   const { buffered, error } = song;
   const loaded =
@@ -100,8 +115,18 @@ function describe(song: HTMLAudioElement, problems: Problem[]) {
     `Languages: ${navigator.languages.join(", ")}`,
     `Page ever activated: ${everActivated}`,
     `Audio: ready state ${song.readyState}, network state ${song.networkState}, ${song.paused ? "paused" : "not paused"} at ${song.currentTime.toFixed(1)} s, loaded to ${loaded} s, MP3 support "${song.canPlayType("audio/mpeg")}"`,
-    `Source: ${song.currentSrc.startsWith("blob:") ? "preloaded" : "streamed"}`,
+    `Source: ${sourceOf(song, download)}`,
     `Media error: ${error ? `${error.code} ${error.message}` : "none"}`,
     `Captions: mode ${track.track.mode}, ready state ${track.readyState}`,
   ].join("\n");
+}
+
+function sourceOf(song: HTMLAudioElement, download: HTMLProgressElement) {
+  if (!song.hasAttribute("src")) {
+    return `none yet, download at ${Math.round(download.value * 100)}%`;
+  }
+  if (song.src.startsWith("blob:")) {
+    return "downloaded";
+  }
+  return "streamed";
 }

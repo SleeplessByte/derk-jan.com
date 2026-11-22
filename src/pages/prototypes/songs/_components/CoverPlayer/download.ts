@@ -1,19 +1,36 @@
+import { playSong } from "../../../../../components/Lyrics/play";
+
 const FADE_DELAY_MS = 300;
 const FADE_MS = 400;
 
+export const DOWNLOAD_PROGRESS = "cover-player:download-progress";
+
+declare global {
+  interface HTMLMediaElementEventMap {
+    [DOWNLOAD_PROGRESS]: Event;
+  }
+}
+
 /**
- * Downloads the whole song once the page has loaded, with the progress as a
- * bar over the cover.
+ * Downloads the whole song when it is first played, with the progress as a
+ * bar over the cover, and then plays it.
  */
-export function preloadSong(root: HTMLElement, song: HTMLAudioElement) {
+export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
   const loading = root.querySelector<HTMLElement>(".loading")!;
   const progress = loading.querySelector("progress")!;
+  const source = song.src;
   const controller = new AbortController();
   const { signal } = controller;
+
+  // Without a source, the play() of a tap waits for one, and Safari keeps the
+  // tap's permission to play on this element.
+  song.removeAttribute("src");
+  song.load();
 
   const show = (ratio: number) => {
     progress.value = ratio;
     loading.style.setProperty("--loaded", String(ratio));
+    song.dispatchEvent(new Event(DOWNLOAD_PROGRESS));
   };
 
   const finish = async () => {
@@ -29,44 +46,44 @@ export function preloadSong(root: HTMLElement, song: HTMLAudioElement) {
     loading.hidden = true;
   };
 
+  const use = (url: string) => {
+    // A pause during the download means the listener changed their mind.
+    const wanted = !song.paused;
+    song.src = url;
+    if (wanted) {
+      playSong(song);
+    }
+  };
+
   const start = async () => {
     loading.hidden = false;
-    const blob = await download(song.src, signal, show);
-    // paused turns false at play(), a moment before the play event aborts.
-    if (signal.aborted || !song.paused) {
+    let blob: Blob;
+    try {
+      blob = await download(source, signal, show);
+    } catch {
       loading.hidden = true;
+      // Aborted means the page is being left.
+      if (!signal.aborted) {
+        use(source);
+      }
       return;
     }
+
     const url = URL.createObjectURL(blob);
-    song.src = url;
     document.addEventListener(
       "astro:before-swap",
       () => URL.revokeObjectURL(url),
       { once: true },
     );
+    use(url);
     await finish();
   };
 
-  const begin = () => {
-    start().catch(() => {
-      loading.hidden = true;
-    });
-  };
-
-  song.addEventListener("play", () => controller.abort(), {
-    once: true,
-    signal,
-  });
+  song.addEventListener("play", () => void start(), { once: true, signal });
   document.addEventListener("astro:before-swap", () => controller.abort(), {
     once: true,
     signal,
   });
-
-  if (document.readyState === "complete") {
-    begin();
-  } else {
-    window.addEventListener("load", begin, { once: true, signal });
-  }
 }
 
 async function download(
