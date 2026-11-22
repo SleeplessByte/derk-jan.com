@@ -53,7 +53,7 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
     "error",
     ({ target }) => {
       if (target instanceof HTMLSourceElement) {
-        refused.push(kindOf(target.src));
+        refused.push(kindOf(target));
       }
     },
     { capture: true },
@@ -125,7 +125,7 @@ function describe(
     `Screen: ${screen.width}x${screen.height} at ${devicePixelRatio}x, window ${innerWidth}x${innerHeight}, ${navigator.maxTouchPoints} touch points`,
     `Languages: ${navigator.languages.join(", ")}`,
     `Page ever activated: ${everActivated}`,
-    `Audio: ready state ${song.readyState}, network state ${song.networkState}, ${song.paused ? "paused" : "not paused"} at ${song.currentTime.toFixed(1)} s, loaded to ${loaded} s, MP3 support "${song.canPlayType("audio/mpeg")}"`,
+    `Audio: ready state ${song.readyState}, network state ${song.networkState}, ${song.paused ? "paused" : "not paused"} at ${song.currentTime.toFixed(1)} s, loaded to ${loaded} s, MP3 support "${song.canPlayType("audio/mpeg")}", AAC support "${song.canPlayType("audio/mp4")}"`,
     `Source: ${sourceOf(song, download)}; refused: ${refused.join(", ") || "none"}`,
     `Media error: ${error ? `${error.code} ${error.message}` : "none"}`,
     `Captions: mode ${track.track.mode}, ready state ${track.readyState}`,
@@ -133,12 +133,17 @@ function describe(
 }
 
 function sourceOf(song: HTMLAudioElement, download: HTMLProgressElement) {
-  if (!song.querySelector("source")) {
+  // Chrome keeps currentSrc after its source is removed.
+  const current = [...song.querySelectorAll("source")].find(
+    (source) => source.src === song.currentSrc,
+  );
+  if (!current) {
     return `none yet, download at ${Math.round(download.value * 100)}%`;
   }
-  return kindOf(song.currentSrc);
+  return kindOf(current);
 }
 
-function kindOf(url: string) {
-  return url.startsWith("blob:") ? "downloaded without tag" : "streamed";
+function kindOf(source: HTMLSourceElement) {
+  const kind = source.src.startsWith("blob:") ? "downloaded" : "streamed";
+  return `${kind} ${source.type}`;
 }

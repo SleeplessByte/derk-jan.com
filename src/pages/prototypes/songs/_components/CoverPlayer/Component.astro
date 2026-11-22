@@ -6,14 +6,18 @@ import type { Lyrics } from "../../../../../components/Lyrics/types";
 interface Props {
   cover: ImageMetadata;
   alt: string;
-  src: string;
+  /**
+   * The song in order of preference. The first one that the browser knows is
+   * downloaded on play.
+   */
+  sources: { src: string; type: string }[];
   /** The lyrics as WebVTT. */
   captions: string;
   title: string;
   lyrics: Lyrics;
 }
 
-const { cover, alt, src, captions, title, lyrics } = Astro.props;
+const { cover, alt, sources, captions, title, lyrics } = Astro.props;
 const progressId = `cover-player-${crypto.randomUUID()}-progress`;
 
 // Each spark leaves the tip at its own angle, distance and moment, so the stream looks random.
@@ -86,7 +90,10 @@ const sparks = [
       </span>
     </button>
   </div>
-  <audio src={src} controls preload="none" data-target="song">
+  <audio controls preload="none" data-target="song">
+    {sources.map(({ src, type }) => (
+      <source src={src} type={type} />
+    ))}
     <track kind="captions" src={captions} srclang="en" label={title} />
   </audio>
   <div class="problem text-zinc-700 dark:text-zinc-300" hidden>

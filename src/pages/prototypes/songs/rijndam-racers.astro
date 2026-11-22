@@ -6,6 +6,7 @@ import CoverPlayer from "./_components/CoverPlayer/Component.astro";
 
 import cover from "../../../assets/2026-rijndam-racers-cover.jpeg";
 import lyrics from "../../../assets/audio/2027-rijndam-racers-theme.lyrics.json";
+import themeM4a from "../../../assets/audio/2027-rijndam-racers-theme.m4a?url";
 import themeMp3 from "../../../assets/audio/2027-rijndam-racers-theme.mp3";
 import themeVtt from "../../../assets/audio/2027-rijndam-racers-theme.vtt?url";
 
@@ -54,7 +55,11 @@ const preview = await getImage({
     <CoverPlayer
       cover={cover}
       alt={coverAlt}
-      src={themeMp3}
+      sources={[
+        { src: themeM4a, type: 'audio/mp4; codecs="mp4a.40.2"' },
+        { src: themeM4a, type: "audio/mp4" }, // for browsers failing on codecs
+        { src: themeMp3, type: "audio/mpeg" },
+      ]}
       captions={themeVtt}
       title={title}
       lyrics={lyrics}

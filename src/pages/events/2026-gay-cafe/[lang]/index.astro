@@ -15,6 +15,7 @@ import { localeList, localeOf, locales, pageUrl, type Messages } from "../_i18n"
 
 import backgroundImage from "../../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import kitchenImage from "../../../../assets/IMG_20240825_233805_104.jpg";
+import fruityXmasM4a from "../../../../assets/audio/2026-fruity-xmas.m4a?url";
 import fruityXmasMp3 from "../../../../assets/audio/2026-fruity-xmas.mp3";
 import fruityXmasLyrics from "../../../../assets/audio/2026-fruity-xmas.lyrics.json";
 import fruityXmasVtt from "../../../../assets/audio/2026-fruity-xmas.vtt?url";
@@ -208,12 +209,14 @@ const drinks = [
             </div>
             <audio
               controls
-              src={fruityXmasMp3}
               class="absolute bottom-2 left-2"
               data-target="song"
               transition:name="audio"
               transition:persist
             >
+              <source src={fruityXmasM4a} type='audio/mp4; codecs="mp4a.40.2"' />
+              <source src={fruityXmasM4a} type="audio/mp4" />
+              <source src={fruityXmasMp3} type="audio/mpeg" />
               <track
                 kind="captions"
                 src={fruityXmasVtt}

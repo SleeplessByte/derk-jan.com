@@ -12,19 +12,24 @@ declare global {
 }
 
 /**
- * Downloads the whole song when it is first played, with the progress as a
- * bar over the cover, and then plays it.
+ * Downloads the song's first playable source when it is first played, with the
+ * progress as a bar over the cover, and then plays it.
  */
 export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
   const loading = root.querySelector<HTMLElement>(".loading")!;
   const progress = loading.querySelector("progress")!;
-  const stream = song.src;
+  const sources = [...song.querySelectorAll("source")];
+  const preferred = sources.find(
+    (source) => song.canPlayType(source.type) !== "",
+  )!;
   const controller = new AbortController();
   const { signal } = controller;
 
   // Without a source, the play() of a tap waits for one, and Safari keeps the
   // tap's permission to play on this element.
-  song.removeAttribute("src");
+  for (const source of sources) {
+    source.remove();
+  }
   song.load();
 
   const show = (ratio: number) => {
@@ -56,22 +61,18 @@ export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
     }
   };
 
-  const streamed = () => {
-    const element = document.createElement("source");
-    element.src = stream;
-    return element;
-  };
-
   const start = async () => {
     loading.hidden = false;
     let blob: Blob;
     try {
-      blob = await withoutTag(await download(stream, signal, show));
+      blob = await withoutTag(
+        await download(preferred.src, preferred.type, signal, show),
+      );
     } catch {
       loading.hidden = true;
       // Aborted means the page is being left.
       if (!signal.aborted) {
-        use(streamed());
+        use(...sources);
       }
       return;
     }
@@ -87,7 +88,7 @@ export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
     downloaded.src = url;
     downloaded.type = blob.type;
 
-    use(downloaded, streamed());
+    use(downloaded, ...sources);
 
     await finish();
   };
@@ -101,6 +102,7 @@ export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
 
 async function download(
   url: string,
+  type: string,
   signal: AbortSignal,
   onProgress: (ratio: number) => void,
 ) {
@@ -126,7 +128,7 @@ async function download(
   }
 
   // Safari chooses the decoder for a blob by its type.
-  return new Blob(chunks, { type: response.headers.get("Content-Type")! });
+  return new Blob(chunks, { type });
 }
 
 /**

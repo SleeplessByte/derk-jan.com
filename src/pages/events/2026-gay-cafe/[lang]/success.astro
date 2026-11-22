@@ -13,6 +13,7 @@ import successVideoAv1 from "../../../../assets/video/coffee-magic-20261115.webm
 import successVideoMp4 from "../../../../assets/video/coffee-magic-20261115.mp4";
 import successCaptionsEn from "../../../../assets/video/coffee-magic-20261115.en.vtt?url";
 import successCaptionsNl from "../../../../assets/video/coffee-magic-20261115.nl.vtt?url";
+import fruityXmasM4a from "../../../../assets/audio/2026-fruity-xmas.m4a?url";
 import fruityXmasMp3 from "../../../../assets/audio/2026-fruity-xmas.mp3";
 import fruityXmasLyrics from "../../../../assets/audio/2026-fruity-xmas.lyrics.json";
 import fruityXmasVtt from "../../../../assets/audio/2026-fruity-xmas.vtt?url";
@@ -83,12 +84,14 @@ const successCaptions: Record<typeof lang, string> = {
 
             <audio
               controls
-              src={fruityXmasMp3}
               class="absolute bottom-2 left-2"
               data-target="song"
               transition:name="audio"
               transition:persist
             >
+              <source src={fruityXmasM4a} type='audio/mp4; codecs="mp4a.40.2"' />
+              <source src={fruityXmasM4a} type="audio/mp4" />
+              <source src={fruityXmasMp3} type="audio/mpeg" />
               <track
                 kind="captions"
                 src={fruityXmasVtt}
