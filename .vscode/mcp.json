@@ -1,8 +1,4 @@
 {
   "servers": {
-    "netlify": {
-      "type": "http",
-      "url": "https://mcp.netlify.com/mcp"
-    }
   }
 }
