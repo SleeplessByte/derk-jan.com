@@ -1,7 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { codeToHtml } from "shiki";
-import { Code as C } from "astro:components";
+
+function overflows(pre: HTMLPreElement) {
+  return (
+    pre.scrollHeight > pre.clientHeight || pre.scrollWidth > pre.clientWidth
+  );
+}
 
 export function Code({
   language,
@@ -12,6 +17,7 @@ export function Code({
   children: string;
   caption: string;
 }) {
+  const captionId = useId();
   const preRef = useRef<HTMLPreElement | null>(null);
   const [hasOverflow, setHasOverflow] = useState(false);
 
@@ -29,6 +35,8 @@ export function Code({
       const html = await codeToHtml(children.trim(), {
         lang: language,
         theme: "github-dark",
+        // The outer <pre> scrolls, so only that one may need focus.
+        tabindex: false,
       });
 
       resolve(html);
@@ -54,9 +62,7 @@ export function Code({
       raf = undefined;
 
       if (preRef.current) {
-        setHasOverflow(
-          preRef.current.scrollHeight !== preRef.current.clientHeight,
-        );
+        setHasOverflow(overflows(preRef.current));
       }
     }
 
@@ -68,7 +74,7 @@ export function Code({
       raf = requestAnimationFrame(resized);
     }
 
-    setHasOverflow(preRef.current.scrollHeight !== preRef.current.clientHeight);
+    setHasOverflow(overflows(preRef.current));
     window.addEventListener("resize", onResize);
 
     return () => {
@@ -77,19 +83,26 @@ export function Code({
         cancelAnimationFrame(raf);
       }
     };
-  }, [preRef]);
+    // The highlighted code arrives after the first render, so measure again then.
+  }, [code]);
 
   return (
     <figure className="max-w-full w-auto max-h-full prose-2xl">
       <figcaption
+        id={captionId}
         className="font-semibold"
         style={{ marginTop: 0, marginBottom: "-2rem" }}
       >
         {caption}
       </figcaption>
+      {/* Code that scrolls must be reachable by keyboard, and not every browser
+          makes a scroll container focusable by itself. The region names the
+          focus stop. */}
       <pre
         className="border dark:border-0 bg-zinc-900 text-zinc-50 dark:bg-black/30 shadow-sm leading-6 sm:leading-6 md:leading-7 overflow-auto max-w-full max-h-[80%]"
         tabIndex={hasOverflow ? 0 : undefined}
+        role={hasOverflow ? "region" : undefined}
+        aria-labelledby={hasOverflow ? captionId : undefined}
         ref={preRef}
       >
         <code

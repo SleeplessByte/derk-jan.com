@@ -48,7 +48,8 @@ const transitionName = md5(id || "");
             <path
               fill-rule="evenodd"
               d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clip-rule="evenodd"></path>
+              clip-rule="evenodd"
+            ></path>
           </svg>
           <span>Back to all articles</span>
         </a>
@@ -57,18 +58,14 @@ const transitionName = md5(id || "");
   </div>
 
   <main class="p-6" id="content">
-    <article
-      class="prose prose-lg sm:prose-xl dark:prose-invert prose-zinc max-w-prose mx-auto article"
-    >
+    <article class="prose prose-lg sm:prose-xl dark:prose-invert prose-zinc max-w-prose mx-auto article">
       <header>
         <h1 class="font-extrabold text-5xl">
           {/* transition:animate="none" transition:name={transitionName}*/}
-          <span>
-            {frontmatter.title}
-          </span>
+          <span>{frontmatter.title}</span>
         </h1>
         <p style={{ marginTop: -24 }} class="font-bold">
-          <StaticDate date={frontmatter.date} aria-label="Published on" /> •{" "}
+          <StaticDate date={frontmatter.date} prefix="Published on" /> •{" "}
           <TimeToRead minutes={frontmatter.minutesRead} />
         </p>
       </header>

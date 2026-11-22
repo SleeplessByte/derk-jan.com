@@ -2,10 +2,11 @@ import { useMemo } from "react";
 
 export default function StaticDate({
   date,
-  "aria-label": label,
+  prefix,
 }: {
   date: string | Date | number;
-  "aria-label": string;
+  /** Read before the date by screen readers only; sighted readers get it from the layout. */
+  prefix: string;
 }) {
   const time = useMemo(() => {
     if (typeof date === "string" || typeof date === "number") {
@@ -20,7 +21,7 @@ export default function StaticDate({
       dateTime={time.toISOString().split("T").shift()}
       suppressHydrationWarning
     >
-      <span className="sr-only">{label}</span>
+      <span className="sr-only">{prefix} </span>
       {time.toLocaleDateString(undefined, {
         year: "numeric",
         month: "long",
