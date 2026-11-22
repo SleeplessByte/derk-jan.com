@@ -18,7 +18,7 @@ declare global {
 export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
   const loading = root.querySelector<HTMLElement>(".loading")!;
   const progress = loading.querySelector("progress")!;
-  const source = song.src;
+  const stream = song.src;
   const controller = new AbortController();
   const { signal } = controller;
 
@@ -46,25 +46,32 @@ export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
     loading.hidden = true;
   };
 
-  const use = (url: string) => {
+  // The audio element tries its sources in order
+  const use = (...sources: HTMLSourceElement[]) => {
     // A pause during the download means the listener changed their mind.
     const wanted = !song.paused;
-    song.src = url;
+    song.prepend(...sources);
     if (wanted) {
       playSong(song);
     }
+  };
+
+  const streamed = () => {
+    const element = document.createElement("source");
+    element.src = stream;
+    return element;
   };
 
   const start = async () => {
     loading.hidden = false;
     let blob: Blob;
     try {
-      blob = await download(source, signal, show);
+      blob = await withoutTag(await download(stream, signal, show));
     } catch {
       loading.hidden = true;
       // Aborted means the page is being left.
       if (!signal.aborted) {
-        use(source);
+        use(streamed());
       }
       return;
     }
@@ -75,7 +82,13 @@ export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
       () => URL.revokeObjectURL(url),
       { once: true },
     );
-    use(url);
+
+    const downloaded = document.createElement("source");
+    downloaded.src = url;
+    downloaded.type = blob.type;
+
+    use(downloaded, streamed());
+
     await finish();
   };
 
@@ -114,4 +127,20 @@ async function download(
 
   // Safari chooses the decoder for a blob by its type.
   return new Blob(chunks, { type: response.headers.get("Content-Type")! });
+}
+
+/**
+ * The ID3 tag contains the lyrics, the cover and optionally a C2PA manifest,
+ * which the page does not need.
+ */
+async function withoutTag(song: Blob) {
+  const header = new Uint8Array(await song.slice(0, 10).arrayBuffer());
+  if (new TextDecoder().decode(header.subarray(0, 3)) !== "ID3") {
+    return song;
+  }
+
+  // The size does not include the 10 header bytes.
+  const size =
+    (header[6] << 21) | (header[7] << 14) | (header[8] << 7) | header[9];
+  return song.slice(10 + size, song.size, song.type);
 }

@@ -24,12 +24,13 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
     root.querySelector<HTMLProgressElement>(".loading progress")!;
 
   let problems: Problem[] = [];
+  const refused: string[] = [];
   let report = "";
   let stall = 0;
 
   const add = (text: string, slow = false) => {
     problems.push({ text, slow });
-    report = describe(song, download, problems);
+    report = describe(song, download, problems, refused);
     details.textContent = report;
     copied.hidden = true;
     failed.hidden = true;
@@ -48,6 +49,15 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
   });
 
   song.addEventListener("error", () => add("the audio element failed"));
+  song.addEventListener(
+    "error",
+    ({ target }) => {
+      if (target instanceof HTMLSourceElement) {
+        refused.push(kindOf(target.src));
+      }
+    },
+    { capture: true },
+  );
 
   const watch = () => {
     window.clearTimeout(stall);
@@ -58,7 +68,6 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
   };
 
   song.addEventListener("play", watch);
-  // A slow download is not a problem while it moves.
   song.addEventListener(DOWNLOAD_PROGRESS, () => {
     if (!song.paused) {
       watch();
@@ -95,12 +104,14 @@ function describe(
   song: HTMLAudioElement,
   download: HTMLProgressElement,
   problems: Problem[],
+  refused: string[],
 ) {
   const track = song.querySelector("track")!;
   const { buffered, error } = song;
   const loaded =
     buffered.length > 0 ? buffered.end(buffered.length - 1).toFixed(1) : "0";
-  // Older iPhones lack this, and they are the ones this report is for.
+
+  // Older iPhones lack this, and they are originally the ones this report is for.
   const everActivated =
     "userActivation" in navigator
       ? navigator.userActivation.hasBeenActive
@@ -115,18 +126,19 @@ function describe(
     `Languages: ${navigator.languages.join(", ")}`,
     `Page ever activated: ${everActivated}`,
     `Audio: ready state ${song.readyState}, network state ${song.networkState}, ${song.paused ? "paused" : "not paused"} at ${song.currentTime.toFixed(1)} s, loaded to ${loaded} s, MP3 support "${song.canPlayType("audio/mpeg")}"`,
-    `Source: ${sourceOf(song, download)}`,
+    `Source: ${sourceOf(song, download)}; refused: ${refused.join(", ") || "none"}`,
     `Media error: ${error ? `${error.code} ${error.message}` : "none"}`,
     `Captions: mode ${track.track.mode}, ready state ${track.readyState}`,
   ].join("\n");
 }
 
 function sourceOf(song: HTMLAudioElement, download: HTMLProgressElement) {
-  if (!song.hasAttribute("src")) {
+  if (!song.querySelector("source")) {
     return `none yet, download at ${Math.round(download.value * 100)}%`;
   }
-  if (song.src.startsWith("blob:")) {
-    return "downloaded";
-  }
-  return "streamed";
+  return kindOf(song.currentSrc);
+}
+
+function kindOf(url: string) {
+  return url.startsWith("blob:") ? "downloaded without tag" : "streamed";
 }
