@@ -2,5 +2,11 @@ allowBuilds:
   "@tailwindcss/oxide": true
   esbuild: true
   sharp: true
-patchedDependencies: {}
+patchedDependencies:
+  # Windows only lets administrators create symbolic links, which the Netlify
+  # adapter does at the end of every build.
+  "@astrojs/internal-helpers@0.13.2": patches/@astrojs__internal-helpers@0.13.2.patch
+  # On a restart of the dev server, the old Netlify emulation removed the blobs
+  # context of the new one, so Netlify Blobs failed until a manual restart.
+  "@netlify/vite-plugin@3.0.1": patches/@netlify__vite-plugin@3.0.1.patch
   # micromark: patches/micromark.patch

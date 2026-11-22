@@ -1,0 +1,39 @@
+---
+import { formatIngredient, type IngredientData } from "./amount";
+import IngredientButton from "./IngredientButton.astro";
+
+interface Props {
+  ingredients: IngredientData[];
+}
+
+const { ingredients } = Astro.props;
+---
+
+<div data-component="ingredient-list">
+  <ul role="list">
+    {ingredients.map((ingredient) => (
+      <li>
+        <IngredientButton name={ingredient.name} variant="item">
+          <span data-ingredient={JSON.stringify(ingredient)} data-metric>
+            {formatIngredient(ingredient, 1, { metric: true })}
+          </span>
+        </IngredientButton>
+      </li>
+    ))}
+  </ul>
+  <p id="ingredient-button-description" class="sr-only">
+    Highlights this ingredient in every step.
+  </p>
+  <p class="status sr-only" aria-live="polite"></p>
+</div>
+
+<style>
+  [data-component="ingredient-list"] > ul {
+    padding-inline-start: 0;
+    list-style: none;
+
+    & > li {
+      padding-inline-start: 0;
+    }
+  }
+</style>

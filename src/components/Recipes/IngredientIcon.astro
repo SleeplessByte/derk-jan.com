@@ -1,0 +1,51 @@
+---
+import { ingredientIcons, type IngredientIconName } from "./ingredient-icons";
+
+interface Props {
+  name: IngredientIconName;
+}
+
+const { name } = Astro.props;
+---
+
+<svg
+  data-component="ingredient-icon"
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  style={`--icon-accent: var(--ingredient-${name.replaceAll(" ", "-")})`}
+>
+  {ingredientIcons[name].map((part) => (
+    <path
+      class={part.layer}
+      d={part.d}
+      fill-rule={part.evenOdd ? "evenodd" : undefined}
+    />
+  ))}
+</svg>
+
+<style>
+  [data-component="ingredient-icon"] {
+    --ingredient-tempeh: light-dark(oklch(54% 0.09 70), oklch(78% 0.09 75));
+    --ingredient-olive-oil: light-dark(oklch(53% 0.12 112), oklch(80% 0.14 112));
+    --ingredient-white-wine-vinegar: light-dark(oklch(56% 0.1 88), oklch(86% 0.12 95));
+    --ingredient-teriyaki-sauce: light-dark(oklch(42% 0.09 35), oklch(74% 0.1 40));
+    --ingredient-water: light-dark(oklch(58% 0.15 245), oklch(76% 0.12 240));
+    --ingredient-sugar: light-dark(oklch(56% 0.02 80), oklch(92% 0.01 90));
+    --ingredient-salt: light-dark(oklch(54% 0.03 245), oklch(86% 0.02 245));
+    --ingredient-pepper: light-dark(oklch(45% 0.03 60), oklch(78% 0.02 60));
+    --ingredient-cucumber: light-dark(oklch(56% 0.15 145), oklch(78% 0.17 145));
+    --ingredient-red-onion: light-dark(oklch(50% 0.18 350), oklch(76% 0.14 350));
+    --ingredient-red-pepper: light-dark(oklch(58% 0.21 28), oklch(74% 0.16 28));
+    --ingredient-cloves: light-dark(oklch(48% 0.09 50), oklch(76% 0.09 55));
+
+    flex-shrink: 0;
+
+    & > .line {
+      fill: currentColor;
+    }
+
+    & > .accent {
+      fill: var(--icon-accent);
+    }
+  }
+</style>

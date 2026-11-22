@@ -1,0 +1,16 @@
+---
+import { formatIngredient, type IngredientData } from "./amount";
+import IngredientButton from "./IngredientButton.astro";
+
+interface Props {
+  /** The ingredient as JSON, from remark-ingredients.ts. */
+  data: string;
+}
+
+const { data } = Astro.props;
+const ingredient = JSON.parse(data) as IngredientData;
+---
+
+<IngredientButton name={ingredient.name} variant="inline">
+  <strong data-ingredient={data}>{formatIngredient(ingredient, 1)}</strong>
+</IngredientButton>

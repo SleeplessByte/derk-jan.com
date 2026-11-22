@@ -13,7 +13,11 @@ import {
 } from "@shikijs/transformers";
 
 import { remarkReadingTime } from "./remark-reading-time.mjs";
+import { remarkIngredients } from "./src/components/Recipes/remark-ingredients.ts";
 import { unified } from "@astrojs/markdown-remark";
+
+// Shared by link only, so not in the sitemap.
+const UNLISTED = ["/prototypes/", "/recipes"];
 
 // https://astro.build/config
 export default defineConfig({
@@ -39,7 +43,7 @@ export default defineConfig({
       ],
     },
     processor: unified({
-      remarkPlugins: [remarkReadingTime],
+      remarkPlugins: [remarkReadingTime, remarkIngredients],
     }),
   },
   vite: {
@@ -49,7 +53,8 @@ export default defineConfig({
     react(),
     mdx({ syntaxHighlight: "shiki" }),
     sitemap({
-      filter: (page) => !new URL(page).pathname.startsWith("/prototypes/"),
+      filter: (page) =>
+        !UNLISTED.some((prefix) => new URL(page).pathname.startsWith(prefix)),
     }),
   ],
 });

@@ -1,0 +1,14 @@
+---
+import IngredientButton from "./IngredientButton.astro";
+
+interface Props {
+  /** Set by remark-ingredients.ts. */
+  name: string;
+}
+
+const { name } = Astro.props;
+---
+
+<IngredientButton name={name} variant="inline">
+  <strong>{name}</strong>
+</IngredientButton>

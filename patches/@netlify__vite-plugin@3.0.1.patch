@@ -1,0 +1,41 @@
+diff --git a/dist/main.js b/dist/main.js
+index 815c12a827b2b35ea0ba310046120aa945c3738a..7fd3696dc30ae48204e6b59a40ba459baf6c92df 100644
+--- a/dist/main.js
++++ b/dist/main.js
+@@ -90,6 +90,7 @@ function createBuildPlugin(options) {
+ }
+ 
+ // src/main.ts
++var running;
+ function netlify(options = {}) {
+   if (process.env.NETLIFY_DEV) {
+     return [];
+@@ -100,6 +101,15 @@ function netlify(options = {}) {
+       if (!viteDevServer.httpServer) {
+         return;
+       }
++      // Patched: on a restart, Vite creates the new server before it closes the old one.
++      // Stopping the old instance later would restore an environment without the new
++      // blobs context, and every Netlify Blobs call would fail.
++      if (running) {
++        const previous = running;
++        running = void 0;
++        delete process.env.__VITE_PLUGIN_NETLIFY_LOADED__;
++        await previous.stop();
++      }
+       const logger = createLoggerFromViteLogger(viteDevServer.config.logger);
+       warnOnDuplicatePlugin(logger);
+       const {
+@@ -130,7 +140,12 @@ function netlify(options = {}) {
+         projectRoot: viteDevServer.config.root
+       });
+       await netlifyDev.start();
++      running = netlifyDev;
+       viteDevServer.httpServer.once("close", () => {
++        if (running !== netlifyDev) {
++          return;
++        }
++        running = void 0;
+         delete process.env.__VITE_PLUGIN_NETLIFY_LOADED__;
+         netlifyDev.stop();
+       });

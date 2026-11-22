@@ -11,3 +11,4 @@ Read the file that matches your task before you start. Add to it when you learn 
 - [Astro and CSS](astro-and-css.md): framework behaviour that was hard to find.
 - [Gay Café 2026](gay-cafe-2026.md): the event invitation in `src/pages/events/2026-gay-cafe/`.
 - [Songs](songs.md): song pages with a karaoke player, and how their lyrics are made and timed.
+- [Recipes](recipes.md): how to write a recipe, the ingredients list, the number of people, and the preview card.

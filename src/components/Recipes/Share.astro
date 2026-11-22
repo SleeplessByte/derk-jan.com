@@ -1,0 +1,78 @@
+---
+interface Props {
+  title: string;
+  text: string;
+}
+
+const { title, text } = Astro.props;
+---
+
+<button type="button" data-component="share" data-title={title} data-text={text} hidden>
+  Share recipe
+</button>
+
+<script>
+  import { setupShare } from "./share";
+
+  document.addEventListener("astro:page-load", setupShare);
+</script>
+
+<style>
+  /* Tailwind only emits the theme variables that the site's utilities use. */
+  @reference "../../styles/global.css";
+
+  [data-component="share"] {
+    --share-ground: --theme(--color-pink-700 inline);
+    --share-ground-raised: --theme(--color-pink-600 inline);
+    --share-ground-pressed: --theme(--color-pink-800 inline);
+    --share-text: --theme(--color-white inline);
+    --share-ring: --theme(--color-pink-500 inline);
+
+    @media (prefers-color-scheme: dark) {
+      --share-ground: --theme(--color-orange-500 inline);
+      --share-ground-raised: --theme(--color-orange-400 inline);
+      --share-ground-pressed: --theme(--color-orange-600 inline);
+      --share-text: --theme(--color-zinc-950 inline);
+      --share-ring: --theme(--color-yellow-500 inline);
+    }
+
+    min-block-size: 2.75rem;
+    padding-inline: 1rem;
+    border-radius: 0.375rem;
+    background: var(--share-ground);
+    color: var(--share-text);
+    font-weight: 600;
+    box-shadow: --theme(--shadow-xs inline);
+    transition-property: background-color, box-shadow, translate;
+    transition-duration: 150ms;
+
+    &:focus-visible {
+      outline: 2px solid var(--share-ring);
+      outline-offset: 2px;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background: var(--share-ground-raised);
+        box-shadow: --theme(--shadow-sm inline);
+      }
+    }
+
+    &:active {
+      background: var(--share-ground-pressed);
+      box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      @media (hover: hover) {
+        &:hover {
+          translate: 0 -1px;
+        }
+      }
+
+      &:active {
+        translate: 0 1px;
+      }
+    }
+  }
+</style>

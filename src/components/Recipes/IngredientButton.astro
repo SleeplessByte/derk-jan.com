@@ -1,0 +1,104 @@
+---
+import IngredientIcon from "./IngredientIcon.astro";
+import type { IngredientIconName } from "./ingredient-icons";
+
+interface Props {
+  name: string;
+  /** `inline` in a step, `item` in the ingredients list. */
+  variant: "inline" | "item";
+}
+
+const { name, variant } = Astro.props;
+---
+
+<button
+  type="button"
+  data-component="ingredient-button"
+  data-ingredient-name={name}
+  class={`--${variant}`}
+  aria-pressed="false"
+  aria-describedby="ingredient-button-description"
+  disabled
+>
+  <IngredientIcon name={name as IngredientIconName} />
+  <slot />
+</button>
+
+<script>
+  import { setupHighlight } from "./highlight";
+
+  document.addEventListener("astro:page-load", setupHighlight);
+</script>
+
+<style>
+  /* Tailwind only emits the theme variables that the site's utilities use. */
+  @reference "../../styles/global.css";
+
+  [data-component="ingredient-button"] {
+    --ingredient-highlight: --theme(--color-yellow-200 inline);
+    --ingredient-highlight-text: --theme(--color-zinc-950 inline);
+    --ingredient-ring: --theme(--color-pink-500 inline);
+
+    @media (prefers-color-scheme: dark) {
+      --ingredient-highlight: --theme(--color-yellow-300 inline);
+      --ingredient-ring: --theme(--color-yellow-500 inline);
+    }
+
+    padding: 0;
+    border: 0;
+    border-radius: 0.25rem;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: pointer;
+    transition-property: background-color, box-shadow;
+    transition-duration: 150ms;
+
+    /* Disabled until highlight.ts runs, but it must not look disabled. */
+    &:disabled {
+      color: inherit;
+      cursor: auto;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--ingredient-ring);
+      outline-offset: 3px;
+    }
+
+    &.--highlighted {
+      /* The highlight is light in both themes */
+      color-scheme: light;
+      background: var(--ingredient-highlight);
+      box-shadow: 0 0 0 0.2em var(--ingredient-highlight);
+
+      /* The prose styles give <strong> a colour of its own. */
+      &,
+      & :global(strong) {
+        color: var(--ingredient-highlight-text);
+      }
+    }
+
+    /* Tailwind's preflight makes every svg a block. */
+    &.--inline > :global([data-component="ingredient-icon"]) {
+      display: inline-block;
+      inline-size: 1.15em;
+      block-size: 1.15em;
+      margin-inline-end: 0.2em;
+      vertical-align: -0.2em;
+    }
+
+    &.--item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6em;
+
+      & > :global([data-component="ingredient-icon"]) {
+        inline-size: 1.5em;
+        block-size: 1.5em;
+        /* Centres the icon on the first line when the text wraps. */
+        margin-block-start: calc((1lh - 1.5em) / 2);
+      }
+    }
+  }
+</style>

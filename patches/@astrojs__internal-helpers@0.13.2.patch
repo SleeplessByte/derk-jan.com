@@ -1,0 +1,27 @@
+diff --git a/dist/fs.js b/dist/fs.js
+index fceca48ecfe6c62223db467f1b508a01c3cb4a32..867fb341aa46a32b40e3963c8f6e518c3f539330 100644
+--- a/dist/fs.js
++++ b/dist/fs.js
+@@ -66,7 +66,21 @@ export async function copyFilesToFolder(files, outDir, exclude = []) {
+ 			// So we check if the destination already exists. If it does, move on.
+ 			// Symbolic links here are usually dependencies and not user code. Symbolic links exist because of the pnpm strategy.
+ 			if (!existsSync(dest)) {
+-				await fs.symlink(target, dest, isDir ? "dir" : "file");
++				try {
++					await fs.symlink(target, dest, isDir ? "dir" : "file");
++				} catch (error) {
++					// Windows only lets administrators and Developer Mode create symbolic
++					// links. A junction needs no rights, but links only folders, and only
++					// to an absolute path.
++					if (process.platform !== "win32" || error.code !== "EPERM") {
++						throw error;
++					}
++					if (isDir) {
++						await fs.symlink(realdest, dest, "junction");
++					} else {
++						await fs.copyFile(realpath, dest);
++					}
++				}
+ 			}
+ 		} else if (!isDir) {
+ 			await fs.copyFile(origin, dest);
