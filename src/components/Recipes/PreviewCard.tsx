@@ -8,6 +8,9 @@ const COLORS = {
   accent: "#ff8904",
 };
 
+/** Satori draws each text with the font registered at its weight. */
+export const WEIGHTS = { details: 300, label: 500, title: 600 } as const;
+
 interface Props {
   label: string;
   title: string;
@@ -36,6 +39,7 @@ export default function PreviewCard({ label, title, details, graphic }: Props) {
         padding: "64px 56px 64px 80px",
         backgroundColor: COLORS.ground,
         fontFamily: "Alan Sans",
+        fontWeight: WEIGHTS.details,
       }}
     >
       <div
@@ -47,11 +51,19 @@ export default function PreviewCard({ label, title, details, graphic }: Props) {
           gap: 28,
         }}
       >
-        <div style={{ fontSize: 32, color: COLORS.accent }}>{label}</div>
+        <div
+          style={{
+            fontSize: 32,
+            fontWeight: WEIGHTS.label,
+            color: COLORS.accent,
+          }}
+        >
+          {label}
+        </div>
         <div
           style={{
             fontSize: 88,
-            fontWeight: 700,
+            fontWeight: WEIGHTS.title,
             lineHeight: 1.05,
             color: COLORS.title,
           }}

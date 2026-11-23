@@ -54,7 +54,8 @@ The icons come from Streamline's Freehand Duotone set (the user has a license). 
 
 `/recipes/<lang>/<id>.png` (1200×630) is made at build time with satori and sharp, with the label and details in the recipe's language.
 
-- Satori ignores the weight axis of the variable font and draws its default, light instance. When the font is registered at weight 700, satori draws that instance in a synthetic bold. The title uses that.
+- Satori ignores the weight axis of the variable font and draws its default, light instance (300). The label (Medium, 500) and the title (SemiBold, 600) use static instances in [`fonts/`](../src/components/Recipes/fonts/). Satori picks the font that is registered at the text's weight, so the route registers each file at its weight from `WEIGHTS` in `PreviewCard.tsx`.
+  - Windows Python has no fonttools, so make an instance in a Docker container with Python: `pip install fonttools`, then `fonttools varLib.instancer AlanSans-VariableFont_wght.ttf wght=600 --static --update-name-table -o AlanSans-SemiBold.ttf`. In Git Bash, set `MSYS_NO_PATHCONV=1`, or it rewrites the container paths of `-v`.
 - Satori sizes boxes without their padding (content-box). The root has `boxSizing: "border-box"`; without it, the padding pushes the illustration off the card.
 - An element with more than one child needs `display: flex`.
 - The route reads the font with a path relative to the project root, because Astro bundles the route into another folder.
