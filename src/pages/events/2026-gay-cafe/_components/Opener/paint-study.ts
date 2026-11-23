@@ -30,8 +30,16 @@ export interface Shape {
 }
 
 /**
- * What a painter looks at before painting: the bare paper, the darkest
- * colour, the outlines of the objects, and the shapes of one colour.
+ * Study the image by looking at its pixels and its palette.
+ *
+ * Tries to mimic what a painter would also do:
+ * - Look at the bare paper
+ * - Decide on the darkest colour
+ * - Determine the outlines of the objects
+ * - Find the shapes per colour
+ *
+ * @param image the image to study
+ * @returns the study results
  */
 export function studyImage(image: HTMLImageElement) {
   const copies = createCopies(image);
@@ -68,9 +76,14 @@ export function studyImage(image: HTMLImageElement) {
 export type Study = ReturnType<typeof studyImage>;
 
 /**
- * Each copy halves the one before, so every pixel averages the pixels it
- * replaces. The copies are read back, so they live in memory rather than on
- * the GPU: reading pixels back from the GPU stalls the page.
+ * Make smaller copies of the image, each half the size of the one before.
+ *
+ * Halving each time makes every pixel the average of the pixels it replaces.
+ * The copies are read back, so they live in memory rather than on the GPU:
+ * reading pixels back from the GPU stalls the page.
+ *
+ * @param image the image to copy
+ * @returns the RGBA pixels of each copy, by resolution
  */
 function createCopies(image: HTMLImageElement) {
   const copies = new Map<number, Uint8ClampedArray>();
@@ -95,8 +108,13 @@ function createCopies(image: HTMLImageElement) {
 }
 
 /**
- * Groups the colours of the image into a few base colours (k-means). Groups
- * close to the bare paper are marked, because they need no paint.
+ * Group the colours of the image into a few base colours, with k-means.
+ *
+ * Groups close to the bare paper are marked, because they need no paint.
+ *
+ * @param data the RGBA pixels to group
+ * @param paper the colour of the bare paper
+ * @returns the base colours, the group of each pixel, and which groups are bare
  */
 function createPalette(data: Uint8ClampedArray, paper: Rgb) {
   const pixels: Rgb[] = [];
@@ -139,8 +157,11 @@ function createPalette(data: Uint8ClampedArray, paper: Rgb) {
 }
 
 /**
- * Joins neighbouring cells of one base colour into shapes, largest first.
- * Colours close to the bare paper make no shapes.
+ * Join neighbouring cells of one base colour into shapes.
+ *
+ * @param groups the base colour of each cell
+ * @param bare which base colours are close to the bare paper, and make no shapes
+ * @returns the shapes, largest first
  */
 function findShapes(groups: Uint8Array, bare: boolean[]): Shape[] {
   const n = PALETTE_RESOLUTION;
@@ -151,9 +172,11 @@ function findShapes(groups: Uint8Array, bare: boolean[]): Shape[] {
     if (seen[start] || bare[groups[start]]) {
       continue;
     }
+
     seen[start] = 1;
     const cells: Point[] = [];
     const queue = [start];
+
     while (queue.length > 0) {
       const index = queue.pop()!;
       const x = index % n;
@@ -167,29 +190,37 @@ function findShapes(groups: Uint8Array, bare: boolean[]): Shape[] {
       ]) {
         const [nx, ny] = [x + dx, y + dy];
         const next = ny * n + nx;
+
         if (nx < 0 || ny < 0 || nx >= n || ny >= n) {
           continue;
         }
+
         if (seen[next] || groups[next] !== groups[start]) {
           continue;
         }
+
         seen[next] = 1;
         queue.push(next);
       }
     }
+
     if (cells.length < MIN_SHAPE_CELLS) {
       continue;
     }
+
     const cx = cells.reduce((sum, [x]) => sum + x, 0) / cells.length;
     const cy = cells.reduce((sum, [, y]) => sum + y, 0) / cells.length;
+
     let xx = 0;
     let yy = 0;
     let xy = 0;
+
     for (const [x, y] of cells) {
       xx += (x - cx) ** 2;
       yy += (y - cy) ** 2;
       xy += (x - cx) * (y - cy);
     }
+
     // The main axis of the spread of cells (principal component).
     const angle = 0.5 * Math.atan2(2 * xy, xx - yy);
     const axis: Point = [Math.cos(angle), Math.sin(angle)];
@@ -213,21 +244,33 @@ function findShapes(groups: Uint8Array, bare: boolean[]): Shape[] {
   return shapes.sort((a, b) => b.cells - a.cells);
 }
 
-/** The lightness of every pixel, worked out once instead of per lookup. */
+/**
+ * Work out the lightness of every pixel once, instead of per lookup.
+ *
+ * @param data the RGBA pixels
+ * @returns the lightness of each pixel, from 0 to 255
+ */
 function lightnessOf(data: Uint8ClampedArray) {
   const lightness = new Float32Array(data.length / 4);
+
   for (let index = 0; index < lightness.length; index++) {
     lightness[index] =
       0.299 * data[index * 4] +
       0.587 * data[index * 4 + 1] +
       0.114 * data[index * 4 + 2];
   }
+
   return lightness;
 }
 
 /**
- * Finds the strongest edges, thins them to one pixel, and follows them into
- * lines, longest first.
+ * Trace the outlines of the objects as lines.
+ *
+ * Finds the strongest edges with a Sobel filter, thins them to one pixel, and
+ * follows each edge into a line.
+ *
+ * @param pixels the lightness of each pixel of the largest copy
+ * @returns the longest lines first, in card units
  */
 function traceOutlines(pixels: Float32Array): Point[][] {
   const n = LARGEST;
@@ -266,9 +309,11 @@ function traceOutlines(pixels: Float32Array): Point[][] {
     if (strength[index] <= threshold) {
       continue;
     }
+
     const step =
       Math.round(gy[index] / strength[index]) * n +
       Math.round(gx[index] / strength[index]);
+
     if (
       strength[index] >= strength[index + step] &&
       strength[index] >= strength[index - step]
@@ -286,23 +331,28 @@ function traceOutlines(pixels: Float32Array): Point[][] {
   const follow = (start: number, sign: 1 | -1) => {
     const points: Point[] = [];
     let index = start;
+
     const [startX, startY] = tangent(start);
     let direction: Point = [startX * sign, startY * sign];
+
     for (let steps = 0; steps < 80; steps++) {
       let best = -1;
       let bestScore = 0;
       let bestStep: Point = [0, 0];
+
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
           const next = index + dy * n + dx;
           if ((dx === 0 && dy === 0) || !edge[next] || visited[next]) {
             continue;
           }
+
           const length = Math.hypot(dx, dy);
           const alignment = (dx * direction[0] + dy * direction[1]) / length;
           if (alignment < 0.35) {
             continue;
           }
+
           const score = alignment * strength[next];
           if (score > bestScore) {
             best = next;
@@ -311,16 +361,20 @@ function traceOutlines(pixels: Float32Array): Point[][] {
           }
         }
       }
+
       if (best < 0) {
         break;
       }
+
       visited[best] = 1;
       index = best;
+
       // Turn with the edge, but keep heading the same way along it.
       const along = tangent(best);
       const sameWay =
         along[0] * bestStep[0] + along[1] * bestStep[1] >= 0 ? 1 : -1;
       direction = [along[0] * sameWay, along[1] * sameWay];
+
       points.push([index % n, Math.floor(index / n)]);
     }
     return points;
@@ -339,12 +393,14 @@ function traceOutlines(pixels: Float32Array): Point[][] {
     if (visited[seed]) {
       continue;
     }
+
     visited[seed] = 1;
     const line = [
       ...follow(seed, -1).reverse(),
       [seed % n, Math.floor(seed / n)] as Point,
       ...follow(seed, 1),
     ];
+
     if (line.length >= 6) {
       lines.push(line);
     }
@@ -357,20 +413,28 @@ function traceOutlines(pixels: Float32Array): Point[][] {
     if (points + line.length > SKETCH_POINTS) {
       break;
     }
+
     points += line.length;
     kept.push(
       smooth(line).map(([x, y]) => [(x + 0.5) / n, (y + 0.5) / n] as const),
     );
   }
+
   return kept;
 }
 
-/** Averages each point with its neighbours, so traced pixels become a line. */
+/**
+ * Average each point with its neighbours, so traced pixels become a line.
+ *
+ * @param line the traced points
+ * @returns the smoothed points
+ */
 function smooth(line: Point[]): Point[] {
   return line.map((point, index) => {
     if (index === 0 || index === line.length - 1) {
       return point;
     }
+
     const [a, b] = [line[index - 1], line[index + 1]];
     return [(a[0] + 2 * point[0] + b[0]) / 4, (a[1] + 2 * point[1] + b[1]) / 4];
   });

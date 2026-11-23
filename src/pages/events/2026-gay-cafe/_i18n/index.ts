@@ -10,7 +10,15 @@ const nl: Messages = nlJson;
 export const locales = { en, nl };
 export const localeList = Object.keys(locales) as Locale[];
 
-/** Pass `Astro.params.lang` and place pages under `[lang]/`. */
+/**
+ * Find the locale of a page.
+ *
+ * Pass `Astro.params.lang` and place pages under `[lang]/`. A language without
+ * messages stops the build.
+ *
+ * @param lang the language of the page
+ * @returns the locale of that language
+ */
 export function localeOf(lang: string | undefined) {
   const locale = localeList.find((known) => known === lang);
   if (!locale) {

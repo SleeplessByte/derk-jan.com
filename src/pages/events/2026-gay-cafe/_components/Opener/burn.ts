@@ -29,11 +29,17 @@ export interface Burn {
 }
 
 /**
- * Prepares the sky's burn from the card outward, behind a glowing gold rim.
+ * Prepare the sky's burn from the card outward, behind a glowing gold rim.
  *
  * A small grid of cells decides what has burned, and the canvas scales it up,
  * which softens the edge automatically. Yields between small steps, so that
  * the caller can spread the work over frames.
+ *
+ * @param sky the copy of the sky that burns
+ * @param from where the burn starts: the middle of the card
+ * @param gold the colour of the rim
+ * @param light the colour where the rim glows brightest
+ * @returns the burn, to step through once per frame
  */
 export function* burnSky(
   sky: Layer,
@@ -145,7 +151,16 @@ function cellLayer(columns: number, rows: number) {
   };
 }
 
-/** Smooth random values from 0 to 1 */
+/**
+ * Make smooth random values from 0 to 1, from two layers of noise.
+ *
+ * Yields between small steps, so that the caller can spread the work over
+ * frames.
+ *
+ * @param columns the number of cells across
+ * @param rows the number of cells down
+ * @returns a value for each cell
+ */
 function* valueNoise(columns: number, rows: number) {
   const values = new Float32Array(columns * rows);
   for (const [size, weight] of OCTAVES) {

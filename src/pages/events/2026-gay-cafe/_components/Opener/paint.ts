@@ -78,6 +78,11 @@ interface Mark {
  *
  * Resolves when the painting is done, or when the device is too slow, which
  * then falls back to seeing the card without the painting.
+ *
+ * @param image the picture on the card
+ * @param canvas the canvas to paint on, with a small copy of the card to study
+ * @param options when to stop, whether to paint at all, at which quality, and
+ *   what to do when the device is too slow
  */
 export async function paintCard(
   image: HTMLImageElement,
@@ -126,7 +131,12 @@ export async function paintCard(
 }
 
 /**
- * Draws each mark and renders once per frame
+ * Draw each mark at its time, and render once per frame.
+ *
+ * @param marks the marks, in the order of their time
+ * @param render puts what the marks drew on the canvas
+ * @param options when to stop, and what to do when the device is too slow
+ * @returns resolves after the last mark, or when the device is too slow
  */
 function play(
   marks: Mark[],
@@ -148,6 +158,7 @@ function play(
       if (elapsed > SLOW_FRAME_MS && counts(now, elapsed)) {
         slowTime += elapsed;
       }
+
       if (slowTime > GIVE_UP_MS) {
         onSlow();
         resolve();
@@ -158,9 +169,11 @@ function play(
       while (next < marks.length && marks[next].at <= now - start) {
         marks[next++].draw();
       }
+
       if (next > drawn) {
         render();
       }
+
       if (next < marks.length) {
         frame = requestAnimationFrame(step);
       } else {
@@ -176,11 +189,16 @@ function play(
 }
 
 /**
- * One pencil draws the outlines, one line at a time: the longest lines that
- * fit the time, and each next line the one closest to where the pencil is.
+ * Plan the pencil sketch of the outlines, one line at a time.
  *
- * The pencil speeds up and slows down along a line, and presses lighter where
- * it lands and lifts.
+ * The sketch has the longest lines that fit the time, and each next line is
+ * the one closest to where the pencil is. The pencil speeds up and slows down
+ * along a line, and presses lighter where it lands and lifts.
+ *
+ * @param study what the painter saw in the image
+ * @param context the canvas to sketch on
+ * @param size the size of the canvas, in canvas pixels
+ * @returns the marks of the pencil
  */
 function sketch(
   study: Study,
@@ -278,9 +296,17 @@ function planSketch(outlines: Point[][]) {
 }
 
 /**
- * One brush fills the shapes, largest first, sweeping back and forth along
- * each shape. Every sweep paints a mask, and the real card shows through the
- * mask over the sketch. A few broad sweeps bring in the rest.
+ * Plan the brush that fills the shapes, largest first.
+ *
+ * The brush sweeps back and forth along each shape. Every sweep paints a
+ * mask, and the real card shows through the mask over the sketch. A few broad
+ * sweeps bring in the rest.
+ *
+ * @param study what the painter saw in the image
+ * @param image the picture on the card
+ * @param canvas the canvas with the sketch
+ * @param start when the brush starts, in ms after the painting starts
+ * @returns the marks of the brush, and the render that shows them
  */
 function paintWithBrush(
   study: Study,
@@ -330,6 +356,7 @@ function paintWithBrush(
     if (time - start > SHAPES_MS) {
       break;
     }
+
     for (const [from, to, width] of generateSweeps(shape)) {
       sweep(from, to, width);
     }
@@ -341,7 +368,7 @@ function paintWithBrush(
 
   return {
     marks,
-    render() {
+    render: () => {
       if (!dirty) {
         return;
       }
@@ -350,6 +377,7 @@ function paintWithBrush(
       const width = Math.min(size, Math.ceil(dirty[2])) - x;
       const height = Math.min(size, Math.ceil(dirty[3])) - y;
       dirty = undefined;
+
       if (width <= 0 || height <= 0) {
         return;
       }
@@ -385,7 +413,14 @@ function generateSweeps(shape: Shape): [Point, Point, number][] {
   });
 }
 
-/** A wide brush with ragged bristles. */
+/**
+ * Make one stroke of a wide brush with ragged bristles.
+ *
+ * @param from where the stroke starts, in card units
+ * @param to where the stroke ends, in card units
+ * @param width the width of the brush, in card units
+ * @returns the stroke, to paint a part of it at a time
+ */
 function createMaskStroke(from: Point, to: Point, width: number) {
   const count = 9;
 
@@ -485,7 +520,12 @@ function distance(a: Point, b: Point) {
   return Math.hypot(a[0] - b[0], a[1] - b[1]);
 }
 
-/** Slow at the start and the end, like a hand. */
+/**
+ * Ease in and out, like a hand: slow at the start and the end.
+ *
+ * @param t the progress, from 0 to 1
+ * @returns the eased progress, from 0 to 1
+ */
 function ease(t: number) {
   return (1 - Math.cos(Math.PI * t)) / 2;
 }

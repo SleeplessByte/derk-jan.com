@@ -32,7 +32,7 @@ export function readOrder(form: HTMLFormElement): Order {
     checked(name).map((input) => {
       const label = input.labels![0];
       return {
-        text: label.querySelector("span")!.textContent!.trim(),
+        text: label.querySelector("span")!.textContent.trim(),
         icon: label.querySelector<SVGElement>('[data-component="form-icon"]')!
           .dataset.icon!,
       };
@@ -65,7 +65,7 @@ function chosen(select: HTMLSelectElement): Choice | null {
     return null;
   }
 
-  return { value: option.value, text: option.textContent!.trim() };
+  return { value: option.value, text: option.textContent.trim() };
 }
 
 export function keepOrderOnSubmit(form: HTMLFormElement) {
@@ -80,7 +80,9 @@ export function keepOrderOnSubmit(form: HTMLFormElement) {
 
 export function recallOrder(): Order | null {
   try {
-    return JSON.parse(sessionStorage.getItem(ORDER_KEY) ?? "null");
+    return JSON.parse(
+      sessionStorage.getItem(ORDER_KEY) ?? "null",
+    ) as Order | null;
   } catch {
     return null;
   }

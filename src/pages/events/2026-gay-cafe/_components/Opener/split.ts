@@ -1,12 +1,17 @@
 const SPLIT_MS = 1000;
 
 /**
- * The whole screen splits down the middle.
+ * Split the whole screen down the middle.
  *
  * Its halves slide apart and show the invitation from the middle out, with gold
  * light in the gap. The halves copy the sky and the card in CSS, and only
  * `translate` and `opacity` change, so the compositor does the work on weaker
  * devices.
+ *
+ * @param root the opener
+ * @param veil the sky and the card
+ * @param drawn resolves when the card's painting is gone
+ * @returns resolves when the halves have slid apart and the veil has faded
  */
 export async function splitScreen(
   root: HTMLElement,

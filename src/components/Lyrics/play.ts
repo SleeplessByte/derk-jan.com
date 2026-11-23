@@ -1,6 +1,6 @@
-export const PLAY_REFUSED = "lyrics:play-refused";
+export const PLAY_FAILED = "lyrics:play-failed";
 
-export interface PlayRefusal {
+export interface PlayFailure {
   error: unknown;
   /** Whether the browser still counted the tap or click as a user activation. */
   activated: boolean | undefined;
@@ -8,28 +8,32 @@ export interface PlayRefusal {
 
 declare global {
   interface HTMLMediaElementEventMap {
-    [PLAY_REFUSED]: CustomEvent<PlayRefusal>;
+    [PLAY_FAILED]: CustomEvent<PlayFailure>;
   }
 }
 
 /**
- * Plays the song. Only the caller of play() learns why the browser refused,
- * so the refusal goes out as an event on the song, for a page that reports it.
+ * Play the song, and send a failure on as an event on the song.
+ *
+ * Only the caller of play() gets its error, so a page that reports problems
+ * can listen for `PLAY_FAILED` instead.
+ *
+ * @param song the song to play
  */
 export function playSong(song: HTMLMediaElement) {
-  // Read at the call: the activation can expire before the refusal arrives.
   const activated =
     "userActivation" in navigator
       ? navigator.userActivation.isActive
       : undefined;
 
   song.play().catch((error: unknown) => {
-    // A pause() before the start rejects play(); that is the listener's choice.
+    // A pause() before the start is often the listener's choice.
     if (error instanceof DOMException && error.name === "AbortError") {
       return;
     }
+
     song.dispatchEvent(
-      new CustomEvent(PLAY_REFUSED, { detail: { error, activated } }),
+      new CustomEvent(PLAY_FAILED, { detail: { error, activated } }),
     );
   });
 }

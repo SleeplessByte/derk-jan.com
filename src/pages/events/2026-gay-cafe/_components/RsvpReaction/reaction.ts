@@ -16,7 +16,7 @@ export function setupRsvpReaction() {
   const line = root.querySelector<HTMLElement>(".line")!;
   const messages = new Map(
     [...root.querySelectorAll<HTMLElement>(".messages > [data-value]")].map(
-      (item) => [item.dataset.value!, item.textContent!.trim()],
+      (item) => [item.dataset.value!, item.textContent.trim()],
     ),
   );
 
@@ -48,9 +48,11 @@ function celebrate(root: HTMLElement, from: HTMLElement, guests: number) {
   for (let i = 0; i < PIECES_BASE + guests * PIECES_PER_GUEST; i++) {
     const piece = document.createElement("span");
     piece.className = `piece ${pick(COLOURS)}`;
+
     if (Math.random() < DOT_SHARE) {
       piece.classList.add("--dot");
     }
+
     piece.style.left = `${x}px`;
     piece.style.top = `${y}px`;
 

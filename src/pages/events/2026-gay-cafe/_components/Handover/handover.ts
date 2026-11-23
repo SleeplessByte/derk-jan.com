@@ -1,6 +1,8 @@
 /**
- * On phones the share sheet reaches more of the guest's own allows for more
- * than email does: AirDrop, chats with themselves, notes, etc.
+ * Open the share sheet instead of the email link, where the browser has one.
+ *
+ * On phones, the share sheet reaches more of the guest's own places than email
+ * does: AirDrop, chats with themselves, notes, and more.
  */
 export function setupHandover() {
   const links = document.querySelectorAll<HTMLAnchorElement>(

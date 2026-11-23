@@ -60,11 +60,15 @@ const LEVELS = [
 ] as const;
 
 /**
- * Lets snow fall on the canvases until the signal aborts.
+ * Let snow fall on the canvases until the signal aborts.
  *
  * Soft dots far away and crystals close by, all carried by a slow, gusty wind.
  * When frames remain slow, the snow lowers its quality step by step until it
  * finally stands still.
+ *
+ * @param layers the canvases behind and in front of the card
+ * @param options when to stop, whether the snow stands still, whether the
+ *   device is weak, and what to do when it is too slow
  */
 export function startSnow(
   { back, front }: SnowLayers,
@@ -82,6 +86,7 @@ export function startSnow(
   // A weak device starts without the front layer.
   let level = lowPower ? 2 : 0;
   const counts = framesThatCount(signal);
+
   let flakes: Flake[] = [];
   let width = 0;
   let height = 0;
@@ -93,13 +98,19 @@ export function startSnow(
   let stopped = still;
 
   /**
+   * Create a flake, anywhere on the screen or just above it.
+   *
    * A flake placed `anywhere` fades in after a random delay, most of them
    * early. A flake that falls in from the top needs no fade.
+   *
+   * @param anywhere whether the flake starts anywhere on the screen
+   * @returns the flake
    */
   function createFlake(anywhere: boolean): Flake {
     const depth = Math.random();
     const crystal = depth > CRYSTAL_DEPTH;
     const size = crystal ? 14 + Math.random() * 12 : 2 + depth * 10;
+
     return {
       x: Math.random() * width,
       y: anywhere ? Math.random() * height : -size,
@@ -148,7 +159,12 @@ export function startSnow(
     );
   }
 
-  /** The wind changes slowly, with the odd gust. */
+  /**
+   * Work out the wind, which changes slowly, with the odd gust.
+   *
+   * @param seconds the time since the snow started
+   * @returns the sideways speed of the wind
+   */
   function wind(seconds: number) {
     return 14 * Math.sin(seconds * 0.21) + 7 * Math.sin(seconds * 0.53 + 1.3);
   }
@@ -167,6 +183,7 @@ export function startSnow(
       if (shown <= 0) {
         continue;
       }
+
       // While it fades in, the flake also grows a little, like it comes closer.
       const size = flake.size * (0.6 + 0.4 * shown);
       const x =
@@ -256,6 +273,7 @@ export function startSnow(
           ? slowTime + elapsed
           : Math.max(0, slowTime - elapsed);
     }
+
     if (slowTime >= SLOW_FOR_MS) {
       const moving = lowerQuality(time);
       if (!moving) {
@@ -292,13 +310,23 @@ export function startSnow(
   });
 }
 
-/** Eases from 0 to 1, slow at both ends; values outside 0 to 1 are clamped. */
+/**
+ * Ease from 0 to 1, slow at both ends.
+ *
+ * @param value the progress; values outside 0 to 1 are clamped
+ * @returns the eased progress
+ */
 function smoothstep(value: number) {
   const t = Math.min(1, Math.max(0, value));
   return t * t * (3 - 2 * t);
 }
 
-/** One soft flake, drawn once and then stamped for every flake. */
+/**
+ * Draw one soft flake once, to stamp it for every far flake.
+ *
+ * @param color the colour of the snow
+ * @returns the sprite
+ */
 function createDot(color: string) {
   const sprite = document.createElement("canvas");
   sprite.width = DOT_SPRITE;
@@ -322,8 +350,13 @@ function createDot(color: string) {
 }
 
 /**
- * A round, very soft shadow, drawn once and stamped under every flake in
- * front of the card. On the dark sky it disappears, so it needs no clipping.
+ * Draw a round, very soft shadow once, to stamp it under every flake in front
+ * of the card.
+ *
+ * On the dark sky it disappears, so it needs no clipping.
+ *
+ * @param color the colour of the shadow
+ * @returns the sprite
  */
 function createShadow(color: string) {
   const sprite = document.createElement("canvas");
@@ -349,9 +382,13 @@ function createShadow(color: string) {
 }
 
 /**
- * A six-armed crystal with side branches. Every design branches at its own
- * places, so no two designs look the same. The soft glow keeps it slightly
- * out of focus, as close flakes are.
+ * Draw a six-armed crystal with side branches.
+ *
+ * Every design branches at its own places, so no two designs look the same.
+ * The soft glow keeps it slightly out of focus, as close flakes are.
+ *
+ * @param color the colour of the snow
+ * @returns the sprite
  */
 function createCrystal(color: string) {
   const sprite = document.createElement("canvas");

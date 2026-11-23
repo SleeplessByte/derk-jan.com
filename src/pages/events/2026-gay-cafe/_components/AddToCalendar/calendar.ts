@@ -2,7 +2,7 @@ import type { Messages } from "../../_i18n";
 import { recallOrder } from "../OrderTicket/order";
 import { eventFor, googleCalendarUrl, toIcs, utcStamp } from "./event";
 
-/** Puts the guest's own answers and times in both calendar links. */
+/** Put the guest's own answers and times in both calendar links. */
 export function setupCalendar() {
   const root = document.querySelector<HTMLElement>(
     '[data-component="add-to-calendar"]',
@@ -16,7 +16,7 @@ export function setupCalendar() {
     return;
   }
 
-  const text: Messages["calendar"] = JSON.parse(root.dataset.messages!);
+  const text = JSON.parse(root.dataset.messages!) as Messages["calendar"];
   const event = eventFor(order, text);
   const ics = root.querySelector<HTMLAnchorElement>('[data-target="ics"]')!;
   const google = root.querySelector<HTMLAnchorElement>(

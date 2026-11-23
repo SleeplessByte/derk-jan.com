@@ -44,10 +44,18 @@ export interface Dust {
 }
 
 /**
- * Prepares the card's burst into gold dust, with the card at `at`: round
- * grains and a few sparkles fly out from the middle, the outer ones fastest,
- * then slow down, twinkle, and fall. Yields between steps, so that the
- * caller can spread the work over frames.
+ * Prepare the card's burst into gold dust.
+ *
+ * Round grains and a few sparkles fly out from the middle, the outer ones
+ * fastest, then slow down, twinkle, and fall. Yields between steps, so that
+ * the caller can spread the work over frames.
+ *
+ * @param layer the canvas that the dust is drawn on
+ * @param card the picture on the card, with its size and its rounded corners
+ * @param at where the card is on the screen
+ * @param colors the gold and the light gold that the grains turn
+ * @param sparkle the shape of the label's sparkles
+ * @returns the dust, to step and draw once per frame
  */
 export function* prepareDust(
   layer: Layer,
@@ -61,9 +69,11 @@ export function* prepareDust(
   const whole = document.createElement("canvas");
   whole.width = Math.round(width * layer.ratio);
   whole.height = Math.round(height * layer.ratio);
+
   const wholeContext = whole.getContext("2d")!;
   wholeContext.scale(layer.ratio, layer.ratio);
   drawCard(wholeContext, card, [0, 0]);
+
   yield;
 
   const [cellWidth, cellHeight] = [width / GRID, height / GRID];
@@ -78,12 +88,14 @@ export function* prepareDust(
     if (!color) {
       return [];
     }
+
     const [column, row] = [index % GRID, Math.floor(index / GRID)];
     const x = (column + 0.5) * cellWidth;
     const y = (row + 0.5) * cellHeight;
     const out = Math.hypot(x - centerX, y - centerY) / reach;
     const away = Math.atan2(y - centerY, x - centerX) + between(-0.5, 0.5);
     const speed = between(...SPEED) * long * (0.5 + out);
+
     return {
       x: at[0] + x,
       y: at[1] + y,
@@ -115,6 +127,7 @@ export function* prepareDust(
       fill.addColorStop(0, gold.css());
       fill.addColorStop(0.55, gold.css());
       fill.addColorStop(1, gold.css(0));
+
       context.fillStyle = fill;
       context.fillRect(0, 0, SPRITE, SPRITE);
     }),
@@ -131,6 +144,7 @@ export function* prepareDust(
       spark.addColorStop(0, "white");
       spark.addColorStop(0.2, light.css());
       spark.addColorStop(1, light.css(0));
+
       context.fillStyle = spark;
       context.fillRect(0, 0, SPRITE, SPRITE);
     }),
@@ -163,7 +177,9 @@ export function* prepareDust(
           if (time < grain.release) {
             continue;
           }
+
           grain.loose = true;
+
           // A little wider than the cell, so no seam of picture stays behind.
           wholeContext.clearRect(
             grain.cell[0] - 0.5,
@@ -172,6 +188,7 @@ export function* prepareDust(
             cellHeight + 1,
           );
         }
+
         grain.vy += GRAVITY * seconds;
         grain.vx *= slowing;
         grain.vy *= slowing;
@@ -199,6 +216,7 @@ export function* prepareDust(
         if (!grain.loose || age >= 1) {
           continue;
         }
+
         const size = grain.size * (1 - 0.7 * age);
         // Many grains fly off the screen; drawing them would cost as much.
         if (!visible(grain.x, grain.y, size)) {
@@ -235,20 +253,29 @@ export function* prepareDust(
           stamp(context, sprites.glint, grain.x, grain.y, size * 4);
         }
       }
+
       context.globalAlpha = 1;
     },
   };
 }
 
-/** One colour per grain: the card, drawn as small as the grid. */
+/**
+ * Sample one colour per grain, by drawing the card as small as the grid.
+ *
+ * @param card the picture on the card, with its size and its rounded corners
+ * @returns the colour of each cell, if the cell is part of the card
+ */
 function sampleColors(card: CardArea) {
   const canvas = document.createElement("canvas");
   canvas.width = GRID;
   canvas.height = GRID;
+
   const context = canvas.getContext("2d", { willReadFrequently: true })!;
   const radius = (card.radius * GRID) / card.width;
   drawCard(context, { ...card, width: GRID, height: GRID, radius }, [0, 0]);
+
   const { data } = context.getImageData(0, 0, GRID, GRID);
+
   // The rounded corners cut some cells off: those give no grain.
   return Array.from({ length: GRID * GRID }, (_, index): Rgb | undefined =>
     data[index * 4 + 3] < 128
@@ -262,18 +289,27 @@ function pickLook(): Grain["look"] {
   if (chance < STAR_SHARE) {
     return "star";
   }
+
   if (chance < STAR_SHARE + GLINT_SHARE) {
     return "glint";
   }
+
   return "dot";
 }
 
-/** Drawn once, then stamped for every grain that looks like it. */
+/**
+ * Draw a sprite once, to stamp it for every grain that looks like it.
+ *
+ * @param draw draws the look on the sprite's canvas
+ * @returns the sprite
+ */
 function createSprite(draw: (context: CanvasRenderingContext2D) => void) {
   const sprite = document.createElement("canvas");
   sprite.width = SPRITE;
   sprite.height = SPRITE;
+
   draw(sprite.getContext("2d")!);
+
   return sprite;
 }
 

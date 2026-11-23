@@ -34,10 +34,15 @@ interface Explosion {
 }
 
 /**
- * Chooses how the opener transitions.
+ * Choose how the opener goes away, and prepare it.
  *
  * Users on reduced motion see a fade, weak devices see the screen split, and
  * the rest see the card burst into gold dust.
+ *
+ * @param root the opener
+ * @param veil the sky and the card, which the reveal takes away
+ * @param options reduced motion, when to stop, and when the card's painting is gone
+ * @returns starts the reveal, and resolves when it is done
  */
 export function prepareReveal(
   root: HTMLElement,
@@ -72,7 +77,14 @@ function chosen(): Choice {
 }
 
 /**
- * Breaks the work to burn the sky and explode the dust into smaller steps.
+ * Prepare the burning sky and the gold dust.
+ *
+ * Yields between small steps, so that `runInSlices` can spread the work over
+ * frames.
+ *
+ * @param root the opener
+ * @param veil the sky and the card
+ * @returns the burn, the canvas for the dust, and the dust
  */
 function* prepareExplosion(
   root: HTMLElement,
@@ -114,7 +126,15 @@ function* prepareExplosion(
   return { burn, overlay, dust };
 }
 
-/** The card bursts into gold dust and the sky burns away behind it. */
+/**
+ * Burst the card into gold dust, and burn the sky away behind it.
+ *
+ * @param root the opener
+ * @param veil the sky and the card
+ * @param explosion the prepared burn, canvas and dust
+ * @param signal stops the explosion
+ * @returns resolves when the sky has burned and the veil has faded
+ */
 function explode(
   root: HTMLElement,
   veil: HTMLElement,
@@ -171,7 +191,12 @@ function explode(
   });
 }
 
-/** Runs the work a slice per frame with as many steps as fit in `SLICE_MS`. */
+/**
+ * Run the work a slice per frame, with as many steps as fit in `SLICE_MS`.
+ *
+ * @param work the steps of the work
+ * @returns resolves with the result of the work
+ */
 function runInSlices<T>(work: Generator<void, T>) {
   return new Promise<T>((resolve) => {
     const slice = () => {

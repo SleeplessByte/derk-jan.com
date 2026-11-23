@@ -1,4 +1,4 @@
-import { PLAY_REFUSED } from "../../../../../components/Lyrics/play";
+import { PLAY_FAILED } from "../../../../../components/Lyrics/play";
 import { DOWNLOAD_PROGRESS } from "./download";
 
 // Long enough for a slow mobile connection to deliver the next part of the song.
@@ -10,9 +10,14 @@ interface Problem {
 }
 
 /**
- * When the song does not start, shows what went wrong with the details of the
- * device, so the listener can send them. The native controls come back as a
- * second way to play.
+ * Show a problem report when the song does not start.
+ *
+ * The report holds what went wrong and the details of the device, so the
+ * listener can copy it and send it. The native controls come back as a second
+ * way to play.
+ *
+ * @param root the cover player
+ * @param song the song of the cover player
  */
 export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
   const panel = root.querySelector<HTMLElement>(".problem")!;
@@ -24,13 +29,13 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
     root.querySelector<HTMLProgressElement>(".loading progress")!;
 
   let problems: Problem[] = [];
-  const refused: string[] = [];
+  const failedSources: string[] = [];
   let report = "";
   let stall = 0;
 
   const add = (text: string, slow = false) => {
     problems.push({ text, slow });
-    report = describe(song, download, problems, refused);
+    report = describe(song, download, problems, failedSources);
     details.textContent = report;
     copied.hidden = true;
     failed.hidden = true;
@@ -38,13 +43,13 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
     song.controls = true;
   };
 
-  song.addEventListener(PLAY_REFUSED, ({ detail: { error, activated } }) => {
+  song.addEventListener(PLAY_FAILED, ({ detail: { error, activated } }) => {
     const reason =
       error instanceof DOMException
         ? `${error.name}: ${error.message}`
         : String(error);
     add(
-      `play() refused (${reason}); user activation at the call: ${activated ?? "unknown"}`,
+      `play() failed (${reason}); user activation at the call: ${activated ?? "unknown"}`,
     );
   });
 
@@ -53,7 +58,7 @@ export function setupProblemReport(root: HTMLElement, song: HTMLAudioElement) {
     "error",
     ({ target }) => {
       if (target instanceof HTMLSourceElement) {
-        refused.push(kindOf(target));
+        failedSources.push(kindOf(target));
       }
     },
     { capture: true },
@@ -104,7 +109,7 @@ function describe(
   song: HTMLAudioElement,
   download: HTMLProgressElement,
   problems: Problem[],
-  refused: string[],
+  failedSources: string[],
 ) {
   const track = song.querySelector("track")!;
   const { buffered, error } = song;
@@ -126,7 +131,7 @@ function describe(
     `Languages: ${navigator.languages.join(", ")}`,
     `Page ever activated: ${everActivated}`,
     `Audio: ready state ${song.readyState}, network state ${song.networkState}, ${song.paused ? "paused" : "not paused"} at ${song.currentTime.toFixed(1)} s, loaded to ${loaded} s, MP3 support "${song.canPlayType("audio/mpeg")}", AAC support "${song.canPlayType("audio/mp4")}"`,
-    `Source: ${sourceOf(song, download)}; refused: ${refused.join(", ") || "none"}`,
+    `Source: ${sourceOf(song, download)}; failed: ${failedSources.join(", ") || "none"}`,
     `Media error: ${error ? `${error.code} ${error.message}` : "none"}`,
     `Captions: mode ${track.track.mode}, ready state ${track.readyState}`,
   ].join("\n");
@@ -137,9 +142,11 @@ function sourceOf(song: HTMLAudioElement, download: HTMLProgressElement) {
   const current = [...song.querySelectorAll("source")].find(
     (source) => source.src === song.currentSrc,
   );
+
   if (!current) {
     return `none yet, download at ${Math.round(download.value * 100)}%`;
   }
+
   return kindOf(current);
 }
 

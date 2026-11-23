@@ -99,10 +99,13 @@ function escapeText(value: string) {
 }
 
 /**
- * Lines limit is 75 characters
+ * Fold a line of the calendar file at 75 bytes.
  *
- * @param line the input line
- * @returns folded line (based on limit)
+ * The calendar format limits lines to 75 bytes, not characters. A folded line
+ * goes on after a line break and a space, which counts towards the next line.
+ *
+ * @param line the line to fold
+ * @returns the folded line
  */
 function fold(line: string) {
   const encoder = new TextEncoder();
@@ -129,10 +132,11 @@ function fold(line: string) {
 }
 
 /**
- * Generate calendar file
- * @param event
+ * Generate the calendar file of the event.
+ *
+ * @param event the event to put in the calendar
  * @param stamp moment of creation (UTC date-time)
- * @returns
+ * @returns the content of the .ics file
  */
 export function toIcs(event: CalendarEvent, stamp: string) {
   const lines = [

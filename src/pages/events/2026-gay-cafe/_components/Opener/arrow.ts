@@ -9,9 +9,16 @@ interface ArrowOptions {
 }
 
 /**
- * Splits a quadratic Bézier curve into separate dashes. A dashed stroke
- * cannot also be drawn in with `stroke-dashoffset`, but separate dashes can,
- * one after the other.
+ * Split a quadratic Bézier curve into separate dashes, with an arrowhead.
+ *
+ * A dashed stroke cannot also be drawn in with `stroke-dashoffset`, but
+ * separate dashes can, one after the other.
+ *
+ * @param start where the curve starts
+ * @param control the control point of the curve
+ * @param tip where the curve and the arrowhead end
+ * @param options the number of dashes, their share of ink, and the size of the head
+ * @returns the path of each dash, and the path of the arrowhead
  */
 export function dashedArrow(
   start: Point,
@@ -24,7 +31,13 @@ export function dashedArrow(
     (1 - t) ** 2 * start[1] + 2 * (1 - t) * t * control[1] + t ** 2 * tip[1],
   ];
 
-  // The control point of the part of the curve between t0 and t1.
+  /**
+   * Find the control point of the part of the curve between t0 and t1.
+   *
+   * @param t0 where the part starts, from 0 to 1
+   * @param t1 where the part ends, from 0 to 1
+   * @returns the control point of that part
+   */
   const controlBetween = (t0: number, t1: number): Point => {
     const a = (1 - t0) * (1 - t1);
     const b = (1 - t0) * t1 + t0 * (1 - t1);
@@ -35,7 +48,7 @@ export function dashedArrow(
     ];
   };
 
-  // The last dash ends on the tip, so the arrowhead connects to it.
+  // The last dash ends on the tip and the arrowhead connects to it.
   const strokes = Array.from({ length: dashes }, (_, index) => {
     const t0 = (index + 1 - ink) / dashes;
     const t1 = (index + 1) / dashes;

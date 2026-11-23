@@ -117,9 +117,9 @@ export function setupOpener() {
     );
 
   if (document.readyState === "complete") {
-    media.preload();
+    void media.preload();
   } else {
-    window.addEventListener("load", () => media.preload(), {
+    window.addEventListener("load", () => void media.preload(), {
       once: true,
       signal,
     });
@@ -160,15 +160,19 @@ export function setupOpener() {
   if ("queued" in root.dataset) {
     void open();
   } else {
-    card.addEventListener("click", open, { once: true, signal });
+    card.addEventListener("click", () => void open(), { once: true, signal });
   }
 
   root.dataset.ready = "";
 }
 
 /**
+ * Skip the opener of the next page after a language link.
+ *
  * A language link leads to the same invitation, which the guest has already
  * opened.
+ *
+ * @param event the event before Astro swaps in the next page
  */
 export function skipOpenerAfterLanguageSwitch(
   event: TransitionBeforeSwapEvent,
@@ -182,7 +186,11 @@ export function skipOpenerAfterLanguageSwitch(
 }
 
 /**
- * Tilts the card toward the pointer and moves the light across its paper.
+ * Tilt the card toward the pointer, and move the light across its paper.
+ *
+ * @param root the opener, which holds the tilt and the light
+ * @param lift the card without its tilt, to measure the pointer against
+ * @param signal stops following the pointer
  */
 function followPointer(
   root: HTMLElement,

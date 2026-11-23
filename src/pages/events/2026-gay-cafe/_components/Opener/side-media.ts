@@ -91,8 +91,10 @@ export function createSideMedia(
   );
 
   /**
-   * Downloads the intro first, then the loop, so the intro gets all the
-   * bandwidth. Resolves with whether the intro can play.
+   * Download the intro first, then the loop, so the intro gets all the
+   * bandwidth.
+   *
+   * @returns resolves with whether the intro can play
    */
   function preload() {
     if (!introReady) {
@@ -103,8 +105,10 @@ export function createSideMedia(
   }
 
   /**
-   * Must run inside the click handler. WebKit only lets an element play
-   * with sound later when it was started inside a user gesture.
+   * Unlock the intro and the song, so they can play with sound later.
+   *
+   * Must run inside the click handler: WebKit only lets an element play with
+   * sound later when it was started inside a user gesture.
    */
   function unlock() {
     for (const media of [intro, song]) {
@@ -117,7 +121,7 @@ export function createSideMedia(
     }
   }
 
-  /** Starts the song from silence, unless the guest already started or paused it. */
+  /** Start the song from silence, unless the guest already started or paused it. */
   function cueSong() {
     if (songCued) {
       return;
@@ -155,7 +159,13 @@ export function createSideMedia(
     intro.classList.add("opacity-0");
   }
 
-  /** After a language switch: the guest has seen the intro, so the loop starts at once. */
+  /**
+   * Start the loop at once, after a language switch.
+   *
+   * The guest has already seen the intro.
+   *
+   * @returns resolves when the loop plays, or cannot play
+   */
   function resume() {
     return startLoop(load(loop));
   }
@@ -181,7 +191,13 @@ export function createSideMedia(
   return { preload, unlock, play, resume };
 }
 
-/** Starts playback, falling back to muted when the browser blocks sound. */
+/**
+ * Start playback, muted when the browser blocks sound.
+ *
+ * @param video the video to start
+ * @param options whether to try with sound first
+ * @returns resolves with whether the video plays
+ */
 async function start(video: HTMLVideoElement, { sound }: { sound: boolean }) {
   video.currentTime = 0;
   video.muted = !sound;
@@ -200,7 +216,15 @@ async function start(video: HTMLVideoElement, { sound }: { sound: boolean }) {
   }
 }
 
-/** Downloads the whole file, so playback never waits for the network. */
+/**
+ * Download the whole file, so playback never waits for the network.
+ *
+ * @param url where the file is
+ * @param signal stops the download
+ * @param onProgress gets the share that is downloaded, or nothing when the
+ *   size is unknown
+ * @returns a blob URL of the file
+ */
 async function fetchObjectUrl(
   url: string,
   signal: AbortSignal,
@@ -232,9 +256,12 @@ async function fetchObjectUrl(
 }
 
 /**
- * Raises the volume from silence, squared, because loudness is not linear.
+ * Raise the volume from silence, squared, because loudness is not linear.
  *
  * iOS ignores `volume`, so there the song starts at full volume.
+ *
+ * @param media the media to fade in
+ * @param duration how long the fade takes, in ms
  */
 function fadeIn(media: HTMLMediaElement, duration: number) {
   const start = performance.now();

@@ -12,8 +12,13 @@ declare global {
 }
 
 /**
- * Downloads the song's first playable source when it is first played, with the
- * progress as a bar over the cover, and then plays it.
+ * Download the song when it is first played, and then play it.
+ *
+ * Downloads the first playable source, with the progress as a bar over the
+ * cover.
+ *
+ * @param root the cover player
+ * @param song the song of the cover player
  */
 export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
   const loading = root.querySelector<HTMLElement>(".loading")!;
@@ -51,7 +56,13 @@ export function downloadOnPlay(root: HTMLElement, song: HTMLAudioElement) {
     loading.hidden = true;
   };
 
-  // The audio element tries its sources in order
+  /**
+   * Put the sources before the others, and play them if the listener still wants to.
+   *
+   * The audio element tries its sources in order.
+   *
+   * @param sources the sources to try first
+   */
   const use = (...sources: HTMLSourceElement[]) => {
     // A pause during the download means the listener changed their mind.
     const wanted = !song.paused;
@@ -132,8 +143,13 @@ async function download(
 }
 
 /**
- * The ID3 tag contains the lyrics, the cover and optionally a C2PA manifest,
- * which the page does not need.
+ * Cut the ID3 tag off the song.
+ *
+ * The tag contains the lyrics, the cover and optionally a C2PA manifest, which
+ * the page does not need.
+ *
+ * @param song the downloaded song
+ * @returns the song without its tag, or the song itself when it has none
  */
 async function withoutTag(song: Blob) {
   const header = new Uint8Array(await song.slice(0, 10).arrayBuffer());

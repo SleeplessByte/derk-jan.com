@@ -7,7 +7,14 @@ export function getStaticPaths() {
   return localeList.map((lang) => ({ params: { lang } }));
 }
 
-// The general event, for guests whose answers the success page does not know.
+/**
+ * Serve the general event as a calendar file.
+ *
+ * It is for guests whose answers the success page does not know.
+ *
+ * @param context the request, with the page's language in its params
+ * @returns the .ics file
+ */
 export const GET: APIRoute = ({ params }) =>
   new Response(
     toIcs(

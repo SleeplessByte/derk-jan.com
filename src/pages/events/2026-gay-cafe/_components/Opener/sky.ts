@@ -33,7 +33,12 @@ export function viewportLayer(canvas: HTMLCanvasElement, ratio: number): Layer {
   return { context, width: innerWidth, height: innerHeight, ratio };
 }
 
-/** An empty canvas like the layer. */
+/**
+ * Make an empty canvas of the same size and scale as the layer.
+ *
+ * @param layer the layer to copy the size and the scale of
+ * @returns the empty layer
+ */
 export function blankLike(layer: Layer): Layer {
   const canvas = document.createElement("canvas");
   canvas.width = layer.context.canvas.width;
@@ -46,8 +51,12 @@ export function blankLike(layer: Layer): Layer {
 }
 
 /**
- * Copies the sky of the veil to a canvas, so that an effect can erase it bit
- * by bit.
+ * Copy the sky of the veil to a canvas, so that an effect can erase it bit by
+ * bit.
+ *
+ * @param veil the veil, whose colours the sky uses
+ * @param canvas the canvas to paint the sky on
+ * @returns the layer with the sky
  */
 export function paintSky(veil: HTMLElement, canvas: HTMLCanvasElement) {
   const layer = viewportLayer(canvas, SKY_RATIO);
@@ -82,6 +91,7 @@ export function paintSky(veil: HTMLElement, canvas: HTMLCanvasElement) {
   context.fillStyle = light;
   context.fillRect(-x / rx, -y / ry, width / rx, height / ry);
   context.restore();
+
   return layer;
 }
 
