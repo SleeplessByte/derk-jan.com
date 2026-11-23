@@ -27,7 +27,17 @@ const star =
 ---
 
 <div data-component="invite-opener">
+  <span class="split" aria-hidden="true" hidden>
+    <span class="seam"></span>
+    {["--left", "--right"].map((side) => (
+      <span class:list={["half", side]}>
+        <span class="copy"></span>
+      </span>
+    ))}
+  </span>
+
   <div class="veil">
+    <canvas class="sky" aria-hidden="true" hidden></canvas>
     <canvas class="snow --back" aria-hidden="true"></canvas>
 
     <div class="scene">
@@ -102,14 +112,13 @@ const star =
       </p>
     </div>
 
+    <canvas class="dust" aria-hidden="true" hidden></canvas>
     <canvas class="snow --front" aria-hidden="true"></canvas>
 
     <div class="handover">
       <Handover placement="opener" />
     </div>
   </div>
-
-  <span class="halo" aria-hidden="true"></span>
 
   <p id={descriptionId} class="sr-only" set:html={t.cardDescription} />
 </div>
@@ -148,21 +157,16 @@ const star =
 
 <style>
   [data-component="invite-opener"] {
-    /* Base colours. */
-    --opener-gold: oklch(86% 0.11 85);
+    /* Base colours. The gold and the sky are on html, at the end of this style. */
     --opener-berry: oklch(21% 0.057 349);
     --opener-paper: oklch(81% 0.032 88);
     --opener-snow: white;
-    --opener-dusk-top: oklch(32% 0.046 265);
-    --opener-dusk-bottom: oklch(47% 0.045 333);
 
     /* Mixed from the base colours. */
     --opener-gold-light: color-mix(in oklch, var(--opener-gold) 40%, white);
     --opener-gold-deep: color-mix(in oklch, var(--opener-gold) 78%, black);
     --opener-ink: color-mix(in oklch, var(--opener-berry) 45%, black);
     --opener-ring: var(--opener-gold-light);
-    --opener-sky-top: var(--opener-dusk-top);
-    --opener-sky-bottom: var(--opener-dusk-bottom);
 
     --card-size: min(78vmin, 30rem);
     --card-radius: 0.5rem;
@@ -173,11 +177,6 @@ const star =
     --light-x: 30;
     --light-y: 20;
     --progress: 0;
-    --reveal-x: 50%;
-    --reveal-y: 50%;
-    --reveal-progress: 0;
-    --reveal-feather: 48px;
-    --reveal-radius: calc(-1 * var(--reveal-feather));
 
     /* Paper textures. The browser rasterises each SVG once, so moving the light is cheap. */
     --paper-tooth: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
@@ -186,11 +185,6 @@ const star =
     position: fixed;
     inset: 0;
     z-index: 50;
-
-    @media (prefers-color-scheme: dark) {
-      --opener-sky-top: color-mix(in oklch, var(--opener-dusk-top) 30%, black);
-      --opener-sky-bottom: color-mix(in oklch, var(--opener-dusk-bottom) 30%, black);
-    }
 
     @media (scripting: none) {
       display: none;
@@ -203,21 +197,96 @@ const star =
     & .veil {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(
-          ellipse 60% 50% at 50% 45%,
-          color-mix(in oklch, var(--opener-gold) 22%, transparent),
-          transparent
-        ),
-        linear-gradient(var(--opener-sky-top), var(--opener-sky-bottom));
+      background: var(--opener-sky);
     }
 
-    & .snow {
+    &.--dust,
+    &.--split {
+      & .veil {
+        background: none;
+      }
+    }
+
+    &.--dust .card {
+      visibility: hidden;
+    }
+
+    &.--split .scene {
+      visibility: hidden;
+    }
+
+    & .split {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    & .seam {
+      position: absolute;
+      inset-block: 0;
+      left: 50%;
+      width: 16rem;
+      translate: -50% 0;
+      background: radial-gradient(
+        ellipse 50% 50% at 50% 50%,
+        var(--opener-gold-light),
+        color-mix(in oklch, var(--opener-gold) 50%, transparent) 40%,
+        transparent 70%
+      );
+      opacity: 0;
+    }
+
+    & .half {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      overflow: hidden;
+      background: var(--opener-sky);
+      background-size: 200% 100%;
+
+      &.--left {
+        left: 0;
+        background-position: left top;
+      }
+
+      &.--right {
+        right: 0;
+        background-position: right top;
+
+        & .copy {
+          left: calc(var(--card-x) - 100%);
+        }
+      }
+    }
+
+    & .copy {
+      position: absolute;
+      top: var(--card-y);
+      left: var(--card-x);
+      width: var(--card-width);
+      aspect-ratio: 1;
+      border-radius: var(--card-radius);
+      background: var(--picture) center / cover;
+      box-shadow:
+        0 1px 2px color-mix(in oklch, var(--opener-ink) 35%, transparent),
+        0 2.5rem 3rem -1rem color-mix(in oklch, var(--opener-ink) 55%, transparent);
+
+      &::after {
+        content: "";
+      }
+    }
+
+    & .snow,
+    & .sky,
+    & .dust {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
+    }
 
+    & .snow {
       &.--front {
         color: var(--opener-ink);
         pointer-events: none;
@@ -257,6 +326,11 @@ const star =
       transform: rotateX(calc(var(--tilt-x) * 1deg)) rotateY(calc(var(--tilt-y) * 1deg));
     }
 
+    &.--opening .tilt {
+      transform: none;
+      transition: transform 0.3s ease-out;
+    }
+
     & .card {
       position: relative;
       display: block;
@@ -287,7 +361,8 @@ const star =
     & .picture,
     & .paint,
     & .grain,
-    & .sheen {
+    & .sheen,
+    & .copy::after {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -310,7 +385,8 @@ const star =
       }
     }
 
-    & .grain {
+    & .grain,
+    & .copy::after {
       background-image: var(--paper-tooth);
       background-size: 200px;
       mix-blend-mode: soft-light;
@@ -644,39 +720,11 @@ const star =
       pointer-events: none;
     }
 
-    & .halo {
-      position: fixed;
-      top: var(--reveal-y);
-      left: var(--reveal-x);
-      width: calc(2 * var(--reveal-radius) + var(--reveal-feather));
-      aspect-ratio: 1;
-      border: 2px solid var(--opener-gold-light);
-      border-radius: 50%;
-      box-shadow:
-        0 0 40px 10px color-mix(in oklch, var(--opener-gold) 55%, transparent),
-        inset 0 0 40px 10px color-mix(in oklch, var(--opener-gold) 40%, transparent);
-      opacity: 0;
-      translate: -50% -50%;
-      pointer-events: none;
-    }
-
     &.--revealing {
       pointer-events: none;
 
-      & .veil {
-        mask-image: radial-gradient(
-          circle at var(--reveal-x) var(--reveal-y),
-          transparent var(--reveal-radius),
-          var(--opener-ink) calc(var(--reveal-radius) + var(--reveal-feather))
-        );
-      }
-
       & .progress {
         opacity: 0;
-      }
-
-      & .halo {
-        opacity: min(calc(var(--reveal-progress) * 6), calc(1 - var(--reveal-progress)));
       }
     }
 
@@ -773,7 +821,33 @@ const star =
 
   @media (scripting: enabled) {
     :global(html:has([data-component="invite-opener"]:not([data-skipped]))) {
+      --opener-gold: oklch(86% 0.11 85);
+      --opener-dusk-top: oklch(32% 0.046 265);
+      --opener-dusk-bottom: oklch(47% 0.045 333);
+      --opener-sky-top: var(--opener-dusk-top);
+      --opener-sky-bottom: var(--opener-dusk-bottom);
+      --opener-sky:
+        radial-gradient(
+          ellipse 60% 50% at 50% 45%,
+          color-mix(in oklch, var(--opener-gold) 22%, transparent),
+          transparent
+        ),
+        linear-gradient(var(--opener-sky-top), var(--opener-sky-bottom));
+
       overflow: hidden;
+      scrollbar-gutter: stable;
+      background-image: var(--opener-sky);
+      background-attachment: fixed;
+
+      & :global(body) {
+        height: auto;
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        --opener-sky-top: color-mix(in oklch, var(--opener-dusk-top) 30%, black);
+        --opener-sky-bottom: color-mix(in oklch, var(--opener-dusk-bottom) 30%, black);
+      }
     }
   }
 

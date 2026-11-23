@@ -34,6 +34,8 @@ export async function launch({
   height = 900,
   scale = 1,
   touch = false,
+  /** Shows classic scrollbars, as Windows has them, for checks on layout shifts. */
+  scrollbars = false,
   args = [],
 } = {}) {
   mkdirSync(PROFILES, { recursive: true });
@@ -47,7 +49,7 @@ export async function launch({
       `--remote-debugging-port=${port}`,
       `--user-data-dir=${profile}`,
       `--window-size=${width},${height}`,
-      "--hide-scrollbars",
+      ...(scrollbars ? [] : ["--hide-scrollbars"]),
       "--no-first-run",
       "--autoplay-policy=no-user-gesture-required",
       "--mute-audio",
@@ -116,6 +118,21 @@ export async function launch({
       configuration: "mobile",
     });
   }
+
+  /** Screencast frames while a recording runs. */
+  let recording;
+  listeners.push((message) => {
+    if (message.method === "Page.screencastFrame" && recording) {
+      recording.push({
+        data: message.params.data,
+        timestamp: message.params.metadata.timestamp,
+      });
+      // Chrome sends the next frame only after this.
+      void send("Page.screencastFrameAck", {
+        sessionId: message.params.sessionId,
+      });
+    }
+  });
 
   const logs = [];
   listeners.push((message) => {
@@ -198,6 +215,49 @@ export async function launch({
           windowsVirtualKeyCode: keyCode,
         });
       }
+    },
+    /** Starts recording the viewport, for motion that screenshots cannot show. */
+    async startRecording() {
+      recording = [];
+      await send("Page.startScreencast", { format: "jpeg", quality: 85 });
+    },
+    /**
+     * Stops recording and writes an MP4 that keeps each frame's real
+     * duration, so stutter shows. Needs ffmpeg on the PATH. Returns the path.
+     */
+    async stopRecording(path) {
+      await send("Page.stopScreencast");
+      const frames = recording;
+      recording = undefined;
+      const folder = mkdtempSync(join(tmpdir(), "derk-jan-com-video-"));
+      const file = (index) =>
+        join(folder, `${index}.jpg`).replaceAll("\\", "/");
+      const list = frames.flatMap(({ data, timestamp }, index) => {
+        writeFileSync(file(index), Buffer.from(data, "base64"));
+        const next = frames[index + 1]?.timestamp ?? timestamp + 1 / 30;
+        return [`file '${file(index)}'`, `duration ${next - timestamp}`];
+      });
+      // The concat demuxer drops the last duration unless its file repeats.
+      list.push(`file '${file(frames.length - 1)}'`);
+      writeFileSync(join(folder, "frames.txt"), list.join("\n"));
+
+      const ffmpeg = spawn(
+        "ffmpeg",
+        [
+          ...["-v", "error", "-y", "-f", "concat", "-safe", "0"],
+          ...["-i", join(folder, "frames.txt")],
+          // H.264 needs even dimensions.
+          ...["-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2"],
+          ...["-pix_fmt", "yuv420p", "-c:v", "libx264", "-r", "60", path],
+        ],
+        { stdio: "inherit" },
+      );
+      const [code] = await once(ffmpeg, "exit");
+      rmSync(folder, { recursive: true, force: true });
+      if (code !== 0) {
+        throw new Error(`ffmpeg stopped with code ${code}`);
+      }
+      return path;
     },
     /** Saves a PNG of the viewport, or of `clip` in CSS pixels, and returns the path. */
     async shot(path, clip) {

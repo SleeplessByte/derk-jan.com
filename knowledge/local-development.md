@@ -8,7 +8,7 @@
 - Astro restarts itself when `astro.config.mjs` changes, but not when a file that the config imports changes, such as a remark plugin. The MDX compiler keeps the plugin it loaded, so the pages still use the old one. `touch astro.config.mjs` makes Astro reload the config.
 - `src/middleware.ts` uses Netlify Blobs on every route that is not pre-rendered, `/_image` included. Those routes failed with `MissingBlobsEnvironmentError` after the server restarted itself (an edit of `astro.config.mjs`).
   - The cause: on a restart, Vite creates the new server before it closes the old one. Netlify's Vite plugin stops its emulation when the old server closes, and that stop restores the environment from before the old start, which removes the blobs context of the new emulation.
-  - [`patches/@netlify__vite-plugin@3.0.1.patch`](../patches/@netlify__vite-plugin@3.0.1.patch) stops the old emulation before the new one starts. Node loads the plugin only once, so a change to the patch takes effect after a manual restart of the dev server.
+  - [`patches/@netlify__vite-plugin@3.0.1.patch`](../patches/@netlify__vite-plugin@3.0.1.patch) stops the old emulation before the new one starts. Node loads the plugin only once, so a change to the patch takes effect after a manual restart of the dev server. Verified with two restarts by `touch astro.config.mjs`: `/_image` kept working.
   - To test the patch without the user's dev server, create a Vite server with only the Netlify plugin on another port, call `server.restart()`, and then call `getStore()`.
   - The error was also seen after `node_modules` was re-linked (`pnpm add`, worktrees). Astro does not restart for that, so the patch may not help there: ask the user to restart the dev server.
   - The patch belongs to that exact version, like the one in [Building](#building).
@@ -40,12 +40,20 @@
 These techniques proved useful:
 
 - `Emulation.setTouchEmulationEnabled` makes `(hover: none)` match, for UI that only phones and tablets see.
+- `launch({ scrollbars: true })` shows classic scrollbars, as Windows has them, to measure layout shifts (`innerWidth - documentElement.clientWidth`). Screenshots do not include the scrollbar's gutter, so its colour cannot be checked this way. In Chrome, `100vw` leaves out a gutter reserved by `scrollbar-gutter: stable`.
 - CSS `zoom` on the root element (0.9, 1.25) reproduces bugs that appear at the browser zoom levels many Windows users have.
 - A `Date` override through `Page.addScriptToEvaluateOnNewDocument` tests countdowns and past-tense text. Stub `Navigator.prototype.share` the same way to test the share sheet.
 - `Emulation.setCPUThrottlingRate` (6×, 12×) tests the quality steps of animations.
 - `Emulation.setEmulatedMedia` sets `prefers-color-scheme` and `prefers-reduced-motion`.
+- A second tab hides the page, as when a visitor switches tabs or apps: `Target.createTarget` fires `visibilitychange`, and `Target.closeTarget` with `Page.bringToFront` shows the page again.
+- To see a state that only lasts a frame, hold the animation that ends it: wrap the element's `animate`, `pause()` the animation it returns, take the screenshot, then `play()` it.
+- A test page starts at the top, but a visitor's reloaded tab keeps its scroll position. For bugs that need a scrolled page, set `document.documentElement.scrollTop` by hand; it also works under `overflow: hidden`.
+
+For motion, record a video rather than screenshots: `startRecording()` and `stopRecording(path)` record the viewport with Chrome's screencast and write an MP4 with ffmpeg (on Windows, through scoop). Every frame keeps its real duration, so a stutter shows. `ffmpeg -i <video> -vf freezedetect=n=0.0005:d=0.08 -f null -` lists where the picture stands still.
 
 Pitfalls:
 
 - The `clip` of `shot()` is in document coordinates: add `scrollY` to a `getBoundingClientRect()` top.
+- A recording of the Gay Café opener freezes for about 0.2 s, 0.3 s into every reveal except the fade, also in versions that do not stall. The frame times measured without recording show no such stall there, so it probably comes from the screencast.
 - The site scrolls smoothly, so use `scrollIntoView({ behavior: "instant" })` before you measure or click.
+- With `touch: true`, `click()` did not return (November 2026). A click handler that does not check the pointer type can be tested with `element.click()` in `eval`.

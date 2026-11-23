@@ -1,3 +1,5 @@
+import { framesThatCount } from "./frames";
+
 interface Crystal {
   design: number;
   angle: number;
@@ -45,7 +47,6 @@ const SHADOW_ALPHA = 0.15;
 const SHADOW_OFFSET = 6;
 const SLOW_FRAME_MS = 24;
 const SLOW_FOR_MS = 500;
-const PAUSE_MS = 1000;
 const GRACE_MS = 1000;
 const APPEAR_S = 1.6;
 const FADE_S = 0.9;
@@ -80,6 +81,7 @@ export function startSnow(
 
   // A weak device starts without the front layer.
   let level = lowPower ? 2 : 0;
+  const counts = framesThatCount(signal);
   let flakes: Flake[] = [];
   let width = 0;
   let height = 0;
@@ -248,7 +250,7 @@ export function startSnow(
     const elapsed = previous ? time - previous : 0;
     previous = time;
 
-    if (time - started > GRACE_MS && elapsed < PAUSE_MS) {
+    if (time - started > GRACE_MS && counts(time, elapsed)) {
       slowTime =
         elapsed > SLOW_FRAME_MS
           ? slowTime + elapsed

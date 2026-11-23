@@ -1,5 +1,4 @@
-/** This file is largely AI generated */
-
+import { framesThatCount } from "./frames";
 import {
   mix,
   studyImage,
@@ -9,15 +8,26 @@ import {
   type Study,
 } from "./paint-study";
 
+// The painting has three phases:
+//
+// 1. The sketch phase, where a single pen draws lines
+// 2. The shapes phase, where brush strokes remove parts of a mask
+// 3. The reval phase, where broad strokes remove more parts of the mask
+
+/** How long the pen may sketch for */
 const SKETCH_MS = 1500;
+
+/** The pause while the pencil or brush lifts and moves to its next line. */
+const LIFT_MS = 70;
+
+/** Most time the brush spends on single shapes, before its last broad sweeps. */
+const SHAPES_MS = 1500;
+
 /** How fast the pencil and the brush move, in card widths per second. */
 const PEN_SPEED = 3.2;
 const BRUSH_SPEED = 2.8;
-/** The pause while the pencil or brush lifts and moves to its next line. */
-const LIFT_MS = 70;
-/** Most time the brush spends on single shapes, before its last broad sweeps. */
-const SHAPES_MS = 1500;
-/** Broad sweeps over the painted circle on the card, to bring in what is left. */
+
+/** Broad sweeps over the painted circle on the card */
 const LAST_SWEEPS: [Point, Point][] = [
   [
     [0.2, 0.24],
@@ -35,21 +45,22 @@ const LAST_SWEEPS: [Point, Point][] = [
 
 /** A study slower than this predicts a painting that stutters. */
 const STUDY_BUDGET_MS = 150;
+
 /** Frames slower than this add up; past `GIVE_UP_MS` the painting stops. */
 const SLOW_FRAME_MS = 50;
+
+/** Total amount that may pass before painting is abandoned, and it paints */
 const GIVE_UP_MS = 400;
-/** A longer gap is a pause, such as a hidden tab, not a slow device. */
-const PAUSE_MS = 1000;
 
 type Bounds = [number, number, number, number];
 
 interface PaintOptions {
   signal: AbortSignal;
-  /** Only waits for the image, for visitors who prefer reduced motion. */
+  /** Only waits for the image for visitors who prefer reduced motion. */
   still: boolean;
   /** Paints at one canvas pixel per CSS pixel. */
   lowPower: boolean;
-  /** Called when the device is too slow, before the painting gives up. */
+  /** Called when the device is too slow, before painting stops (gives up). */
   onSlow: () => void;
 }
 
@@ -60,10 +71,13 @@ interface Mark {
 }
 
 /**
- * Paints the image in like a person would: a pencil sketch of the outlines,
- * one line at a time, then one brush that brings the real image in, shape by
- * shape. Resolves when the painting is done, or when the device turns out
- * too slow for it: then the caller shows the card without the painting.
+ * Paints the image in "like" a person would.
+ *
+ * 1. a pencil sketch of the outlines, one line at a time
+ * 2. then one brush that starts showing the real image, shape by shape.
+ *
+ * Resolves when the painting is done, or when the device is too slow, which
+ * then falls back to seeing the card without the painting.
  */
 export async function paintCard(
   image: HTMLImageElement,
@@ -73,7 +87,9 @@ export async function paintCard(
   // Component.astro puts a small copy of the card on the canvas, for the study.
   const studyCopy = new Image();
   studyCopy.src = canvas.dataset.study!;
+
   await Promise.all([image.decode(), studyCopy.decode()]);
+
   if (still) {
     return;
   }
@@ -89,12 +105,18 @@ export async function paintCard(
   const size = canvas.clientWidth * ratio;
   canvas.width = size;
   canvas.height = size;
+
   const context = canvas.getContext("2d")!;
   context.fillStyle = rgb(study.paper);
   context.fillRect(0, 0, size, size);
 
   const sketched = sketch(study, context, size);
-  const brushed = bringIn(study, image, canvas, sketched.at(-1)!.at + LIFT_MS);
+  const brushed = paintWithBrush(
+    study,
+    image,
+    canvas,
+    sketched.at(-1)!.at + LIFT_MS,
+  );
 
   return play(
     [...sketched, ...brushed.marks].sort((a, b) => a.at - b.at),
@@ -104,9 +126,7 @@ export async function paintCard(
 }
 
 /**
- * Draws each mark when its time comes, and renders once per frame that drew
- * any. Gives up when frames stay too slow: a stuttering painting is worse
- * than none.
+ * Draws each mark and renders once per frame
  */
 function play(
   marks: Mark[],
@@ -114,6 +134,7 @@ function play(
   { signal, onSlow }: Pick<PaintOptions, "signal" | "onSlow">,
 ) {
   return new Promise<void>((resolve) => {
+    const counts = framesThatCount(signal);
     let start = 0;
     let previous = 0;
     let slowTime = 0;
@@ -124,7 +145,7 @@ function play(
       start ||= now;
       const elapsed = previous ? now - previous : 0;
       previous = now;
-      if (elapsed > SLOW_FRAME_MS && elapsed < PAUSE_MS) {
+      if (elapsed > SLOW_FRAME_MS && counts(now, elapsed)) {
         slowTime += elapsed;
       }
       if (slowTime > GIVE_UP_MS) {
@@ -156,16 +177,16 @@ function play(
 
 /**
  * One pencil draws the outlines, one line at a time: the longest lines that
- * fit the time, each next line the one closest to where the pencil is. The
- * pencil speeds up and slows down along a line, and presses lighter where it
- * lands and lifts.
+ * fit the time, and each next line the one closest to where the pencil is.
+ *
+ * The pencil speeds up and slows down along a line, and presses lighter where
+ * it lands and lifts.
  */
 function sketch(
   study: Study,
   context: CanvasRenderingContext2D,
   size: number,
 ): Mark[] {
-  // A warm, soft brown from the image's darkest colour.
   const pencil = rgb(
     mix(mix(study.darkest, [62, 40, 28], 0.5), study.paper, 0.35),
   );
@@ -178,6 +199,7 @@ function sketch(
     if (pen) {
       time += LIFT_MS + (distance(pen, line[0]) / (PEN_SPEED * 3)) * 1000;
     }
+
     const lengths = cumulativeLengths(line);
     const total = lengths.at(-1)!;
     const duration = (total / PEN_SPEED) * 1000;
@@ -186,6 +208,7 @@ function sketch(
       const progress = lengths[index] / total;
       const [from, to] = [line[index - 1], line[index]];
       const width = 0.0034 * (0.55 + 0.6 * Math.sin(Math.PI * progress));
+
       marks.push({
         at: time + ease(progress) * duration,
         draw: () => {
@@ -209,13 +232,16 @@ function sketch(
 
 function planSketch(outlines: Point[][]) {
   const chosen: Point[][] = [];
+
   let time = 0;
   for (const line of outlines) {
     const cost = (pathLength(line) / PEN_SPEED) * 1000 + LIFT_MS;
     if (time + cost > SKETCH_MS) {
       continue;
     }
+
     time += cost;
+
     // A hand never follows the edge exactly.
     chosen.push(
       line.map(([x, y]): Point => [
@@ -231,6 +257,7 @@ function planSketch(outlines: Point[][]) {
     let best = 0;
     let reverse = false;
     let closest = Infinity;
+
     chosen.forEach((line, index) => {
       for (const [end, backwards] of [
         [line[0], false],
@@ -243,6 +270,7 @@ function planSketch(outlines: Point[][]) {
         }
       }
     });
+
     const [line] = chosen.splice(best, 1);
     ordered.push(reverse ? [...line].reverse() : line);
   }
@@ -254,7 +282,7 @@ function planSketch(outlines: Point[][]) {
  * each shape. Every sweep paints a mask, and the real card shows through the
  * mask over the sketch. A few broad sweeps bring in the rest.
  */
-function bringIn(
+function paintWithBrush(
   study: Study,
   image: HTMLImageElement,
   canvas: HTMLCanvasElement,
@@ -265,6 +293,7 @@ function bringIn(
   const sketched = createLayer(size);
   const card = createLayer(size);
   card.context.drawImage(image, 0, 0, size, size);
+
   const mask = createLayer(size);
   const revealed = createLayer(size);
   mask.context.lineCap = "round";
@@ -273,14 +302,15 @@ function bringIn(
   const marks: Mark[] = [
     { at: start, draw: () => sketched.context.drawImage(canvas, 0, 0) },
   ];
+
   let time = start;
-  // Only the part the brush touched since the last frame is composited again.
   let dirty: Bounds | undefined;
 
   const sweep = (from: Point, to: Point, width: number) => {
     const stroke = createMaskStroke(from, to, width);
     const duration = Math.max(90, (distance(from, to) / BRUSH_SPEED) * 1000);
     const steps = Math.ceil(duration / 16);
+
     for (let step = 0; step < steps; step++) {
       // The brush speeds up and slows down along the sweep.
       const [t0, t1] = [ease(step / steps), ease((step + 1) / steps)];
@@ -292,6 +322,7 @@ function bringIn(
         },
       });
     }
+
     time += duration + LIFT_MS;
   };
 
@@ -299,10 +330,11 @@ function bringIn(
     if (time - start > SHAPES_MS) {
       break;
     }
-    for (const [from, to, width] of sweepsAcross(shape)) {
+    for (const [from, to, width] of generateSweeps(shape)) {
       sweep(from, to, width);
     }
   }
+
   for (const [from, to] of LAST_SWEEPS) {
     sweep(from, to, 0.24);
   }
@@ -333,8 +365,7 @@ function bringIn(
   };
 }
 
-/** Parallel sweeps along a shape, back and forth, that together cover it. */
-function sweepsAcross(shape: Shape): [Point, Point, number][] {
+function generateSweeps(shape: Shape): [Point, Point, number][] {
   const axis: Point = [Math.cos(shape.angle), Math.sin(shape.angle)];
   const normal: Point = [-axis[1], axis[0]];
   const span = shape.across[1] - shape.across[0];
@@ -354,9 +385,10 @@ function sweepsAcross(shape: Shape): [Point, Point, number][] {
   });
 }
 
-/** A wide brush with ragged bristles, painted a part at a time as it moves. */
+/** A wide brush with ragged bristles. */
 function createMaskStroke(from: Point, to: Point, width: number) {
   const count = 9;
+
   const bristles = Array.from({ length: count }, (_, index) => ({
     offset: (index + 0.5) / count - 0.5,
     start: between(0, 0.1),
@@ -364,6 +396,7 @@ function createMaskStroke(from: Point, to: Point, width: number) {
     // The outer bristles carry less paint, which softens the edge.
     alpha: index === 0 || index === count - 1 ? 0.45 : between(0.85, 1),
   }));
+
   const bend = between(-0.12, 0.12);
   const length = distance(from, to);
   const normal: Point = [
@@ -382,12 +415,15 @@ function createMaskStroke(from: Point, to: Point, width: number) {
       context.lineWidth = (width / count) * 1.9 * size;
       const reach = context.lineWidth / 2 + 1;
       const touched: Bounds = [Infinity, Infinity, -Infinity, -Infinity];
+
       for (const bristle of bristles) {
         const a = Math.max(t0, bristle.start);
         const b = Math.min(t1, bristle.end);
+
         if (a >= b) {
           continue;
         }
+
         const point = (t: number) => {
           const sideways =
             bristle.offset * width + (1 - (2 * t - 1) ** 2) * bend * length;

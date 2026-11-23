@@ -1,15 +1,12 @@
 import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
 
 import { paintCard } from "./paint";
+import { prepareReveal } from "./reveal";
 import { createSideMedia } from "./side-media";
 import { startSnow } from "./snow";
 
 const LABEL_EXIT_MS = 300;
-const REVEAL_MS = 1200;
-const FADE_MS = 400;
 const TILT_DEG = 8;
-/** Must match `--reveal-feather` in Component.astro. */
-const FEATHER_PX = 48;
 
 export function setupOpener() {
   const root = document.querySelector<HTMLElement>(
@@ -90,7 +87,8 @@ export function setupOpener() {
   }
 
   const paint = find<HTMLCanvasElement>(".paint", root);
-  paintCard(find<HTMLImageElement>(".picture", root), paint, {
+  /** Resolves when the painting has faded and the card shows its picture. */
+  const drawn = paintCard(find<HTMLImageElement>(".picture", root), paint, {
     signal,
     still: reducedMotion,
     lowPower,
@@ -99,16 +97,24 @@ export function setupOpener() {
     },
   })
     .catch((error) => console.error(error))
-    .then(() => {
-      if (signal.aborted) {
-        return;
-      }
-      paint.addEventListener("transitionend", () => paint.remove(), {
-        once: true,
-      });
-      paint.classList.add("--done");
-      root.dataset.painted = "";
-    });
+    .then(
+      () =>
+        new Promise<void>((resolve) => {
+          if (signal.aborted) {
+            return;
+          }
+          paint.addEventListener(
+            "transitionend",
+            () => {
+              paint.remove();
+              resolve();
+            },
+            { once: true },
+          );
+          paint.classList.add("--done");
+          root.dataset.painted = "";
+        }),
+    );
 
   if (document.readyState === "complete") {
     media.preload();
@@ -121,11 +127,16 @@ export function setupOpener() {
 
   const open = async () => {
     media.unlock();
+
     let ready = false;
     const playable = media.preload().then(() => (ready = true));
 
     card.setAttribute("aria-disabled", "true");
     root.classList.add("--opening");
+
+    // The reveal prepares while the label fades out, in order to reduce
+    // processing power required.
+    const reveal = prepareReveal(root, veil, { reducedMotion, signal, drawn });
     await wait(LABEL_EXIT_MS);
 
     if (!ready) {
@@ -134,18 +145,12 @@ export function setupOpener() {
       await playable;
     }
 
+    // Browsers may restore scroll, but the invitation starts at the top.
+    scrollTo({ top: 0, behavior: "instant" });
+
     root.classList.add("--revealing");
     void media.play();
-
-    // The growing mask repaints the whole screen every frame, too much for a weak device.
-    if (reducedMotion || root.dataset.quality === "low") {
-      await veil.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: FADE_MS,
-        fill: "forwards",
-      }).finished;
-    } else {
-      await expandReveal(root, card);
-    }
+    await reveal();
 
     root.remove();
     content.inert = false;
@@ -174,41 +179,6 @@ export function skipOpenerAfterLanguageSwitch(
   event.newDocument.querySelector<HTMLElement>(
     '[data-component="invite-opener"]',
   )!.dataset.skipped = "";
-}
-
-/**
- * Grows a hole in the veil from the middle of the card until it uncovers
- * the farthest corner of the viewport.
- */
-function expandReveal(root: HTMLElement, card: HTMLElement) {
-  const rect = card.getBoundingClientRect();
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
-  const end =
-    Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) +
-    FEATHER_PX;
-
-  root.style.setProperty("--reveal-x", `${x}px`);
-  root.style.setProperty("--reveal-y", `${y}px`);
-
-  return new Promise<void>((resolve) => {
-    let start = 0;
-    function frame(now: number) {
-      start ||= now;
-      const progress = Math.min(1, (now - start) / REVEAL_MS);
-      root.style.setProperty("--reveal-progress", String(progress));
-      root.style.setProperty(
-        "--reveal-radius",
-        `${easeInOutCubic(progress) * end - FEATHER_PX}px`,
-      );
-      if (progress < 1) {
-        requestAnimationFrame(frame);
-      } else {
-        resolve();
-      }
-    }
-    requestAnimationFrame(frame);
-  });
 }
 
 /**
@@ -335,10 +305,6 @@ function find<T extends Element>(
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
-}
-
-function easeInOutCubic(t: number) {
-  return t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2;
 }
 
 function wait(ms: number) {
