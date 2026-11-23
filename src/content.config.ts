@@ -16,7 +16,7 @@ const articles = defineCollection({
 });
 
 const recipes = defineCollection({
-  loader: glob({ pattern: "*.mdx", base: "./src/recipes" }),
+  loader: glob({ pattern: "*/*.mdx", base: "./src/recipes" }),
   schema: z.object({
     title: z.string(),
     description: z.string(),

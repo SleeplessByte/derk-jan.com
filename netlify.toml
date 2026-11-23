@@ -47,6 +47,40 @@
   to = "/events/2026-gay-cafe/en/success"
   status = 301
 
+# Recipe links from before the recipes had a language.
+[[redirects]]
+  from = "/recipes/"
+  to = "/recipes/nl/"
+  status = 302
+  conditions = {Language = ["nl"]}
+
+[[redirects]]
+  from = "/recipes/"
+  to = "/recipes/en/"
+  status = 302
+
+[[redirects]]
+  from = "/recipes/pickled-cucumber"
+  to = "/recipes/nl/pickled-cucumber"
+  status = 302
+  conditions = {Language = ["nl"]}
+
+[[redirects]]
+  from = "/recipes/pickled-cucumber"
+  to = "/recipes/en/pickled-cucumber"
+  status = 302
+
+[[redirects]]
+  from = "/recipes/teriyaki-tempeh"
+  to = "/recipes/nl/teriyaki-tempeh"
+  status = 302
+  conditions = {Language = ["nl"]}
+
+[[redirects]]
+  from = "/recipes/teriyaki-tempeh"
+  to = "/recipes/en/teriyaki-tempeh"
+  status = 302
+
 [[redirects]]
   from = "/sitemap.xml"
   to = "/sitemap-index.xml"

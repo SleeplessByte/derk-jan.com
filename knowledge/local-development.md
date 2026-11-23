@@ -3,27 +3,24 @@
 ## The dev server
 
 - The user usually runs `pnpm dev` themselves, on http://localhost:4321. Use that server, and do not stop or replace it without asking.
-- Astro 7 refuses a second `astro dev` in the same project ("Another astro dev server is already running"). For an extra check, build instead (see below).
-- The Netlify adapter loads Netlify's local emulation into `astro dev`: blobs, redirects, headers and more. It reads `netlify.toml` only when it starts, so after a change to the redirects the dev server needs a restart.
-- Astro restarts itself when `astro.config.mjs` changes, but not when a file that the config imports changes, such as a remark plugin. The MDX compiler keeps the plugin it loaded, so the pages still use the old one. `touch astro.config.mjs` makes Astro reload the config.
-- `src/middleware.ts` uses Netlify Blobs on every route that is not pre-rendered, `/_image` included. Those routes failed with `MissingBlobsEnvironmentError` after the server restarted itself (an edit of `astro.config.mjs`).
-  - The cause: on a restart, Vite creates the new server before it closes the old one. Netlify's Vite plugin stops its emulation when the old server closes, and that stop restores the environment from before the old start, which removes the blobs context of the new emulation.
-  - [`patches/@netlify__vite-plugin@3.0.1.patch`](../patches/@netlify__vite-plugin@3.0.1.patch) stops the old emulation before the new one starts. Node loads the plugin only once, so a change to the patch takes effect after a manual restart of the dev server. Verified with two restarts by `touch astro.config.mjs`: `/_image` kept working.
-  - To test the patch without the user's dev server, create a Vite server with only the Netlify plugin on another port, call `server.restart()`, and then call `getStore()`.
-  - The error was also seen after `node_modules` was re-linked (`pnpm add`, worktrees). Astro does not restart for that, so the patch may not help there: ask the user to restart the dev server.
-  - The patch belongs to that exact version, like the one in [Building](#building).
+- Astro 7 does not start a second `astro dev` in the same project. For an extra check, build instead (see below).
+- The Netlify adapter loads Netlify's local emulation (blobs, redirects, headers) into `astro dev`. It reads `netlify.toml` only when it starts, so a change to the redirects needs a restart.
+- Astro restarts itself when `astro.config.mjs` changes, but not when a file that the config imports changes, such as a remark plugin. `touch astro.config.mjs` makes it reload.
+- `MissingBlobsEnvironmentError` on routes that render per request (`src/middleware.ts` uses Netlify Blobs, also for `/_image`): on a restart, Vite creates the new server before it closes the old one, and the old Netlify emulation's stop removes the blobs context of the new one.
+  - [`patches/@netlify__vite-plugin@3.0.1.patch`](../patches/@netlify__vite-plugin@3.0.1.patch) stops the old emulation first. Node loads the plugin once, so a change to the patch needs a manual restart. To test it without the user's server, create a Vite server with only the Netlify plugin on another port, call `server.restart()`, and then `getStore()`.
+  - After `node_modules` is re-linked (`pnpm add`, worktrees), Astro does not restart, and the error can still appear: ask the user to restart the dev server.
 
 ## Building
 
 - `pnpm build` runs `astro check && astro build`, so a type error stops the deploy.
-- At the end of a build, the Netlify adapter copies the server function's dependencies into `.netlify/v1/functions/ssr/` and recreates pnpm's symbolic links there. Windows only lets administrators (or Developer Mode) create symbolic links, so this failed with `EPERM: operation not permitted, symlink … sharp …`, and the later hooks, such as the sitemap, did not run.
-  - [`patches/@astrojs__internal-helpers@0.13.2.patch`](../patches/@astrojs__internal-helpers@0.13.2.patch) makes a junction for a folder instead (no rights needed) and copies a file, only on Windows and only after `EPERM`. Netlify's Linux build is unchanged.
-  - The patch belongs to that exact version. When Astro updates `@astrojs/internal-helpers`, pnpm reports that the patch no longer applies: check whether the new version still needs it.
+- On Windows, the build failed with `EPERM: operation not permitted, symlink … sharp …`, and the later hooks, such as the sitemap, did not run. The Netlify adapter recreates pnpm's symbolic links in `.netlify/v1/functions/ssr/`, and only administrators (or Developer Mode) may create them. [`patches/@astrojs__internal-helpers@0.13.2.patch`](../patches/@astrojs__internal-helpers@0.13.2.patch) makes a junction or a copy instead, only on Windows and only after `EPERM`.
+- Both patches belong to their exact version. When pnpm reports that a patch no longer applies, check whether the new version still needs it.
 - To check built pages without the dev server, serve `dist/` with a small static Node server on another port.
 
 ## Formatting and linting
 
-- `pnpm format <files>` (Prettier) and `pnpm lint [files]` (ESLint). Both take file names; without one, `pnpm lint` checks the whole repo.
+- `pnpm format <files>` (Prettier) and `pnpm lint [files]` (ESLint). Without a file, `pnpm lint` checks the whole repo.
+- Many older files, mostly the talks, are not formatted with Prettier. Format only the files you edit, so that a diff shows only your change.
 - [`eslint.config.js`](../eslint.config.js) lints the Astro templates and the React components (`.tsx`) with the jsx-a11y rules, plus a ban on `aria-label` (AGENTS.md). It uses the fork `eslint-plugin-jsx-a11y-x`, because the original does not support ESLint 10.
   - `role="list"` on `<ol>` and `<ul>` is allowed on purpose: Safari drops the list role when a list has `list-style: none`, which Tailwind's preflight sets.
   - The ignore list "Broken on purpose" holds files that break the rules deliberately, many as examples in the accessibility talks. Do not fix them. Add a file there only when the user confirms it is deliberate.
@@ -35,25 +32,26 @@
 
 ## Verifying in a browser
 
-[`src/tools/cdp.mjs`](../src/tools/cdp.mjs) drives headless Chrome through the DevTools Protocol: `launch()`, then `goto`, `eval`, `click`, `key`, `media` and `shot`, and `close()`. Write the scripts that use it and their screenshots in a scratch folder, not in the repo. Its browser profiles live in `%TEMP%/derk-jan-com-cdp/`; `close()` removes its own, and the next `launch()` removes what a crashed script left behind.
+[`src/tools/cdp.mjs`](../src/tools/cdp.mjs) drives headless Chrome through the DevTools Protocol: `launch()`, then `goto`, `eval`, `click`, `key`, `media` and `shot`, and `close()`. Write the scripts that use it and their screenshots in a scratch folder, not in the repo. Its browser profiles live in `%TEMP%/derk-jan-com-cdp/`, and `close()` and the next `launch()` remove them.
 
-These techniques proved useful:
+Useful techniques:
 
 - `Emulation.setTouchEmulationEnabled` makes `(hover: none)` match, for UI that only phones and tablets see.
-- `launch({ scrollbars: true })` shows classic scrollbars, as Windows has them, to measure layout shifts (`innerWidth - documentElement.clientWidth`). Screenshots do not include the scrollbar's gutter, so its colour cannot be checked this way. In Chrome, `100vw` leaves out a gutter reserved by `scrollbar-gutter: stable`.
-- CSS `zoom` on the root element (0.9, 1.25) reproduces bugs that appear at the browser zoom levels many Windows users have.
-- A `Date` override through `Page.addScriptToEvaluateOnNewDocument` tests countdowns and past-tense text. Stub `Navigator.prototype.share` the same way to test the share sheet.
-- `Emulation.setCPUThrottlingRate` (6×, 12×) tests the quality steps of animations.
+- `launch({ scrollbars: true })` shows classic scrollbars, as on Windows, to measure layout shifts (`innerWidth - documentElement.clientWidth`). Screenshots leave out the scrollbar's gutter. In Chrome, `100vw` leaves out a gutter reserved by `scrollbar-gutter: stable`.
+- CSS `zoom` on the root element (0.9, 1.25) reproduces bugs at the browser zoom levels that many Windows users have.
+- `Page.addScriptToEvaluateOnNewDocument` can override `Date` (countdowns, past-tense text) or stub `Navigator.prototype.share`.
+- `Emulation.setCPUThrottlingRate` (4×, 6×, 12×) tests the quality steps of animations.
 - `Emulation.setEmulatedMedia` sets `prefers-color-scheme` and `prefers-reduced-motion`.
+- The `Fetch` domain can serve a broken file, for example an audio file that does not decode, to test error paths.
 - A second tab hides the page, as when a visitor switches tabs or apps: `Target.createTarget` fires `visibilitychange`, and `Target.closeTarget` with `Page.bringToFront` shows the page again.
-- To see a state that only lasts a frame, hold the animation that ends it: wrap the element's `animate`, `pause()` the animation it returns, take the screenshot, then `play()` it.
-- A test page starts at the top, but a visitor's reloaded tab keeps its scroll position. For bugs that need a scrolled page, set `document.documentElement.scrollTop` by hand; it also works under `overflow: hidden`.
+- To see a state that lasts one frame, hold the animation that ends it: wrap the element's `animate`, `pause()` the animation it returns, take the screenshot, then `play()` it.
+- A reloaded tab keeps its scroll position, but a test page starts at the top. Set `document.documentElement.scrollTop` by hand; it also works under `overflow: hidden`.
 
-For motion, record a video rather than screenshots: `startRecording()` and `stopRecording(path)` record the viewport with Chrome's screencast and write an MP4 with ffmpeg (on Windows, through scoop). Every frame keeps its real duration, so a stutter shows. `ffmpeg -i <video> -vf freezedetect=n=0.0005:d=0.08 -f null -` lists where the picture stands still.
+For motion, record a video rather than screenshots: `startRecording()` and `stopRecording(path)` write an MP4 with ffmpeg (on Windows, through scoop). Every frame keeps its real duration, so a stutter shows. `ffmpeg -i <video> -vf freezedetect=n=0.0005:d=0.08 -f null -` lists where the picture stands still.
 
 Pitfalls:
 
 - The `clip` of `shot()` is in document coordinates: add `scrollY` to a `getBoundingClientRect()` top.
-- A recording of the Gay Café opener freezes for about 0.2 s, 0.3 s into every reveal except the fade, also in versions that do not stall. The frame times measured without recording show no such stall there, so it probably comes from the screencast.
 - The site scrolls smoothly, so use `scrollIntoView({ behavior: "instant" })` before you measure or click.
-- With `touch: true`, `click()` did not return (November 2026). A click handler that does not check the pointer type can be tested with `element.click()` in `eval`.
+- With `touch: true`, `click()` did not return (November 2026). Use `element.click()` in `eval`.
+- A recording of the Gay Café opener freezes for about 0.2 s, 0.3 s into every reveal except the fade. The frame times without recording show no stall there, so it probably comes from the screencast.

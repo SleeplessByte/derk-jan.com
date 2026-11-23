@@ -1,15 +1,15 @@
 // @ts-check
-import tsParser from "@typescript-eslint/parser";
+import js from "@eslint/js";
 import { defineConfig, globalIgnores } from "eslint/config";
 import astro from "eslint-plugin-astro";
 import jsxA11y from "eslint-plugin-jsx-a11y-x";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 // Safari drops the list role of a list with `list-style: none`, which
 // Tailwind's preflight sets on every list.
 const listRoles = { ol: ["list"], ul: ["list"] };
 
-// Lints the Astro templates and the React components, with the accessibility
-// rules of jsx-a11y.
 export default defineConfig([
   globalIgnores(["dist/", ".astro/", ".netlify/"]),
   // These break the rules on purpose, many as examples in the accessibility
@@ -31,18 +31,39 @@ export default defineConfig([
     ],
     "Broken on purpose",
   ),
+  js.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    files: ["**/*.js", "**/*.mjs"],
+    languageOptions: { globals: globals.node },
+  },
   ...astro.configs.recommended,
   ...astro.configs["jsx-a11y-recommended"],
   {
+    // With type information, the Astro parser writes a temporary .tsx file
+    // next to each component, which the dev server picks up.
+    files: ["**/*.js", "**/*.mjs", "**/*.astro", "**/*.astro/*"],
+    extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
     files: ["**/*.astro"],
     rules: {
+      // The frontmatter is TypeScript, which `astro check` checks.
+      ...tseslint.configs.eslintRecommended.rules,
       "astro/jsx-a11y/no-redundant-roles": ["error", listRoles],
     },
   },
   {
     files: ["**/*.tsx"],
     extends: [jsxA11y.configs.recommended],
-    languageOptions: { parser: tsParser },
     rules: {
       "jsx-a11y-x/no-redundant-roles": ["error", listRoles],
     },
