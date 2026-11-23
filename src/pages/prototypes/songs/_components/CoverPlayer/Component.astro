@@ -94,7 +94,8 @@ const sparks = [
     {sources.map(({ src, type }) => (
       <source src={src} type={type} />
     ))}
-    <track kind="captions" src={captions} srclang="en" label={title} />
+    <!-- Not "en": iOS 27.2 issue (knowledge/songs.md). -->
+    <track kind="captions" src={captions} srclang="und" label={title} />
   </audio>
   <div class="problem text-zinc-700 dark:text-zinc-300" hidden>
     <div role="alert">

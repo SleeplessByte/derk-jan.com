@@ -7,6 +7,13 @@
     "streamline": {
       "type": "http",
       "url": "https://public-api.streamlinehq.com/mcp"
+    },
+    "netlify": {
+      "type": "http",
+      "url": "https://mcp.netlify.com/mcp",
+      "tools": [
+        "*"
+      ]
     }
   }
 }
