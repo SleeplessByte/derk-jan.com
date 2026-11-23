@@ -10,6 +10,7 @@ import bellPepper from "./icons/Vegetables-Bellpepper--Streamline-Freehand.svg?r
 import oliveOilBottle from "./icons/Vegetables-Olive-Oil-Bottle--Streamline-Freehand.svg?raw";
 import onion from "./icons/Vegetables-Onion-1--Streamline-Freehand.svg?raw";
 import waterGlass from "./icons/Water-Glass-Half-Full--Streamline-Freehand.svg?raw";
+import type { IngredientId } from "./i18n";
 
 const sources = {
   tempeh: beanPod,
@@ -24,9 +25,7 @@ const sources = {
   "red onion": onion,
   "red pepper": bellPepper,
   cloves: spiceBowl,
-} satisfies Record<string, string>;
-
-export type IngredientIconName = keyof typeof sources;
+} satisfies Record<IngredientId, string>;
 
 const LINE = "#020202";
 const ACCENT = "#0c6fff";
@@ -60,8 +59,4 @@ function toParts(name: string, svg: string): Part[] {
 
 export const ingredientIcons = Object.fromEntries(
   Object.entries(sources).map(([name, svg]) => [name, toParts(name, svg)]),
-) as Record<IngredientIconName, Part[]>;
-
-export function hasIngredientIcon(name: string): name is IngredientIconName {
-  return Object.hasOwn(sources, name);
-}
+) as Record<IngredientId, Part[]>;

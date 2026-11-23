@@ -1,35 +1,46 @@
 ---
-import { render, type CollectionEntry } from "astro:content";
-import { formatIngredient, formatPeople } from "../../components/Recipes/amount";
-import Ingredient from "../../components/Recipes/Ingredient.astro";
-import IngredientList from "../../components/Recipes/IngredientList.astro";
-import IngredientReference from "../../components/Recipes/IngredientReference.astro";
-import { getRecipes } from "../../components/Recipes/recipes";
-import type { RecipeFrontmatter } from "../../components/Recipes/remark-ingredients";
-import Servings from "../../components/Recipes/Servings.astro";
-import Share from "../../components/Recipes/Share.astro";
-import HtmlLayout from "../../layouts/HtmlLayout.astro";
-import "../../styles/transitions.css";
+import { render } from "astro:content";
+import { formatIngredient, formatPeople } from "../../../components/Recipes/amount";
+import { localeList, locales, recipeUrl } from "../../../components/Recipes/i18n";
+import { fill } from "../../../components/Recipes/i18n/fill";
+import Ingredient from "../../../components/Recipes/Ingredient.astro";
+import IngredientList from "../../../components/Recipes/IngredientList.astro";
+import IngredientReference from "../../../components/Recipes/IngredientReference.astro";
+import { getRecipes, type Recipe } from "../../../components/Recipes/recipes";
+import type { RecipeFrontmatter } from "../../../components/Recipes/remark-ingredients";
+import Servings from "../../../components/Recipes/Servings.astro";
+import Share from "../../../components/Recipes/Share.astro";
+import HtmlLayout from "../../../layouts/HtmlLayout.astro";
+import "../../../styles/transitions.css";
 
 export async function getStaticPaths() {
   return (await getRecipes()).map((recipe) => ({
-    params: { id: recipe.id },
+    params: { lang: recipe.lang, id: recipe.slug },
     props: { recipe },
   }));
 }
 
 interface Props {
-  recipe: CollectionEntry<"recipes">;
+  recipe: Recipe;
 }
 
-const { recipe } = Astro.props;
-const { title, description, difficulty, minutes, servings, diet } = recipe.data;
-const { Content, remarkPluginFrontmatter } = await render(recipe);
+const { lang, slug, entry } = Astro.props.recipe;
+const t = locales[lang];
+const otherLocales = localeList.filter((other) => other !== lang);
+const { title, description, difficulty, minutes, servings, diet } = entry.data;
+const { Content, remarkPluginFrontmatter } = await render(entry);
 const { ingredients, steps } = remarkPluginFrontmatter as RecipeFrontmatter;
 
 const url = new URL(Astro.url.pathname, Astro.site);
-const image = new URL(`/recipes/${recipe.id}.png`, Astro.site);
-const imageAlt = `${title}: ${diet}, ${minutes} minutes, for ${formatPeople(servings)}.`;
+const image = new URL(`${recipeUrl(lang, slug)}.png`, Astro.site);
+const people = formatPeople(servings, t.people);
+const minutesText = fill(t.minutes, { count: minutes });
+const imageAlt = fill(t.recipe.imageAlt, {
+  title,
+  diet: t.diet[diet],
+  minutes: minutesText,
+  people,
+});
 
 // schema.org has no diet for pescetarian or omnivore.
 const SCHEMA_DIETS: Partial<Record<typeof diet, string>> = {
@@ -42,6 +53,7 @@ const structuredData = {
   "@type": "Recipe",
   name: title,
   description,
+  inLanguage: lang,
   image: image.href,
   url: url.href,
   author: {
@@ -50,17 +62,24 @@ const structuredData = {
     url: new URL("/", Astro.site).href,
   },
   totalTime: `PT${minutes}M`,
-  recipeYield: formatPeople(servings),
+  recipeYield: people,
   suitableForDiet: SCHEMA_DIETS[diet],
   recipeIngredient: ingredients.map((ingredient) =>
-    formatIngredient(ingredient, 1, { metric: true }),
+    formatIngredient(ingredient, 1, { lang, metric: true }),
   ),
   recipeInstructions: steps.map((text) => ({ "@type": "HowToStep", text })),
 };
 ---
 
-<HtmlLayout title={title} description={description}>
+<HtmlLayout title={title} description={description} lang={lang}>
   <Fragment slot="head">
+    {localeList.map((alternate) => (
+      <link
+        rel="alternate"
+        hreflang={alternate}
+        href={new URL(recipeUrl(alternate, slug), Astro.site)}
+      />
+    ))}
     <meta name="robots" content="noindex" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content={title} />
@@ -83,11 +102,11 @@ const structuredData = {
         href="#content"
         class="transition sr-only focus:not-sr-only rounded-md focus:fixed focus:top-4 focus:left-4 focus:dark:bg-zinc-900 focus:bg-zinc-100 focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-yellow-500"
       >
-        <span class="block p-2">Skip to main content</span>
+        <span class="block p-2">{t.recipe.skip}</span>
       </a>
-      <nav>
+      <nav class="flex flex-wrap items-center justify-between gap-x-6">
         <a
-          href="/recipes"
+          href={recipeUrl(lang)}
           class="transition group inline-flex space-x-1 items-center focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-yellow-500 rounded-md p-2 -mx-2"
         >
           <svg
@@ -103,8 +122,18 @@ const structuredData = {
               clip-rule="evenodd"
             ></path>
           </svg>
-          <span>Back to all recipes</span>
+          <span>{t.recipe.back}</span>
         </a>
+        {otherLocales.map((other) => (
+          <a
+            href={recipeUrl(other, slug)}
+            hreflang={other}
+            lang={other}
+            class="transition focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-yellow-500 rounded-md p-2 -mx-2"
+          >
+            {locales[other].meta.languageName}
+          </a>
+        ))}
       </nav>
     </header>
   </div>
@@ -114,7 +143,7 @@ const structuredData = {
       <header>
         <h1 class="font-extrabold text-5xl mb-4">{title}</h1>
         <p class="font-bold mt-0">
-          {diet} · {difficulty} · {minutes} minutes
+          {t.diet[diet]} · {t.difficulty[difficulty]} · {minutesText}
         </p>
       </header>
 
@@ -124,12 +153,12 @@ const structuredData = {
       </div>
 
       <section aria-labelledby="ingredients">
-        <h2 id="ingredients">Ingredients</h2>
+        <h2 id="ingredients">{t.recipe.ingredients}</h2>
         <IngredientList ingredients={ingredients} />
       </section>
 
       <section aria-labelledby="steps">
-        <h2 id="steps">Steps</h2>
+        <h2 id="steps">{t.recipe.steps}</h2>
         <Content components={{ Ingredient, IngredientReference }} />
       </section>
     </article>

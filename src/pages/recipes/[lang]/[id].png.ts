@@ -1,16 +1,17 @@
 import type { APIRoute } from "astro";
-import type { CollectionEntry } from "astro:content";
 import { readFile } from "node:fs/promises";
 import satori from "satori";
 import sharp from "sharp";
-import graphic from "../../assets/source/Leisure-Food-Cooking-For-Family-Friends-Guests_1--Streamline-Bruxelles-color.svg?raw";
-import { formatPeople } from "../../components/Recipes/amount";
-import PreviewCard from "../../components/Recipes/PreviewCard";
-import { getRecipes } from "../../components/Recipes/recipes";
+import graphic from "../../../assets/source/Leisure-Food-Cooking-For-Family-Friends-Guests_1--Streamline-Bruxelles-color.svg?raw";
+import { formatPeople } from "../../../components/Recipes/amount";
+import { locales } from "../../../components/Recipes/i18n";
+import { fill } from "../../../components/Recipes/i18n/fill";
+import PreviewCard from "../../../components/Recipes/PreviewCard";
+import { getRecipes, type Recipe } from "../../../components/Recipes/recipes";
 
 export async function getStaticPaths() {
   return (await getRecipes()).map((recipe) => ({
-    params: { id: recipe.id },
+    params: { lang: recipe.lang, id: recipe.slug },
     props: { recipe },
   }));
 }
@@ -20,13 +21,18 @@ export async function getStaticPaths() {
 const font = await readFile("public/fonts/AlanSans-VariableFont_wght.ttf");
 const graphicUrl = `data:image/svg+xml;base64,${Buffer.from(graphic).toString("base64")}`;
 
-export const GET: APIRoute<{ recipe: CollectionEntry<"recipes"> }> = async ({
-  props,
-}) => {
-  const { title, diet, minutes, servings } = props.recipe.data;
+export const GET: APIRoute<{ recipe: Recipe }> = async ({ props }) => {
+  const { lang, entry } = props.recipe;
+  const t = locales[lang];
+  const { title, diet, minutes, servings } = entry.data;
   const card = PreviewCard({
+    label: t.recipe.card,
     title,
-    details: `${diet} · ${minutes} minutes · for ${formatPeople(servings)}`,
+    details: fill(t.summary, {
+      diet: t.diet[diet],
+      minutes: fill(t.minutes, { count: minutes }),
+      people: formatPeople(servings, t.people),
+    }),
     graphic: graphicUrl,
   });
 

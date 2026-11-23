@@ -1,5 +1,6 @@
 ---
 import { formatIngredient, type IngredientData } from "./amount";
+import { localeOf, locales } from "./i18n";
 import IngredientButton from "./IngredientButton.astro";
 
 interface Props {
@@ -7,22 +8,24 @@ interface Props {
 }
 
 const { ingredients } = Astro.props;
+const lang = localeOf(Astro.params.lang);
+const t = locales[lang].highlight;
 ---
 
-<div data-component="ingredient-list">
+<div data-component="ingredient-list" data-messages={JSON.stringify(t.usedIn)}>
   <ul role="list">
     {ingredients.map((ingredient) => (
       <li>
-        <IngredientButton name={ingredient.name} variant="item">
+        <IngredientButton icon={ingredient.id} name={ingredient.name} variant="item">
           <span data-ingredient={JSON.stringify(ingredient)} data-metric>
-            {formatIngredient(ingredient, 1, { metric: true })}
+            {formatIngredient(ingredient, 1, { lang, metric: true })}
           </span>
         </IngredientButton>
       </li>
     ))}
   </ul>
   <p id="ingredient-button-description" class="sr-only">
-    Highlights this ingredient in every step.
+    {t.description}
   </p>
   <p class="status sr-only" aria-live="polite"></p>
 </div>

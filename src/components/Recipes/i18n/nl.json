@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "languageName": "Nederlands"
+  },
+  "index": {
+    "title": "Recepten",
+    "heading": "Recepten op {site}",
+    "lead": "De favoriete recepten van Derk-Jan",
+    "draft": "(Concept)"
+  },
+  "recipe": {
+    "skip": "Direct naar de inhoud",
+    "back": "Terug naar alle recepten",
+    "ingredients": "Ingrediënten",
+    "steps": "Bereiding",
+    "share": "Recept delen",
+    "card": "Recept · derk-jan.com",
+    "imageAlt": "{title}: {diet}, {minutes}, voor {people}."
+  },
+  "summary": "{diet} · {minutes} · voor {people}",
+  "minutes": "{count} minuten",
+  "people": {
+    "one": "{count} persoon",
+    "other": "{count} personen"
+  },
+  "diet": {
+    "vegan": "vegan",
+    "vegetarian": "vegetarisch",
+    "pescetarian": "pescotarisch",
+    "omnivore": "omnivoor"
+  },
+  "difficulty": {
+    "easy": "makkelijk",
+    "medium": "gemiddeld",
+    "hard": "moeilijk"
+  },
+  "servings": {
+    "for": "Voor {people}",
+    "label": "Personen",
+    "fewer": "Eén persoon minder",
+    "more": "Eén persoon meer",
+    "status": "Hoeveelheden voor {people}"
+  },
+  "highlight": {
+    "description": "Markeert dit ingrediënt in elke stap.",
+    "usedIn": {
+      "one": "{name}: stap {steps}",
+      "other": "{name}: stappen {steps}"
+    }
+  },
+  "units": {
+    "tablespoon": { "name": "eetlepel", "plural": "eetlepels" }
+  },
+  "ingredients": {
+    "tempeh": { "name": "tempé" },
+    "olive oil": { "name": "olijfolie" },
+    "white wine vinegar": { "name": "witte wijnazijn" },
+    "teriyaki sauce": { "name": "teriyakisaus" },
+    "water": { "name": "water" },
+    "sugar": { "name": "suiker" },
+    "salt": { "name": "zout" },
+    "pepper": { "name": "peper" },
+    "cucumber": { "name": "komkommer", "plural": "komkommers" },
+    "red onion": { "name": "rode ui", "plural": "rode uien" },
+    "red pepper": { "name": "rode paprika", "plural": "rode paprika's" },
+    "cloves": { "name": "kruidnagels" }
+  }
+}

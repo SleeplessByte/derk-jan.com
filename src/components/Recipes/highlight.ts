@@ -1,6 +1,13 @@
+import type { Messages } from "./i18n";
+import { fill } from "./i18n/fill";
+
+type UsedIn = Messages["highlight"]["usedIn"];
+
 /**
- * Hovering, focusing or pressing an ingredient highlights it in the list and in
- * every step, so a cook sees where it is needed again.
+ * Highlight an ingredient in the list and in every step while it is hovered,
+ * focused or pressed.
+ *
+ * A cook then sees where it is needed again.
  */
 export function setupHighlight() {
   const list = document.querySelector<HTMLElement>(
@@ -13,6 +20,7 @@ export function setupHighlight() {
   }
 
   const status = list.querySelector<HTMLElement>(".status")!;
+  const usedIn = JSON.parse(list.dataset.messages!) as UsedIn;
   const buttons = [
     ...document.querySelectorAll<HTMLButtonElement>(
       '[data-component="ingredient-button"]',
@@ -38,7 +46,7 @@ export function setupHighlight() {
     render();
 
     // A highlight is visual only. This is for screen readers to hear where.
-    status.textContent = name ? whereUsed(name, buttons) : "";
+    status.textContent = name ? whereUsed(name, buttons, usedIn) : "";
   }
 
   for (const button of buttons) {
@@ -74,7 +82,7 @@ export function setupHighlight() {
   }
 }
 
-function whereUsed(name: string, buttons: HTMLButtonElement[]) {
+function whereUsed(name: string, buttons: HTMLButtonElement[], usedIn: UsedIn) {
   const steps = new Set(
     buttons
       .filter(
@@ -87,11 +95,13 @@ function whereUsed(name: string, buttons: HTMLButtonElement[]) {
   const numbers = [...steps].map((step) =>
     String([...step.parentElement!.children].indexOf(step) + 1),
   );
-  const list = new Intl.ListFormat("en").format(numbers);
+  const list = new Intl.ListFormat(document.documentElement.lang).format(
+    numbers,
+  );
 
   if (numbers.length === 1) {
-    return `${name}: step ${list}`;
+    return fill(usedIn.one, { name, steps: list });
   }
 
-  return `${name}: steps ${list}`;
+  return fill(usedIn.other, { name, steps: list });
 }

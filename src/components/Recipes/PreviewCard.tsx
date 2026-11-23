@@ -9,14 +9,20 @@ const COLORS = {
 };
 
 interface Props {
+  label: string;
   title: string;
   details: string;
   /** A data URL. */
   graphic: string;
 }
 
-/** The link preview of a recipe: 1200×630. */
-export default function PreviewCard({ title, details, graphic }: Props) {
+/**
+ * Draw the link preview of a recipe, at 1200×630.
+ *
+ * @param props the label, the title, the details and the graphic of the recipe
+ * @returns the card, for satori to draw
+ */
+export default function PreviewCard({ label, title, details, graphic }: Props) {
   return (
     <div
       style={{
@@ -41,9 +47,7 @@ export default function PreviewCard({ title, details, graphic }: Props) {
           gap: 28,
         }}
       >
-        <div style={{ fontSize: 32, color: COLORS.accent }}>
-          Recipe · derk-jan.com
-        </div>
+        <div style={{ fontSize: 32, color: COLORS.accent }}>{label}</div>
         <div
           style={{
             fontSize: 88,

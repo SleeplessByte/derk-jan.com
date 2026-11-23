@@ -1,5 +1,6 @@
 ---
 import { formatIngredient, type IngredientData } from "./amount";
+import { localeOf } from "./i18n";
 import IngredientButton from "./IngredientButton.astro";
 
 interface Props {
@@ -8,9 +9,10 @@ interface Props {
 }
 
 const { data } = Astro.props;
+const lang = localeOf(Astro.params.lang);
 const ingredient = JSON.parse(data) as IngredientData;
 ---
 
-<IngredientButton name={ingredient.name} variant="inline">
-  <strong data-ingredient={data}>{formatIngredient(ingredient, 1)}</strong>
+<IngredientButton icon={ingredient.id} name={ingredient.name} variant="inline">
+  <strong data-ingredient={data}>{formatIngredient(ingredient, 1, { lang })}</strong>
 </IngredientButton>

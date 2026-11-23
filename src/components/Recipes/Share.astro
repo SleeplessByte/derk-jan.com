@@ -1,14 +1,17 @@
 ---
+import { messagesFor } from "./i18n";
+
 interface Props {
   title: string;
   text: string;
 }
 
 const { title, text } = Astro.props;
+const t = messagesFor(Astro.params.lang).recipe;
 ---
 
 <button type="button" data-component="share" data-title={title} data-text={text} hidden>
-  Share recipe
+  {t.share}
 </button>
 
 <script>

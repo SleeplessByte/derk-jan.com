@@ -1,4 +1,11 @@
 import { formatIngredient, formatPeople, type IngredientData } from "./amount";
+import type { Locale, Messages } from "./i18n";
+import { fill } from "./i18n/fill";
+
+export type ServingsMessages = {
+  people: Messages["people"];
+  status: string;
+};
 
 export function setupServings() {
   const root = document.querySelector<HTMLElement>(
@@ -14,6 +21,8 @@ export function setupServings() {
   const control = root.querySelector<HTMLElement>(".control")!;
   const input = root.querySelector<HTMLInputElement>(".people")!;
   const status = root.querySelector<HTMLElement>(".status")!;
+  const messages = JSON.parse(root.dataset.messages!) as ServingsMessages;
+  const lang = document.documentElement.lang as Locale;
 
   const isValid = (people: number) =>
     Number.isInteger(people) &&
@@ -27,7 +36,7 @@ export function setupServings() {
   if (isValid(fromLink)) {
     people = fromLink;
     input.value = String(people);
-    renderAmounts(people / servings);
+    renderAmounts(people / servings, lang);
   }
 
   root.querySelector<HTMLElement>(".fallback")!.hidden = true;
@@ -39,8 +48,10 @@ export function setupServings() {
     }
 
     people = next;
-    renderAmounts(people / servings);
-    status.textContent = `Amounts for ${formatPeople(people)}`;
+    renderAmounts(people / servings, lang);
+    status.textContent = fill(messages.status, {
+      people: formatPeople(people, messages.people),
+    });
 
     const url = new URL(location.href);
 
@@ -71,12 +82,13 @@ export function setupServings() {
   });
 }
 
-function renderAmounts(factor: number) {
+function renderAmounts(factor: number, lang: Locale) {
   for (const element of document.querySelectorAll<HTMLElement>(
     "[data-ingredient]",
   )) {
     const data = JSON.parse(element.dataset.ingredient!) as IngredientData;
     element.textContent = formatIngredient(data, factor, {
+      lang,
       metric: "metric" in element.dataset,
     });
   }

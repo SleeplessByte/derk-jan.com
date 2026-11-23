@@ -1,8 +1,9 @@
 ---
-import { ingredientIcons, type IngredientIconName } from "./ingredient-icons";
+import type { IngredientId } from "./i18n";
+import { ingredientIcons } from "./ingredient-icons";
 
 interface Props {
-  name: IngredientIconName;
+  name: IngredientId;
 }
 
 const { name } = Astro.props;

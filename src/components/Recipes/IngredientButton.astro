@@ -1,14 +1,16 @@
 ---
+import type { IngredientId } from "./i18n";
 import IngredientIcon from "./IngredientIcon.astro";
-import type { IngredientIconName } from "./ingredient-icons";
 
 interface Props {
+  icon: IngredientId;
+  /** The name of the recipe, in the recipe's language. */
   name: string;
   /** `inline` in a step, `item` in the ingredients list. */
   variant: "inline" | "item";
 }
 
-const { name, variant } = Astro.props;
+const { icon, name, variant } = Astro.props;
 ---
 
 <button
@@ -20,7 +22,7 @@ const { name, variant } = Astro.props;
   aria-describedby="ingredient-button-description"
   disabled
 >
-  <IngredientIcon name={name as IngredientIconName} />
+  <IngredientIcon name={icon} />
   <slot />
 </button>
 
@@ -67,7 +69,6 @@ const { name, variant } = Astro.props;
     }
 
     &.--highlighted {
-      /* The highlight is light in both themes */
       color-scheme: light;
       background: var(--ingredient-highlight);
       box-shadow: 0 0 0 0.2em var(--ingredient-highlight);

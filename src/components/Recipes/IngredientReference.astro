@@ -1,14 +1,16 @@
 ---
+import type { IngredientId } from "./i18n";
 import IngredientButton from "./IngredientButton.astro";
 
+/** Set by remark-ingredients.ts. */
 interface Props {
-  /** Set by remark-ingredients.ts. */
+  icon: IngredientId;
   name: string;
 }
 
-const { name } = Astro.props;
+const { icon, name } = Astro.props;
 ---
 
-<IngredientButton name={name} variant="inline">
+<IngredientButton icon={icon} name={name} variant="inline">
   <strong>{name}</strong>
 </IngredientButton>

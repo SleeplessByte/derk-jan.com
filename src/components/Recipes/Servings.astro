@@ -1,20 +1,34 @@
 ---
 import { formatPeople } from "./amount";
+import { localeOf, locales } from "./i18n";
+import { fill } from "./i18n/fill";
+import type { ServingsMessages } from "./servings";
 
 interface Props {
   servings: number;
 }
 
 const { servings } = Astro.props;
+const t = locales[localeOf(Astro.params.lang)];
+const messages = {
+  people: t.people,
+  status: t.servings.status,
+} satisfies ServingsMessages;
 ---
 
-<div data-component="servings" data-servings={servings}>
-  <p class="fallback">For {formatPeople(servings)}</p>
+<div
+  data-component="servings"
+  data-servings={servings}
+  data-messages={JSON.stringify(messages)}
+>
+  <p class="fallback">
+    {fill(t.servings.for, { people: formatPeople(servings, t.people) })}
+  </p>
   <div class="control" hidden>
-    <label for="servings-people">People</label>
+    <label for="servings-people">{t.servings.label}</label>
     <button type="button" class="step --fewer">
       <span aria-hidden="true">-</span>
-      <span class="sr-only">One person fewer</span>
+      <span class="sr-only">{t.servings.fewer}</span>
     </button>
     <input
       id="servings-people"
@@ -27,7 +41,7 @@ const { servings } = Astro.props;
     />
     <button type="button" class="step --more">
       <span aria-hidden="true">+</span>
-      <span class="sr-only">One person more</span>
+      <span class="sr-only">{t.servings.more}</span>
     </button>
   </div>
   <p class="status sr-only" aria-live="polite"></p>

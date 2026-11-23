@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "languageName": "English"
+  },
+  "index": {
+    "title": "Recipes",
+    "heading": "Recipes on {site}",
+    "lead": "Derk-Jan's favourite recipes",
+    "draft": "(Draft)"
+  },
+  "recipe": {
+    "skip": "Skip to main content",
+    "back": "Back to all recipes",
+    "ingredients": "Ingredients",
+    "steps": "Steps",
+    "share": "Share recipe",
+    "card": "Recipe · derk-jan.com",
+    "imageAlt": "{title}: {diet}, {minutes}, for {people}."
+  },
+  "summary": "{diet} · {minutes} · for {people}",
+  "minutes": "{count} minutes",
+  "people": {
+    "one": "{count} person",
+    "other": "{count} people"
+  },
+  "diet": {
+    "vegan": "vegan",
+    "vegetarian": "vegetarian",
+    "pescetarian": "pescetarian",
+    "omnivore": "omnivore"
+  },
+  "difficulty": {
+    "easy": "easy",
+    "medium": "medium",
+    "hard": "hard"
+  },
+  "servings": {
+    "for": "For {people}",
+    "label": "People",
+    "fewer": "One person fewer",
+    "more": "One person more",
+    "status": "Amounts for {people}"
+  },
+  "highlight": {
+    "description": "Highlights this ingredient in every step.",
+    "usedIn": {
+      "one": "{name}: step {steps}",
+      "other": "{name}: steps {steps}"
+    }
+  },
+  "units": {
+    "tablespoon": { "name": "tablespoon", "plural": "tablespoons" }
+  },
+  "ingredients": {
+    "tempeh": { "name": "tempeh" },
+    "olive oil": { "name": "olive oil" },
+    "white wine vinegar": { "name": "white wine vinegar" },
+    "teriyaki sauce": { "name": "teriyaki sauce" },
+    "water": { "name": "water" },
+    "sugar": { "name": "sugar" },
+    "salt": { "name": "salt" },
+    "pepper": { "name": "pepper" },
+    "cucumber": { "name": "cucumber", "plural": "cucumbers" },
+    "red onion": { "name": "red onion", "plural": "red onions" },
+    "red pepper": { "name": "red pepper", "plural": "red peppers" },
+    "cloves": { "name": "cloves" }
+  }
+}

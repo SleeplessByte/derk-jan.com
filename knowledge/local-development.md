@@ -21,7 +21,10 @@
 
 - `pnpm format <files>` (Prettier) and `pnpm lint [files]` (ESLint). Without a file, `pnpm lint` checks the whole repo.
 - Many older files, mostly the talks, are not formatted with Prettier. Format only the files you edit, so that a diff shows only your change.
-- [`eslint.config.js`](../eslint.config.js) lints the Astro templates and the React components (`.tsx`) with the jsx-a11y rules, plus a ban on `aria-label` (AGENTS.md). It uses the fork `eslint-plugin-jsx-a11y-x`, because the original does not support ESLint 10.
+- [`eslint.config.js`](../eslint.config.js) has the recommended rules of ESLint and typescript-eslint for all code. `.ts` and `.tsx` files get the rules that need type information (`projectService`); `.astro` files and plain JavaScript do not.
+  - With type information, the Astro parser writes a temporary `.tsx` file next to each component, which the dev server picks up. `astro check` checks the types in the frontmatter instead.
+  - So far, the problems of these rules are fixed only in `src/pages/prototypes/`, `src/pages/events/`, `src/pages/recipes/` and `src/components/Recipes/` (November 2026). Elsewhere, `pnpm lint` still reports about 40.
+- The Astro templates and the React components also get the jsx-a11y rules, plus a ban on `aria-label` (AGENTS.md). They use the fork `eslint-plugin-jsx-a11y-x`, because the original does not support ESLint 10.
   - `role="list"` on `<ol>` and `<ul>` is allowed on purpose: Safari drops the list role when a list has `list-style: none`, which Tailwind's preflight sets.
   - The ignore list "Broken on purpose" holds files that break the rules deliberately, many as examples in the accessibility talks. Do not fix them. Add a file there only when the user confirms it is deliberate.
 
