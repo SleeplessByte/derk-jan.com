@@ -1,9 +1,9 @@
 import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
 
-import { paintCard } from "./paint";
+import { paintCard } from "./paint-card";
 import { prepareReveal } from "./reveal";
 import { createSideMedia } from "./side-media";
-import { startSnow } from "./snow";
+import { startSnow } from "./particles-snow";
 
 const LABEL_EXIT_MS = 300;
 const TILT_DEG = 8;

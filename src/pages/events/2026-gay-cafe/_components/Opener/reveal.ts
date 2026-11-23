@@ -1,10 +1,10 @@
-import { burnSky, type Burn } from "./burn";
+import { burnSky, type Burn } from "./reveal-burn";
 import { readColor } from "./colors";
-import { prepareDust, type Dust } from "./dust";
+import { prepareDust, type Dust } from "./particles-dust";
 import { framesThatCount } from "./frames";
 import type { Point } from "./paint-study";
 import { DUST_RATIO, paintSky, viewportLayer, type Layer } from "./sky";
-import { splitScreen } from "./split";
+import { splitScreen } from "./reveal-split";
 
 type Choice = "dust" | "split" | "fade";
 
