@@ -15,7 +15,8 @@
     "steps": "Bereiding",
     "share": "Recept delen",
     "card": "Recept · derk-jan.com",
-    "imageAlt": "{title}: {diet}, {minutes}, voor {people}."
+    "imageAlt": "{title}: {diet}, {minutes}, voor {people}.",
+    "thumbnailAlt": "Een kookpan waar groenten in springen."
   },
   "summary": "{diet} · {minutes} · voor {people}",
   "minutes": "{count} minuten",

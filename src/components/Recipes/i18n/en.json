@@ -15,7 +15,8 @@
     "steps": "Steps",
     "share": "Share recipe",
     "card": "Recipe · derk-jan.com",
-    "imageAlt": "{title}: {diet}, {minutes}, for {people}."
+    "imageAlt": "{title}: {diet}, {minutes}, for {people}.",
+    "thumbnailAlt": "A cooking pot with vegetables jumping into it."
   },
   "summary": "{diet} · {minutes} · for {people}",
   "minutes": "{count} minutes",

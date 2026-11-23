@@ -1,7 +1,7 @@
 // Satori draws this to an image, so it takes inline styles only, and every
 // element with more than one child needs display: flex.
 
-const COLORS = {
+export const COLORS = {
   ground: "#252A34",
   title: "#fafafa",
   details: "#d4d4d8",

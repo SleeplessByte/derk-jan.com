@@ -22,10 +22,8 @@ export async function getStaticPaths() {
 // are static instances (knowledge/recipes.md).
 const fonts = {
   light: await readFile("public/fonts/AlanSans-VariableFont_wght.ttf"),
-  medium: await readFile("src/components/Recipes/fonts/AlanSans-Medium.ttf"),
-  semiBold: await readFile(
-    "src/components/Recipes/fonts/AlanSans-SemiBold.ttf",
-  ),
+  medium: await readFile("src/assets/fonts/AlanSans-Medium.ttf"),
+  semiBold: await readFile("src/assets/fonts/AlanSans-SemiBold.ttf"),
 };
 const graphicUrl = `data:image/svg+xml;base64,${Buffer.from(graphic).toString("base64")}`;
 

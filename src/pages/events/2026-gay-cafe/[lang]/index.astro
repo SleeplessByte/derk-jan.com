@@ -1,9 +1,9 @@
 ---
-import { Image } from "astro:assets";
-import HtmlLayout from "../../../../layouts/HtmlLayout.astro";
+import { getImage, Image } from "astro:assets";
+import LinkPreview from "../../../../components/LinkPreview.astro";
 import LyricsOverlay from "../../../../components/Lyrics/Overlay.astro";
 import LyricsTranscript from "../../../../components/Lyrics/Transcript.astro";
-
+import HtmlLayout from "../../../../layouts/HtmlLayout.astro";
 import Countdown from "../_components/Countdown/Component.astro";
 import FormIcon from "../_components/FormIcon/Component.astro";
 import type { IconName } from "../_components/FormIcon/icons";
@@ -13,14 +13,15 @@ import OrderTicket from "../_components/OrderTicket/Component.astro";
 import RsvpReaction from "../_components/RsvpReaction/Component.astro";
 import { localeList, localeOf, locales, pageUrl, type Messages } from "../_i18n";
 
-import backgroundImage from "../../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
-import kitchenImage from "../../../../assets/IMG_20240825_233805_104.jpg";
+import fruityXmasLyrics from "../../../../assets/audio/2026-fruity-xmas.lyrics.json";
 import fruityXmasM4a from "../../../../assets/audio/2026-fruity-xmas.m4a?url";
 import fruityXmasMp3 from "../../../../assets/audio/2026-fruity-xmas.mp3";
-import fruityXmasLyrics from "../../../../assets/audio/2026-fruity-xmas.lyrics.json";
 import fruityXmasVtt from "../../../../assets/audio/2026-fruity-xmas.vtt?url";
-import introVideoMp4 from "../../../../assets/video/coffee-swirl-20261120-web.mp4";
+import cardImage from "../../../../assets/gay-cafe-2026-invite.jpg";
+import kitchenImage from "../../../../assets/IMG_20240825_233805_104.jpg";
+import backgroundImage from "../../../../assets/kate-laine-9kNC6g-emEQ-unsplash.jpg";
 import loopVideoMp4 from "../../../../assets/video/coffee-snow-20261116.mp4";
+import introVideoMp4 from "../../../../assets/video/coffee-swirl-20261120-web.mp4";
 
 export function getStaticPaths() {
   return localeList.map((lang) => ({ params: { lang } }));
@@ -28,6 +29,12 @@ export function getStaticPaths() {
 
 const lang = localeOf(Astro.params.lang);
 const t = locales[lang];
+const thumbnail = await getImage({
+  src: cardImage,
+  width: 600,
+  height: 600,
+  format: "jpeg",
+});
 const otherLocales = localeList.filter((other) => other !== lang);
 
 // Astro only types WAI-ARIA 1.2 roles; graphics-symbol comes from the Graphics ARIA module.
@@ -103,6 +110,22 @@ const drinks = [
       />
     ))}
     <link rel="alternate" hreflang="x-default" href={new URL(pageUrl(), Astro.site)} />
+    <LinkPreview
+      type="website"
+      title={t.meta.title}
+      description={t.meta.description}
+      url={new URL(pageUrl(lang), Astro.site)}
+      image={{
+        url: new URL(`${pageUrl()}preview.jpg`, Astro.site),
+        width: 1200,
+        height: 630,
+        alt: t.meta.imageAlt,
+      }}
+      thumbnail={{
+        url: new URL(thumbnail.src, Astro.site),
+        alt: t.meta.imageAlt,
+      }}
+    />
   </Fragment>
 
   <Opener />

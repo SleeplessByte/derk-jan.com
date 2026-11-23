@@ -23,7 +23,7 @@ The RSVP invitation lives in `src/pages/events/2026-gay-cafe/`.
 ## Features and their decisions
 
 - **Opener** (`_components/Opener/`):
-  - The card is painted in with one pencil and then one brush through masks (`paint.ts`: `sketch` and `bringIn`; `paint-study.ts`). This is the reference implementation for paint-in reveals.
+  - The card is painted in with one pencil and then one brush through masks (`paint-card.ts`: `sketch` and `paintWithBrush`; `paint-study.ts`). This is the reference implementation for paint-in reveals.
   - On touch devices, the "Open your invitation" label waits until the painting is done.
   - The language link has `data-skip-opener`. An `astro:before-swap` listener marks the next page's opener as skipped, and the side video starts at its loop.
   - While the opener is there, `html` has `overflow: hidden` and `scrollbar-gutter: stable`, so the page does not shift on Windows when the opener goes. The gutter shows the root's background, so the sky (`--opener-sky`) is set on `html`. `scrollbar-gutter` is Baseline only since December 2024 (Safari 18.2); without it, the old shift returns.
@@ -48,6 +48,7 @@ The RSVP invitation lives in `src/pages/events/2026-gay-cafe/`.
 - **Handover** (`_components/Handover/`): shown only on devices without hover. It is a `mailto:` link that opens the share sheet instead when `navigator.share` exists.
 - **Lyrics**: the shared `src/components/Lyrics/` (see [Songs](songs.md)). Both pages set its colours on the column wrapper.
 - **Song**: a native `<audio controls>` with `transition:persist`, so it keeps playing from the invitation to the success page. Both pages list the same sources: the AAC first, then the MP3. An iPhone was unable to play the MP3 song (see [Songs](songs.md)).
+- **Link preview** (`preview.jpg.ts`, one image for both languages): the card on the opener's dusk sky, inside the middle square that Slack crops to (see [Link previews](link-previews.md)). The night sky of dark mode disappears in dark chat apps. The square thumbnail is the card itself.
 - **Success video**: it has a magic sound effect, so it has a caption track per language next to the video. That track has `srclang={lang}`, so on an iPhone with the track bug of iOS 27.2 (see [Songs](songs.md)), the English video may not play.
 - **Order ticket** (`_components/OrderTicket/`):
   - It reads its labels from the form, so it follows the page's language.

@@ -1,5 +1,5 @@
 ---
-import { getImage } from "astro:assets";
+import LinkPreview from "../../../components/LinkPreview.astro";
 import LyricsTranscript from "../../../components/Lyrics/Transcript.astro";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 import CoverPlayer from "./_components/CoverPlayer/Component.astro";
@@ -14,15 +14,6 @@ const title = "Rijndam Racers";
 const description = "The theme song of the Rijndam Racers, with its lyrics.";
 const coverAlt =
   "The Rijndam Racers in their green team jerseys on a country road: half of them standing, half in their hand bikes, cheering.";
-
-// A square crop, so that every link preview shows the same part of the cover.
-const preview = await getImage({
-  src: cover,
-  width: 1200,
-  height: 1200,
-  fit: "cover",
-  format: "jpeg",
-});
 ---
 
 <HtmlLayout
@@ -33,15 +24,18 @@ const preview = await getImage({
 >
   <Fragment slot="head">
     <meta name="robots" content="noindex" />
-    <meta property="og:type" content="music.song" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
-    <meta property="og:image" content={new URL(preview.src, Astro.site)} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="1200" />
-    <meta property="og:image:alt" content={coverAlt} />
-    <meta name="twitter:card" content="summary" />
+    <LinkPreview
+      type="music.song"
+      title={title}
+      description={description}
+      url={new URL(Astro.url.pathname, Astro.site)}
+      image={{
+        url: new URL("/prototypes/songs/rijndam-racers.jpg", Astro.site),
+        width: 1200,
+        height: 1200,
+        alt: `${coverAlt} A sticker says “${title}”.`,
+      }}
+    />
   </Fragment>
 
   <main class="mx-auto max-w-md px-5 pt-12 pb-24 sm:pt-20">

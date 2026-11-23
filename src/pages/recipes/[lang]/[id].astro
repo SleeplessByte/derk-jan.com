@@ -10,6 +10,7 @@ import { getRecipes, type Recipe } from "../../../components/Recipes/recipes";
 import type { RecipeFrontmatter } from "../../../components/Recipes/remark-ingredients";
 import Servings from "../../../components/Recipes/Servings.astro";
 import Share from "../../../components/Recipes/Share.astro";
+import LinkPreview from "../../../components/LinkPreview.astro";
 import HtmlLayout from "../../../layouts/HtmlLayout.astro";
 import "../../../styles/transitions.css";
 
@@ -81,15 +82,17 @@ const structuredData = {
       />
     ))}
     <meta name="robots" content="noindex" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={url} />
-    <meta property="og:image" content={image} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={imageAlt} />
-    <meta name="twitter:card" content="summary_large_image" />
+    <LinkPreview
+      type="article"
+      title={title}
+      description={description}
+      url={url}
+      image={{ url: image, width: 1200, height: 630, alt: imageAlt }}
+      thumbnail={{
+        url: new URL("/recipes/thumbnail.png", Astro.site),
+        alt: t.recipe.thumbnailAlt,
+      }}
+    />
     <script
       type="application/ld+json"
       set:html={JSON.stringify(structuredData).replaceAll("<", "\\u003c")}
