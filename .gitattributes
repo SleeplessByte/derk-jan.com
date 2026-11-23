@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+# Hunk headers name the heading or the rule that a change is in.
+*.md diff=markdown
+*.mdx diff=markdown
+*.css diff=css
+
+# Written by tools
+pnpm-lock.yaml linguist-generated
+src/assets/audio/*.lyrics.json linguist-generated
+src/assets/audio/*.vtt linguist-generated
